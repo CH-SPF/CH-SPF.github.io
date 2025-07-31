@@ -548,103 +548,92 @@
       }
     };
 
-    function calcular() {
-      const grado = document.getElementById("grado").value;
-      const antiguedad = parseInt(document.getElementById("antiguedad").value);
-      const titulo = document.getElementById("titulo").value;
-      const variabilidad = document.getElementById("variabilidad").value;
-      const fijacion = document.getElementById("fijacion").value === "si";
-      const zona = document.getElementById("zona").value === "si";
-      const usaCasino = document.getElementById("casino").value === "si";
-      const obra = document.getElementById("obra").value;
-      
-      const ref = referencia[grado];
+function calcular() {
+  // ... (código previo de la función calcular hasta la generación del HTML)
 
-      const casinoMonto = ref.casino;
-      const haber = ref.haber;
-      const suplemento = haber * 0.02 * antiguedad;
-      const bonificacionTitulo = ref.titulo[titulo] || 0;
-      const Aportes = haber + suplemento + bonificacionTitulo;
-      
-      const adicionalFijacion = fijacion ? ref.fijacion : 0;
-      const adicionalVariabilidad = variabilidad !== "ninguna" ? ref.variabilidad[variabilidad] : 0;
-      const adicionalZona = zona ? ref.zona : 0;
-      const adicionalCasino = usaCasino ? -casinoMonto : 0;
-      
-      const aporteLey13018 = -Aportes * 0.10;
-      const aporteObra = obra === "carga" ? -Aportes * 0.085 : obra === "mascarga" ? -Aportes * 0.095 : -Aportes * 0.075;
+  document.getElementById("resultado").innerHTML = `
+    <h3 style="color: var(--primary-color); text-align: center; margin-bottom: 20px;">Resultado del Cálculo</h3>
+    
+    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px;">
+      <table style="width: 100%; min-width: 500px; border-collapse: collapse; font-size: 15px;">
+        <thead>
+          <tr>
+            <th style="padding: 12px; background-color: var(--primary-color); color: white; text-align: left; min-width: 200px;">Concepto</th>
+            <th style="padding: 12px; background-color: var(--primary-color); color: white; text-align: right; min-width: 150px;">Importe</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Haber mensual base</strong></td>
+            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${haber.toFixed(2)}</td>
+          </tr>
+          <tr style="background-color: #f9f9f9;">
+            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Suplemento por antigüedad (${antiguedad} años)</strong></td>
+            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${suplemento.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Bonificación por título</strong></td>
+            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${bonificacionTitulo.toFixed(2)}</td>
+          </tr>
+          <tr style="background-color: #f9f9f9;">
+            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Adicional por variabilidad</strong></td>
+            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${adicionalVariabilidad.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Fijación de domicilio</strong></td>
+            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${adicionalFijacion.toFixed(2)}</td>
+          </tr>
+          <tr style="background-color: #f9f9f9;">
+            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Zona Sur</strong></td>
+            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${adicionalZona.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Casino</strong></td>
+            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${adicionalCasino.toFixed(2)}</td>
+          </tr>
+          <tr style="background-color: #f9f9f9;">
+            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Aporte Ley 13.018 (10%)</strong></td>
+            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${aporteLey13018.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Aporte Obra Social</strong></td>
+            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${aporteObra.toFixed(2)}</td>
+          </tr>
+          <tr style="background-color: rgba(52, 152, 219, 0.1); border-top: 2px solid var(--secondary-color);">
+            <td style="padding: 12px;"><strong style="font-size: 16px;">TOTAL ESTIMADO</strong></td>
+            <td style="padding: 12px; text-align: right;"><strong style="font-size: 16px; color: var(--secondary-color);">$${total.toFixed(2)}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-      const total = haber + suplemento + bonificacionTitulo + adicionalVariabilidad +
-                    adicionalFijacion + adicionalZona + adicionalCasino + aporteLey13018 + aporteObra;
-
-      document.getElementById("resultado").innerHTML = `
-        <h3 style="color: var(--primary-color); text-align: center; margin-bottom: 20px;">Resultado del Cálculo</h3>
-        <table class="result-table">
-          <thead>
-            <tr>
-              <th>Concepto</th>
-              <th style="text-align: right;">Importe</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Haber mensual base</strong></td>
-              <td style="text-align: right;">$${haber.toFixed(2)}</td>
-            </tr>
-            <tr>
-              <td><strong>Suplemento por antigüedad (${antiguedad} años)</strong></td>
-              <td style="text-align: right;">$${suplemento.toFixed(2)}</td>
-            </tr>
-            <tr>
-              <td><strong>Bonificación por título</strong></td>
-              <td style="text-align: right;">$${bonificacionTitulo.toFixed(2)}</td>
-            </tr>
-            <tr>
-              <td><strong>Adicional por variabilidad</strong></td>
-              <td style="text-align: right;">$${adicionalVariabilidad.toFixed(2)}</td>
-            </tr>
-            <tr>
-              <td><strong>Fijación de domicilio</strong></td>
-              <td style="text-align: right;">$${adicionalFijacion.toFixed(2)}</td>
-            </tr>
-            <tr>
-              <td><strong>Zona Sur</strong></td>
-              <td style="text-align: right;">$${adicionalZona.toFixed(2)}</td>
-            </tr>
-            <tr>
-              <td><strong>Casino</strong></td>
-              <td style="text-align: right;">$${adicionalCasino.toFixed(2)}</td>
-            </tr>
-            <tr>
-              <td><strong>Aporte Ley 13.018 (10%)</strong></td>
-              <td style="text-align: right;">$${aporteLey13018.toFixed(2)}</td>
-            </tr>
-            <tr>
-              <td><strong>Aporte Obra Social</strong></td>
-              <td style="text-align: right;">$${aporteObra.toFixed(2)}</td>
-            </tr>
-            <tr class="total-row">
-              <td><strong style="font-size: 16px;">TOTAL ESTIMADO</strong></td>
-              <td style="text-align: right;" class="total-amount">$${total.toFixed(2)}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="note-box">
-          <h4>Aclaración:</h4>
-          <p>El resultado es estimativo y no contempla los siguientes rubros:</p>
-          <ul>
-            <li>SUMA FIJA DCTO. 56/2020</li>
-            <li>SUB. POR FALLECIMIENTO</li>
-            <li>SEGURO OBLIGATORIO (C.N.A.S.)</li>
-            <li>ASIST. VARIAS (D.O.S.)</li>
-          </ul>
-        </div>
-      `;
-      document.getElementById("resultado").style.display = "block";
-      document.getElementById("tablaReferencias").style.display = "none";
-    }
-
+    <div class="note-box">
+      <h4>Aclaración:</h4>
+      <p>El resultado es estimativo y no contempla los siguientes rubros:</p>
+      <ul>
+        <li>SUMA FIJA DCTO. 56/2020</li>
+        <li>SUB. POR FALLECIMIENTO</li>
+        <li>SEGURO OBLIGATORIO (C.N.A.S.)</li>
+        <li>ASIST. VARIAS (D.O.S.)</li>
+      </ul>
+    </div>
+    
+    <style>
+      @media (max-width: 768px) {
+        #resultado table {
+          font-size: 14px;
+        }
+        #resultado th, 
+        #resultado td {
+          padding: 8px 10px;
+        }
+      }
+    </style>
+  `;
+  
+  document.getElementById("resultado").style.display = "block";
+  document.getElementById("tablaReferencias").style.display = "none";
+}
     function verificarFijacion() {
       const gradosConFijacion = [
         "INSPECTOR GENERAL", "PREFECTO", "SUBPREFECTO", 
