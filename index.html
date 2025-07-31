@@ -549,7 +549,33 @@
     };
 
 function calcular() {
-  // ... (código previo de la función calcular hasta la generación del HTML)
+      const grado = document.getElementById("grado").value;
+      const antiguedad = parseInt(document.getElementById("antiguedad").value);
+      const titulo = document.getElementById("titulo").value;
+      const variabilidad = document.getElementById("variabilidad").value;
+      const fijacion = document.getElementById("fijacion").value === "si";
+      const zona = document.getElementById("zona").value === "si";
+      const usaCasino = document.getElementById("casino").value === "si";
+      const obra = document.getElementById("obra").value;
+      
+      const ref = referencia[grado];
+        const casinoMonto = ref.casino;
+      const haber = ref.haber;
+      const suplemento = haber * 0.02 * antiguedad;
+      const bonificacionTitulo = ref.titulo[titulo] || 0;
+      const Aportes = haber + suplemento + bonificacionTitulo;
+      
+      const adicionalFijacion = fijacion ? ref.fijacion : 0;
+      const adicionalVariabilidad = variabilidad !== "ninguna" ? ref.variabilidad[variabilidad] : 0;
+      const adicionalZona = zona ? ref.zona : 0;
+      const adicionalCasino = usaCasino ? -casinoMonto : 0;
+      
+      const aporteLey13018 = -Aportes * 0.10;
+      const aporteObra = obra === "carga" ? -Aportes * 0.085 : obra === "mascarga" ? -Aportes * 0.095 : -Aportes * 0.075;
+
+      const total = haber + suplemento + bonificacionTitulo + adicionalVariabilidad +
+                    adicionalFijacion + adicionalZona + adicionalCasino + aporteLey13018 + aporteObra;
+
 
   document.getElementById("resultado").innerHTML = `
     <h3 style="color: var(--primary-color); text-align: center; margin-bottom: 20px;">Resultado del Cálculo</h3>
