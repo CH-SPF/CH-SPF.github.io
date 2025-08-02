@@ -642,7 +642,7 @@ function mostrarTabla() {
     const suplemento = datos.haber * 0.02 * datos.años;
     const baseSinTitulo = datos.haber + suplemento;
     const haberNeto = Math.round(
-      baseSinTitulo + datos.fijacion + datos.casino 
+      baseSinTitulo + datos.fijacion - datos.casino 
       - (baseSinTitulo * 0.10) 
       - (baseSinTitulo * 0.085)
     );
@@ -678,7 +678,7 @@ function mostrarTabla() {
     const baseConTitulo = datos.haber + suplemento + datos.titulo.universitario;
     
     const haberNetoUniv = Math.round(
-      baseConTitulo + datos.fijacion + datos.casino
+      baseConTitulo + datos.fijacion - datos.casino
       - (baseConTitulo * 0.10)
       - (baseConTitulo * 0.085)
     );
@@ -744,6 +744,7 @@ function mostrarTabla() {
   </script>
 </body>
 </html>
+
 
 
 
