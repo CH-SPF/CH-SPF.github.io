@@ -700,14 +700,18 @@ function mostrarTabla() {
     const baseConTitulo = baseSinTitulo + datos.titulo.universitario;
     
     // Haber Neto (sin título universitario)
-    const haberNeto = baseSinTitulo + datos.fijacion + datos.casino 
+    const haberNeto = Math.round( 
+      baseSinTitulo + datos.fijacion + datos.casino 
                      - (baseSinTitulo * 0.10) 
-                     - (baseSinTitulo * 0.085);
+                     - (baseSinTitulo * 0.085)
+      );
     
     // Haber Neto Univ. (con título universitario)
-    const haberNetoUniv = baseConTitulo + datos.fijacion + datos.casino
+    const haberNetoUniv = Math.round(
+      baseConTitulo + datos.fijacion + datos.casino
                          - (baseConTitulo * 0.10)
-                         - (baseConTitulo * 0.085);
+                         - (baseConTitulo * 0.085)
+      );
 
     let rowStyle = "";
     switch (datos.jerarquia) {
@@ -721,8 +725,8 @@ function mostrarTabla() {
       <tr style="${rowStyle}">
         <td>${grado}</td>
         <td>${datos.años}</td>        
-        <td style="text-align: right;">$${haberNeto.toLocaleString("es-AR", {minimumFractionDigits: 2})}</td>
-        <td style="text-align: right;">$${haberNetoUniv.toLocaleString("es-AR", {minimumFractionDigits: 2})}</td>
+        <td style="text-align: right;">$${haberNeto.toLocaleString("es-AR", {minimumFractionDigits: 0})}</td>
+        <td style="text-align: right;">$${haberNetoUniv.toLocaleString("es-AR", {minimumFractionDigits: 0})}</td>
       </tr>
     `;
   });
@@ -769,5 +773,6 @@ function mostrarTabla() {
   </script>
 </body>
 </html>
+
 
 
