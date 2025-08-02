@@ -637,7 +637,25 @@ function calcular() {
 
     
 function mostrarTabla() {
-  const lista = Object.entries(referencia).sort((a, b) => b[1].promedio - a[1].promedio);
+  // Primero calculamos todos los haberes netos para poder ordenarlos
+  const listaConCalculos = Object.entries(referencia).map(([grado, datos]) => {
+    const suplemento = datos.haber * 0.02 * datos.años;
+    const baseSinTitulo = datos.haber + suplemento;
+    const haberNeto = Math.round(
+      baseSinTitulo + datos.fijacion + datos.casino 
+      - (baseSinTitulo * 0.10) 
+      - (baseSinTitulo * 0.085)
+    );
+    
+    return {
+      grado,
+      datos,
+      haberNeto
+    };
+  });
+
+  // Ordenamos de mayor a menor según haberNeto
+  const listaOrdenada = listaConCalculos.sort((a, b) => b.haberNeto - a.haberNeto);
 
   let tablaHTML = `
     <h3 style="color: var(--primary-color); text-align: center; margin-bottom: 20px;">Tabla de Haberes Estimados</h3>
@@ -655,25 +673,15 @@ function mostrarTabla() {
         <tbody>
   `;
 
-  lista.forEach(([grado, datos]) => {
-    // Cálculo base común
+  listaOrdenada.forEach(({grado, datos, haberNeto}) => {
     const suplemento = datos.haber * 0.02 * datos.años;
-    const baseSinTitulo = datos.haber + suplemento;
-    const baseConTitulo = baseSinTitulo + datos.titulo.universitario;
+    const baseConTitulo = datos.haber + suplemento + datos.titulo.universitario;
     
-    // Haber Neto (sin título universitario)
-    const haberNeto = Math.round( 
-      baseSinTitulo + datos.fijacion + datos.casino 
-                     - (baseSinTitulo * 0.10) 
-                     - (baseSinTitulo * 0.085)
-      );
-    
-    // Haber Neto Univ. (con título universitario)
     const haberNetoUniv = Math.round(
       baseConTitulo + datos.fijacion + datos.casino
-                         - (baseConTitulo * 0.10)
-                         - (baseConTitulo * 0.085)
-      );
+      - (baseConTitulo * 0.10)
+      - (baseConTitulo * 0.085)
+    );
 
     let rowStyle = "";
     switch (datos.jerarquia) {
@@ -693,6 +701,7 @@ function mostrarTabla() {
     `;
   });
 
+  // Resto del código permanece igual...
   tablaHTML += `
         </tbody>
       </table>
@@ -704,7 +713,7 @@ function mostrarTabla() {
         <li><strong>Haber neto</strong> = (Haber + Suplemento 2%) + Fijación + Casino - Aporte jubilatorio (10%) - Aporte obra social (8.5%)</li>
         <li><strong>Haber neto universitario</strong> = (Haber + Suplemento 2% + Título univ.) + Fijación + Casino - Aporte jubilatorio (10%) - Aporte obra social (8.5%)</li>
       </ul>
-      <p>Nota: Todos los aportes se calculan sobre la base correspondiente (con o sin título universitario)</p>
+      <p>Nota: La tabla está ordenada de mayor a menor según el Haber Neto</p>
     </div>
     
     <style>
@@ -731,10 +740,11 @@ function mostrarTabla() {
   tablaDiv.innerHTML = tablaHTML;
   tablaDiv.style.display = "block";
   document.getElementById("resultado").style.display = "none";
-}    
+}
   </script>
 </body>
 </html>
+
 
 
 
