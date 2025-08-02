@@ -307,7 +307,7 @@
         </select>
 
         <button type="button" class="btn" onclick="calcular()">Calcular Haber</button>
-        <button type="button" class="btn btn-secondary" onclick="mostrarTabla()">Ver Tabla de Haberes</button>
+        <button type="button" class="btn btn-secondary" onclick="fallTabla()">Ver Tabla de Haberes</button>
       </form>
     </div>
 
@@ -641,6 +641,7 @@ function calcular() {
         <li>SUB. POR FALLECIMIENTO</li>
         <li>SEGURO OBLIGATORIO (C.N.A.S.)</li>
         <li>ASIST. VARIAS (D.O.S.)</li>
+        <li>Otros...</li>
       </ul>
     </div>
     
@@ -693,6 +694,21 @@ function mostrarTabla() {
   `;
 
   lista.forEach(([grado, datos]) => {
+    // Cálculo base común
+    const suplemento = datos.haber * 0.02 * datos.años;
+    const baseSinTitulo = datos.haber + suplemento;
+    const baseConTitulo = baseSinTitulo + datos.titulo.universitario;
+    
+    // Haber Neto (sin título universitario)
+    const haberNeto = baseSinTitulo + datos.fijacion + datos.casino 
+                     - (baseSinTitulo * 0.10) 
+                     - (baseSinTitulo * 0.085);
+    
+    // Haber Neto Univ. (con título universitario)
+    const haberNetoUniv = baseConTitulo + datos.fijacion + datos.casino
+                         - (baseConTitulo * 0.10)
+                         - (baseConTitulo * 0.085);
+
     let rowStyle = "";
     switch (datos.jerarquia) {
       case "Oficial": rowStyle = "background-color: #fff9c4;"; break;
@@ -705,8 +721,8 @@ function mostrarTabla() {
       <tr style="${rowStyle}">
         <td>${grado}</td>
         <td>${datos.años}</td>        
-        <td style="text-align: right;">$${datos.promedio.toLocaleString("es-AR", {minimumFractionDigits: 2})}</td>
-        <td style="text-align: right;">$${datos.promuni.toLocaleString("es-AR", {minimumFractionDigits: 2})}</td>
+        <td style="text-align: right;">$${haberNeto.toLocaleString("es-AR", {minimumFractionDigits: 2})}</td>
+        <td style="text-align: right;">$${haberNetoUniv.toLocaleString("es-AR", {minimumFractionDigits: 2})}</td>
       </tr>
     `;
   });
@@ -719,9 +735,10 @@ function mostrarTabla() {
     <div class="note-box" style="margin-top: 20px;">
       <h4>Fórmulas de Cálculo:</h4>
       <ul>
-        <li><strong>Haber neto</strong> = Haber mensual + Suplemento por antigüedad (años ECG) - Casino - Aporte jubilatorio - Aporte obra social (carga 1-2)</li>
-        <li><strong>Haber neto universitario</strong> = Haber neto + Bonificación por título universitario</li>
+        <li><strong>Haber neto</strong> = (Haber + Suplemento 2%) + Fijación + Casino - Aporte jubilatorio (10%) - Aporte obra social (8.5%)</li>
+        <li><strong>Haber neto universitario</strong> = (Haber + Suplemento 2% + Título univ.) + Fijación + Casino - Aporte jubilatorio (10%) - Aporte obra social (8.5%)</li>
       </ul>
+      <p>Nota: Todos los aportes se calculan sobre la base correspondiente (con o sin título universitario)</p>
     </div>
     
     <style>
@@ -748,8 +765,8 @@ function mostrarTabla() {
   tablaDiv.innerHTML = tablaHTML;
   tablaDiv.style.display = "block";
   document.getElementById("resultado").style.display = "none";
-}
-    
+}    
   </script>
 </body>
 </html>
+
