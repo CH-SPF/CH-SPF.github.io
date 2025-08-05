@@ -317,198 +317,314 @@
 
   <script>
     // Tabla de referencia completa
-    const referencia = {
-      "INSPECTOR GENERAL": {
-        jerarquia: "Oficial",
-        haber: 2916371.18,
-        titulo: { terciario: 437455.68, universitario: 729092.79 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 187326.3,
-        zona: 0,
-        casino: 12349.51,
-        años: 30
-      },
-      "PREFECTO": {
-        jerarquia: "Oficial",
-        haber: 2668514.4,
-        titulo: { terciario: 400277.16, universitario: 667128.6 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 187326.3,
-        zona: 112336.73,
-        casino: 12349.51,
-        años: 27
-      },
-      "SUBPREFECTO": {
-        jerarquia: "Oficial",
-        haber: 2340718.29,
-        titulo: { terciario: 351107.74, universitario: 585179.57 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 187326.3,
-        zona: 99651.98,
-        casino: 12349.51,
-        años: 23
-      },
-      "ALCAIDE MAYOR": {
-        jerarquia: "Oficial",
-        haber: 1956122.05,
-        titulo: { terciario: 293418.31, universitario: 489030.51 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 140503.47,
-        zona: 79727.41,
-        casino: 12349.51,
-        años: 19
-      },
-      "ALCAIDE": {
-        jerarquia: "Oficial",
-        haber: 1551445.03,
-        titulo: { terciario: 232716.75, universitario: 387861.26 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 140503.47,
-        zona: 68856.99,
-        casino: 12349.51,
-        años: 15
-      },
-      "SUBALCAIDE": {
-        jerarquia: "Oficial",
-        haber: 1303348.46,
-        titulo: { terciario: 195502.27, universitario: 325837.11 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 93667.03,
-        zona: 57976.86,
-        casino: 12349.51,
-        años: 12
-      },
-      "ADJUTOR PRINCIPAL": {
-        jerarquia: "Oficial",
-        haber: 1184914.72,
-        titulo: { terciario: 177737.21, universitario: 296228.68 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 0,
-        zona: 52541.65,
-        casino: 12349.51,
-        años: 8
-      },
-      "ADJUTOR": {
-        jerarquia: "Oficial",
-        haber: 1093772.01,
-        titulo: { terciario: 164065.8, universitario: 273443 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 0,
-        zona: 51628.66,
-        casino: 12349.51,
-        años: 5
-      },
-      "SUBADJUTOR": {
-        jerarquia: "Oficial",
-        haber: 1029125.6,
-        titulo: { terciario: 154368.84, universitario: 257281.4 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 0,
-        zona: 49816.28,
-        casino: 12349.51,
-        años: 2
-      },
-      "AYUDANTE MAYOR": {
-        jerarquia: "Suboficial",
-        haber: 1844843.24,
-        titulo: { terciario: 276726.49, universitario: 461210.81 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 0,
-        zona: 67032.95,
-        casino: 6977.96,
-        años: 21
-      },
-      "AYUDANTE PRINCIPAL": {
-        jerarquia: "Suboficial",
-        haber: 1683888.55,
-        titulo: { terciario: 252583.28, universitario: 420972.14 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 0,
-        zona: 59783.42,
-        casino: 6977.96,
-        años: 17
-      },
-      "AYUDANTE DE PRIMERA": {
-        jerarquia: "Suboficial",
-        haber: 1553106.4,
-        titulo: { terciario: 232965.96, universitario: 388276.6 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 0,
-        zona: 54355.98,
-        casino: 6977.96,
-        años: 13
-      },
-      "AYUDANTE DE SEGUNDA": {
-        jerarquia: "Suboficial",
-        haber: 1162805.05,
-        titulo: { terciario: 174420.76, universitario: 290701.26 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 0,
-        zona: 53439.1,
-        casino: 6977.96,
-        años: 10
-      },
-      "AYUDANTE DE TERCERA": {
-        jerarquia: "Suboficial",
-        haber: 1033775.46,
-        titulo: { terciario: 155066.32, universitario: 258443.87 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 0,
-        zona: 52541.65,
-        casino: 6977.96,
-        años: 7
-      },
-      "AYUDANTE DE CUARTA": {
-        jerarquia: "Suboficial",
-        haber: 969411.68,
-        titulo: { terciario: 145411.75, universitario: 242352.92 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 0,
-        zona: 50738.98,
-        casino: 6977.96,
-        años: 4
-      },
-      "AYUDANTE DE QUINTA": {
-        jerarquia: "Suboficial",
-        haber: 923714.48,
-        titulo: { terciario: 138557.17, universitario: 230928.62 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 0,
-        zona: 48909.11,
-        casino: 6977.96,
-        años: 2
-      },
-      "SUBAYUDANTE": {
-        jerarquia: "Suboficial",
-        haber: 872244.86,
-        titulo: { terciario: 130836.73, universitario: 218061.21 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 0,
-        zona: 48005.84,
-        casino: 6977.96,
-        años: 0
-      },
-      "CADETE DE TERCER AÑO": {
-        jerarquia: "Aspirante",
-        haber: 607578.58,
-        titulo: { terciario: 0, universitario: 0 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 0,
-        zona: 0,
-        casino: 1745.70,
-        años: 1
-      },
-      "CADETE DE SEGUNDO AÑO": {
-        jerarquia: "Aspirante",
-        haber: 581900.76,
-        titulo: { terciario: 0, universitario: 0 },
-        variabilidad: { unico: 107730.98, familia: 145204.4 },
-        fijacion: 0,
-        zona: 0,
-        casino: 1822.74,
-        años: 0
-      }
-    };
+    const referencia = 
+      {
+  "INSPECTOR GENERAL": {
+    "jerarquia": "Oficial",
+    "haber": 3031594.66,
+    "titulo": {
+      "terciario": 454739.2,
+      "universitario": 757898.67
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 194727.41,
+    "zona": 0,
+    "casino": 12837.42624,
+    "años": 30
+  },
+  "PREFECTO": {
+    "jerarquia": "Oficial",
+    "haber": 2773945.26,
+    "titulo": {
+      "terciario": 416091.79,
+      "universitario": 693486.32
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 194727.41,
+    "zona": 116775.06,
+    "casino": 12837.42624,
+    "años": 27
+  },
+  "SUBPREFECTO": {
+    "jerarquia": "Oficial",
+    "haber": 2433198.19,
+    "titulo": {
+      "terciario": 364979.73,
+      "universitario": 608299.55
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 194727.41,
+    "zona": 103589.15,
+    "casino": 12837.42624,
+    "años": 23
+  },
+  "ALCAIDE MAYOR": {
+    "jerarquia": "Oficial",
+    "haber": 2033406.87,
+    "titulo": {
+      "terciario": 305011.03,
+      "universitario": 508351.72
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 146054.65,
+    "zona": 82877.38,
+    "casino": 12837.42624,
+    "años": 19
+  },
+  "ALCAIDE": {
+    "jerarquia": "Oficial",
+    "haber": 1612741.38,
+    "titulo": {
+      "terciario": 241911.21,
+      "universitario": 403185.34
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 146054.65,
+    "zona": 71577.48,
+    "casino": 12837.42624,
+    "años": 15
+  },
+  "SUBALCAIDE": {
+    "jerarquia": "Oficial",
+    "haber": 1354842.71,
+    "titulo": {
+      "terciario": 203226.41,
+      "universitario": 338710.68
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 97367.74,
+    "zona": 60267.48,
+    "casino": 12837.42624,
+    "años": 12
+  },
+  "ADJUTOR PRINCIPAL": {
+    "jerarquia": "Oficial",
+    "haber": 1231729.75,
+    "titulo": {
+      "terciario": 184759.46,
+      "universitario": 307932.44
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 0,
+    "zona": 54617.53,
+    "casino": 12837.42624,
+    "años": 8
+  },
+  "ADJUTOR": {
+    "jerarquia": "Oficial",
+    "haber": 1136986.06,
+    "titulo": {
+      "terciario": 170547.91,
+      "universitario": 284246.52
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 0,
+    "zona": 53668.47,
+    "casino": 12837.42624,
+    "años": 5
+  },
+  "SUBADJUTOR": {
+    "jerarquia": "Oficial",
+    "haber": 1069785.52,
+    "titulo": {
+      "terciario": 160467.83,
+      "universitario": 267446.38
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 0,
+    "zona": 51784.48,
+    "casino": 12837.42624,
+    "años": 2
+  },
+  "AYUDANTE MAYOR": {
+    "jerarquia": "Suboficial",
+    "haber": 1917731.52,
+    "titulo": {
+      "terciario": 287659.73,
+      "universitario": 479432.88
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 0,
+    "zona": 69681.37,
+    "casino": 7253.652400000001,
+    "años": 21
+  },
+  "AYUDANTE PRINCIPAL": {
+    "jerarquia": "Suboficial",
+    "haber": 1750417.64,
+    "titulo": {
+      "terciario": 262562.65,
+      "universitario": 437604.41
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 0,
+    "zona": 62145.41,
+    "casino": 7253.652400000001,
+    "años": 17
+  },
+  "AYUDANTE DE PRIMERA": {
+    "jerarquia": "Suboficial",
+    "haber": 1614468.39,
+    "titulo": {
+      "terciario": 242170.26,
+      "universitario": 403617.1
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 0,
+    "zona": 56503.54,
+    "casino": 7253.652400000001,
+    "años": 13
+  },
+  "AYUDANTE DE SEGUNDA": {
+    "jerarquia": "Suboficial",
+    "haber": 1208746.54,
+    "titulo": {
+      "terciario": 181311.98,
+      "universitario": 302186.64
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 0,
+    "zona": 55550.44,
+    "casino": 7253.652400000001,
+    "años": 10
+  },
+  "AYUDANTE DE TERCERA": {
+    "jerarquia": "Suboficial",
+    "haber": 1074619.1,
+    "titulo": {
+      "terciario": 161192.86,
+      "universitario": 268654.77
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 0,
+    "zona": 54617.53,
+    "casino": 7253.652400000001,
+    "años": 7
+  },
+  "AYUDANTE DE CUARTA": {
+    "jerarquia": "Suboficial",
+    "haber": 1007712.36,
+    "titulo": {
+      "terciario": 151156.85,
+      "universitario": 251928.09
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 0,
+    "zona": 52743.64,
+    "casino": 7253.652400000001,
+    "años": 4
+  },
+  "AYUDANTE DE QUINTA": {
+    "jerarquia": "Suboficial",
+    "haber": 960209.7,
+    "titulo": {
+      "terciario": 144031.45,
+      "universitario": 240052.42
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 0,
+    "zona": 50841.47,
+    "casino": 7253.652400000001,
+    "años": 2
+  },
+  "SUBAYUDANTE": {
+    "jerarquia": "Suboficial",
+    "haber": 906706.55,
+    "titulo": {
+      "terciario": 136005.98,
+      "universitario": 226676.64
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 0,
+    "zona": 49902.51,
+    "casino": 7253.652400000001,
+    "años": 0
+  },
+  "CADETE DE TERCER AÑO": {
+    "jerarquia": "Aspirante",
+    "haber": 631583.52,
+    "titulo": {
+      "terciario": 0,
+      "universitario": 0
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 0,
+    "zona": 0,
+    "casino": 1894.7505600000002,
+    "años": 1
+  },
+  "CADETE DE SEGUNDO AÑO": {
+    "jerarquia": "Aspirante",
+    "haber": 604891.19,
+    "titulo": {
+      "terciario": 0,
+      "universitario": 0
+    },
+    "variabilidad": {
+      "unico": 111987.34,
+      "familia": 150941.31
+    },
+    "fijacion": 0,
+    "zona": 0,
+    "casino": 1814.67357,
+    "años": 0
+  }
+}
+      ;
 
 function calcular() {
       const grado = document.getElementById("grado").value;
@@ -744,6 +860,7 @@ function mostrarTabla() {
   </script>
 </body>
 </html>
+
 
 
 
