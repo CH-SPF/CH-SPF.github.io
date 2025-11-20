@@ -218,6 +218,38 @@
       border-color: #2980b9;
     }
 
+    /* Estilos para botones de cuerpo */
+    .btn-cuerpo {
+      padding: 8px 12px;
+      background-color: #f8f9fa;
+      border: 2px solid #dee2e6;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      transition: var(--transition);
+      color: #6c757d;
+      margin: 2px;
+    }
+
+    .btn-cuerpo:hover {
+      background-color: #e9ecef;
+      border-color: var(--secondary-color);
+      color: var(--secondary-color);
+    }
+
+    .btn-cuerpo.active {
+      background-color: var(--success-color);
+      border-color: var(--success-color);
+      color: white;
+    }
+
+    .btn-cuerpo.active:hover {
+      background-color: #219653;
+      border-color: #219653;
+    }
+
     @media (max-width: 768px) {
       .container {
         padding: 10px;
@@ -238,6 +270,11 @@
       .btn-jerarquia {
         padding: 8px 12px;
         font-size: 12px;
+      }
+      
+      .btn-cuerpo {
+        padding: 6px 8px;
+        font-size: 10px;
       }
     }
   </style>
@@ -342,27 +379,141 @@
       "ALCAIDE MAYOR", "ALCAIDE", "SUBALCAIDE"
     ];
 
-    // Tabla de Escalafón (Grado + Años)
+    // Tabla de Escalafón Completa
     const escalafon = {
-      "INSPECTOR GENERAL": 30,
-      "PREFECTO": 27,
-      "SUBPREFECTO": 23,
-      "ALCAIDE MAYOR": 19,
-      "ALCAIDE": 15,
-      "SUBALCAIDE": 12,
-      "ADJUTOR PRINCIPAL": 8,
-      "ADJUTOR": 5,
-      "SUBADJUTOR": 2,
-      "AYUDANTE MAYOR": 21,
-      "AYUDANTE PRINCIPAL": 17,
-      "AYUDANTE DE PRIMERA": 13,
-      "AYUDANTE DE SEGUNDA": 10,
-      "AYUDANTE DE TERCERA": 7,
-      "AYUDANTE DE CUARTA": 4,
-      "AYUDANTE DE QUINTA": 2,
-      "SUBAYUDANTE": 0,
-      "CADETE DE TERCER AÑO": 1,
-      "CADETE DE SEGUNDO AÑO": 0
+      "INSPECTOR GENERAL": {
+        Cuerpo_General: 32,
+        Administrativo: 34,
+        Profesional: 29,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "PREFECTO": {
+        Cuerpo_General: 28,
+        Administrativo: 29,
+        Profesional: 28,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "SUBPREFECTO": {
+        Cuerpo_General: 24,
+        Administrativo: 24,
+        Profesional: 23,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "ALCAIDE MAYOR": {
+        Cuerpo_General: 20,
+        Administrativo: 20,
+        Profesional: 18,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "ALCAIDE": {
+        Cuerpo_General: 16,
+        Administrativo: 16,
+        Profesional: 14,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "SUBALCAIDE": {
+        Cuerpo_General: 13,
+        Administrativo: 13,
+        Profesional: 10,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "ADJUTOR PRINCIPAL": {
+        Cuerpo_General: 9,
+        Administrativo: 9,
+        Profesional: 6,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "ADJUTOR": {
+        Cuerpo_General: 6,
+        Administrativo: 6,
+        Profesional: 3,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "SUBADJUTOR": {
+        Cuerpo_General: 3,
+        Administrativo: 3,
+        Profesional: 0,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "AYUDANTE MAYOR": {
+        Cuerpo_General: 21,
+        Administrativo: "X",
+        Profesional: 5,
+        Auxiliar_Oficinista: 5,
+        Auxiliar_Intendencia: 5
+      },
+      "AYUDANTE PRINCIPAL": {
+        Cuerpo_General: 17,
+        Administrativo: "X",
+        Profesional: 5,
+        Auxiliar_Oficinista: 5,
+        Auxiliar_Intendencia: 5
+      },
+      "AYUDANTE DE PRIMERA": {
+        Cuerpo_General: 13,
+        Administrativo: "X",
+        Profesional: 4,
+        Auxiliar_Oficinista: 4,
+        Auxiliar_Intendencia: 5
+      },
+      "AYUDANTE DE SEGUNDA": {
+        Cuerpo_General: 10,
+        Administrativo: "X",
+        Profesional: 4,
+        Auxiliar_Oficinista: 4,
+        Auxiliar_Intendencia: 5
+      },
+      "AYUDANTE DE TERCERA": {
+        Cuerpo_General: 7,
+        Administrativo: "X",
+        Profesional: 3,
+        Auxiliar_Oficinista: 3,
+        Auxiliar_Intendencia: 3
+      },
+      "AYUDANTE DE CUARTA": {
+        Cuerpo_General: 4,
+        Administrativo: "X",
+        Profesional: 2,
+        Auxiliar_Oficinista: 3,
+        Auxiliar_Intendencia: 3
+      },
+      "AYUDANTE DE QUINTA": {
+        Cuerpo_General: 2,
+        Administrativo: "X",
+        Profesional: 2,
+        Auxiliar_Oficinista: 2,
+        Auxiliar_Intendencia: 3
+      },
+      "SUBAYUDANTE": {
+        Cuerpo_General: 0,
+        Administrativo: "X",
+        Profesional: 0,
+        Auxiliar_Oficinista: 0,
+        Auxiliar_Intendencia: 0
+      },
+      "CADETE DE TERCER AÑO": {
+        Cuerpo_General: 2,
+        Administrativo: "2",
+        Profesional: "X",
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "CADETE DE SEGUNDO AÑO": {
+        Cuerpo_General: 1,
+        Administrativo: "1",
+        Profesional: "X",
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      }
     };
 
     // Tabla de Referencia (Solo datos monetarios)
@@ -502,6 +653,9 @@
       }
     };
 
+    // Variable global para el cuerpo seleccionado
+    let cuerpoSeleccionado = "Cuerpo_General";
+
     // Variable para almacenar todos los grados
     const todosLosGrados = Object.keys(referencia);
 
@@ -526,9 +680,10 @@
       }
     }
 
-    // Función para obtener años del escalafón
-    function obtenerAños(grado) {
-      return escalafon[grado] || 0;
+    // Función para obtener años del escalafón según el cuerpo seleccionado
+    function obtenerAños(grado, cuerpo = cuerpoSeleccionado) {
+      const años = escalafon[grado]?.[cuerpo];
+      return años === "X" ? null : años;
     }
 
     // Función para calcular casino automáticamente
@@ -602,6 +757,22 @@
       }
     }
 
+    // Función para cambiar el cuerpo seleccionado
+    function cambiarCuerpo(cuerpo) {
+      cuerpoSeleccionado = cuerpo;
+      
+      // Actualizar botones activos
+      document.querySelectorAll('.btn-cuerpo').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.querySelector(`[data-cuerpo="${cuerpo}"]`).classList.add('active');
+      
+      // Si la tabla está visible, actualizarla
+      if (document.getElementById("tablaReferencias").style.display === "block") {
+        mostrarTabla();
+      }
+    }
+
     // Función para obtener la jerarquía del grado seleccionado
     function obtenerJerarquiaSeleccionada() {
       const grado = document.getElementById('grado').value;
@@ -641,7 +812,7 @@
         obra
       } = datosUsuario;
 
-      const añosEscalafon = obtenerAños(grado);
+      const añosEscalafon = obtenerAños(grado) || 0;
       const suplemento = ref.haber * CONSTANTES.PORCENTAJE_SUPLEMENTO * antiguedad;
       const bonificacionTitulo = ref.titulo[titulo] || 0;
       const baseAportes = ref.haber + suplemento + bonificacionTitulo;
@@ -774,7 +945,7 @@
 
     // Función para calcular haber neto
     function calcularHaberNeto(datos, grado, conTitulo = false) {
-      const años = obtenerAños(grado);
+      const años = obtenerAños(grado) || 0;
       const suplemento = datos.haber * CONSTANTES.PORCENTAJE_SUPLEMENTO * años;
       const titulo = conTitulo ? datos.titulo.universitario : 0;
       const base = datos.haber + suplemento + titulo;
@@ -790,6 +961,10 @@
       const listaCalculada = Object.keys(referencia).map(grado => {
         const datos = referencia[grado];
         const años = obtenerAños(grado);
+        
+        // Si el grado no existe en el cuerpo seleccionado, retornar null
+        if (años === null) return null;
+        
         const calculoBase = calcularHaberNeto(datos, grado, false);
         const calculoConTitulo = calcularHaberNeto(datos, grado, true);
         
@@ -800,7 +975,7 @@
           haberNeto: Math.round(calculoBase),
           haberNetoUniv: Math.round(calculoConTitulo)
         };
-      });
+      }).filter(item => item !== null); // Filtrar los grados que no existen en el cuerpo seleccionado
 
       const listaOrdenada = listaCalculada.sort((a, b) => b.haberNeto - a.haberNeto);
       renderizarTablaReferencias(listaOrdenada);
@@ -808,15 +983,48 @@
 
     // Función para renderizar tabla de referencias
     function renderizarTablaReferencias(listaOrdenada) {
+      const nombresCuerpos = {
+        "Cuerpo_General": "Cuerpo General",
+        "Administrativo": "Administrativo", 
+        "Profesional": "Profesional",
+        "Auxiliar_Oficinista": "Auxiliar Oficinista",
+        "Auxiliar_Intendencia": "Auxiliar Intendencia"
+      };
+
       let tablaHTML = `
-        <h3 style="color: var(--primary-color); text-align: center; margin-bottom: 20px;">Tabla de Haberes Estimados</h3>
+        <h3 style="color: var(--primary-color); text-align: center; margin-bottom: 20px;">
+          Tabla de Haberes Estimados - ${nombresCuerpos[cuerpoSeleccionado]}
+        </h3>
+        
+        <div style="display: flex; justify-content: center; gap: 5px; margin-bottom: 20px; flex-wrap: wrap;">
+          <button type="button" class="btn-cuerpo ${cuerpoSeleccionado === 'Cuerpo_General' ? 'active' : ''}" 
+                  data-cuerpo="Cuerpo_General" onclick="cambiarCuerpo('Cuerpo_General')">
+            Cuerpo General
+          </button>
+          <button type="button" class="btn-cuerpo ${cuerpoSeleccionado === 'Administrativo' ? 'active' : ''}" 
+                  data-cuerpo="Administrativo" onclick="cambiarCuerpo('Administrativo')">
+            Administrativo
+          </button>
+          <button type="button" class="btn-cuerpo ${cuerpoSeleccionado === 'Profesional' ? 'active' : ''}" 
+                  data-cuerpo="Profesional" onclick="cambiarCuerpo('Profesional')">
+            Profesional
+          </button>
+          <button type="button" class="btn-cuerpo ${cuerpoSeleccionado === 'Auxiliar_Oficinista' ? 'active' : ''}" 
+                  data-cuerpo="Auxiliar_Oficinista" onclick="cambiarCuerpo('Auxiliar_Oficinista')">
+            Aux. Oficinista
+          </button>
+          <button type="button" class="btn-cuerpo ${cuerpoSeleccionado === 'Auxiliar_Intendencia' ? 'active' : ''}" 
+                  data-cuerpo="Auxiliar_Intendencia" onclick="cambiarCuerpo('Auxiliar_Intendencia')">
+            Aux. Intendencia
+          </button>
+        </div>
         
         <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
           <table class="result-table" style="min-width: 100%;">
             <thead>
               <tr>
                 <th style="min-width: 150px;">Grado</th>
-                <th style="min-width: 80px;">Años (ECG)</th>
+                <th style="min-width: 80px;">Antiguedad estimada</th>
                 <th style="min-width: 120px; text-align: right;">Haber Neto</th>
                 <th style="min-width: 150px; text-align: right;">Haber Neto Univ.</th>
               </tr>
@@ -856,6 +1064,7 @@
             <li><strong>Haber neto universitario</strong> = (Haber + Suplemento 2% + Título univ.) + Fijación + Casino - Aporte jubilatorio (10%) - Aporte obra social (8.5%)</li>
           </ul>
           <p>Nota: La tabla está ordenada de mayor a menor según el Haber Neto</p>
+          <p><strong>Cuerpo seleccionado:</strong> ${nombresCuerpos[cuerpoSeleccionado]}</p>
         </div>
         
         <style>
