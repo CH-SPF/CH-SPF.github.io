@@ -186,28 +186,36 @@
       text-decoration: underline;
     }
 
-    .badge {
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: bold;
-      margin-left: 8px;
+    /* Nuevos estilos para botones de jerarquía */
+    .btn-jerarquia {
+      flex: 1;
+      padding: 10px 15px;
+      background-color: #f8f9fa;
+      border: 2px solid #dee2e6;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      transition: var(--transition);
+      color: #6c757d;
     }
 
-    .badge-official {
-      background-color: #f39c12;
+    .btn-jerarquia:hover {
+      background-color: #e9ecef;
+      border-color: var(--secondary-color);
+      color: var(--secondary-color);
+    }
+
+    .btn-jerarquia.active {
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color);
       color: white;
     }
 
-    .badge-suboficial {
-      background-color: #7f8c8d;
-      color: white;
-    }
-
-    .badge-aspirante {
-      background-color: #3498db;
-      color: white;
+    .btn-jerarquia.active:hover {
+      background-color: #2980b9;
+      border-color: #2980b9;
     }
 
     @media (max-width: 768px) {
@@ -226,6 +234,11 @@
       .result-table td, .result-table th {
         padding: 10px;
       }
+      
+      .btn-jerarquia {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
     }
   </style>
 </head>
@@ -239,27 +252,23 @@
 
     <div class="card">
       <form id="calculadoraForm">
+        <!-- Selector de Jerarquía -->
+        <label for="jerarquia">Jerarquía:</label>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+          <button type="button" class="btn-jerarquia active" data-jerarquia="Oficial" onclick="filtrarGrados('Oficial')">
+            Oficial
+          </button>
+          <button type="button" class="btn-jerarquia" data-jerarquia="Suboficial" onclick="filtrarGrados('Suboficial')">
+            Suboficial
+          </button>
+          <button type="button" class="btn-jerarquia" data-jerarquia="Aspirante" onclick="filtrarGrados('Aspirante')">
+            Aspirante
+          </button>
+        </div>
+
         <label for="grado">Grado:</label>
-        <select id="grado" name="grado" onchange="verificarFijacion()">
-          <option value="SUBAYUDANTE">SUBAYUDANTE</option>
-          <option value="AYUDANTE DE QUINTA">AYUDANTE DE QUINTA</option>
-          <option value="AYUDANTE DE CUARTA">AYUDANTE DE CUARTA</option>
-          <option value="AYUDANTE DE TERCERA">AYUDANTE DE TERCERA</option>
-          <option value="AYUDANTE DE SEGUNDA">AYUDANTE DE SEGUNDA</option>
-          <option value="AYUDANTE DE PRIMERA">AYUDANTE DE PRIMERA</option>
-          <option value="AYUDANTE PRINCIPAL">AYUDANTE PRINCIPAL</option>
-          <option value="AYUDANTE MAYOR">AYUDANTE MAYOR</option>
-          <option value="SUBADJUTOR">SUBADJUTOR</option>
-          <option value="ADJUTOR">ADJUTOR</option>
-          <option value="ADJUTOR PRINCIPAL">ADJUTOR PRINCIPAL</option>
-          <option value="SUBALCAIDE">SUBALCAIDE</option>
-          <option value="ALCAIDE">ALCAIDE</option>
-          <option value="ALCAIDE MAYOR">ALCAIDE MAYOR</option>
-          <option value="SUBPREFECTO">SUBPREFECTO</option>
-          <option value="PREFECTO">PREFECTO</option>
-          <option value="INSPECTOR GENERAL">INSPECTOR GENERAL</option>
-          <option value="CADETE DE SEGUNDO AÑO">CADETE DE SEGUNDO AÑO</option>
-          <option value="CADETE DE TERCER AÑO">CADETE DE TERCER AÑO</option>
+        <select id="grado" name="grado">
+          <!-- Las opciones se llenarán dinámicamente -->
         </select>
 
         <label for="antiguedad">Años de servicio:</label>
@@ -316,461 +325,582 @@
   </div>
 
   <script>
-    // Tabla de referencia completa
-    const referencia = {
-  "INSPECTOR GENERAL": {
-    jerarquia: "Oficial",
-    haber: 3135840.45,
-    fijacion: 201423.40,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 470376.07, universitario: 783960.11 },
-    zona: 0,
-    casino: 13278.86,
-    años: 30
-  },
-
-  "PREFECTO": {
-    jerarquia: "Oficial",
-    haber: 2869331.40,
-    fijacion: 201423.40,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 430399.71, universitario: 717332.85 },
-    zona: 120790.54,
-    casino: 13278.86,
-    años: 27
-  },
-
-  "SUBPREFECTO": {
-    jerarquia: "Oficial",
-    haber: 2516867.25,
-    fijacion: 201423.40,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 377530.09, universitario: 629216.81 },
-    zona: 107151.21,
-    casino: 13278.86,
-    años: 23
-  },
-
-  "ALCAIDE MAYOR": {
-    jerarquia: "Oficial",
-    haber: 2103328.51,
-    fijacion: 151076.95,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 315499.28, universitario: 525832.13 },
-    zona: 85727.24,
-    casino: 13278.86,
-    años: 19
-  },
-
-  "ALCAIDE": {
-    jerarquia: "Oficial",
-    haber: 1668197.83,
-    fijacion: 151076.95,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 250229.67, universitario: 417049.46 },
-    zona: 74038.77,
-    casino: 13278.86,
-    años: 15
-  },
-
-  "SUBALCAIDE": {
-    jerarquia: "Oficial",
-    haber: 1401430.94,
-    fijacion: 100715.88,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 210214.64, universitario: 350357.74 },
-    zona: 62339.87,
-    casino: 13278.86,
-    años: 12
-  },
-
-  "ADJUTOR PRINCIPAL": {
-    jerarquia: "Oficial",
-    haber: 1274084.56,
-    fijacion: 0,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 191112.68, universitario: 318521.14 },
-    zona: 56495.63,
-    casino: 13278.86,
-    años: 8
-  },
-
-  "ADJUTOR": {
-    jerarquia: "Oficial",
-    haber: 1176082.98,
-    fijacion: 0,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 176412.45, universitario: 294020.74 },
-    zona: 55513.94,
-    casino: 13278.86,
-    años: 5
-  },
-
-  "SUBADJUTOR": {
-    jerarquia: "Oficial",
-    haber: 1106571.65,
-    fijacion: 0,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 165985.75, universitario: 276642.91 },
-    zona: 53565.16,
-    casino: 13278.86,
-    años: 2
-  },
-
-  "AYUDANTE MAYOR": {
-    jerarquia: "Suboficial",
-    haber: 1983675.50,
-    fijacion: 0,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 297551.33, universitario: 495918.88 },
-    zona: 72077.47,
-    casino: 8852.57,
-    años: 21
-  },
-
-  "AYUDANTE PRINCIPAL": {
-    jerarquia: "Suboficial",
-    haber: 1810608.29,
-    fijacion: 0,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 271591.24, universitario: 452652.07 },
-    zona: 64282.37,
-    casino: 8852.57,
-    años: 17
-  },
-
-  "AYUDANTE DE PRIMERA": {
-    jerarquia: "Suboficial",
-    haber: 1669984.23,
-    fijacion: 0,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 250497.63, universitario: 417496.06 },
-    zona: 58446.50,
-    casino: 8852.57,
-    años: 13
-  },
-
-  "AYUDANTE DE SEGUNDA": {
-    jerarquia: "Suboficial",
-    haber: 1250311.05,
-    fijacion: 0,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 187546.66, universitario: 312577.76 },
-    zona: 57460.62,
-    casino: 8852.57,
-    años: 10
-  },
-
-  "AYUDANTE DE TERCERA": {
-    jerarquia: "Suboficial",
-    haber: 1111571.44,
-    fijacion: 0,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 166735.72, universitario: 277892.86 },
-    zona: 56495.63,
-    casino: 8852.57,
-    años: 7
-  },
-
-  "AYUDANTE DE CUARTA": {
-    jerarquia: "Suboficial",
-    haber: 1042364.01,
-    fijacion: 0,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 156354.60, universitario: 260591.00 },
-    zona: 54557.30,
-    casino: 8852.57,
-    años: 4
-  },
-
-  "AYUDANTE DE QUINTA": {
-    jerarquia: "Suboficial",
-    haber: 993227.90,
-    fijacion: 0,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 148984.19, universitario: 248306.98 },
-    zona: 52589.73,
-    casino: 8852.57,
-    años: 2
-  },
-
-  "SUBAYUDANTE": {
-    jerarquia: "Suboficial",
-    haber: 937884.97,
-    fijacion: 0,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 140682.75, universitario: 234471.24 },
-    zona: 51618.48,
-    casino: 8852.57,
-    años: 0
-  },
-
-  "CADETE DE TERCER AÑO": {
-    jerarquia: "Aspirante",
-    haber: 653301.44,
-    fijacion: 0,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 0, universitario: 0 },
-    zona: 0,
-    casino: 1959.90,
-    años: 1
-  },
-
-  "CADETE DE SEGUNDO AÑO": {
-    jerarquia: "Aspirante",
-    haber: 625691.25,
-    fijacion: 0,
-    variabilidad: { unico: 115838.19, familia: 156131.64 },
-    titulo: { terciario: 0, universitario: 0 },
-    zona: 0,
-    casino: 1877.07,
-    años: 0
-  }
-};
-
-      ;
-
-function calcular() {
-      const grado = document.getElementById("grado").value;
-      const antiguedad = parseInt(document.getElementById("antiguedad").value);
-      const titulo = document.getElementById("titulo").value;
-      const variabilidad = document.getElementById("variabilidad").value;
-      const fijacion = document.getElementById("fijacion").value === "si";
-      const zona = document.getElementById("zona").value === "si";
-      const usaCasino = document.getElementById("casino").value === "si";
-      const obra = document.getElementById("obra").value;
-      
-      const ref = referencia[grado];
-        const casinoMonto = ref.casino;
-      const haber = ref.haber;
-      const suplemento = haber * 0.02 * antiguedad;
-      const bonificacionTitulo = ref.titulo[titulo] || 0;
-      const Aportes = haber + suplemento + bonificacionTitulo;
-      
-      const adicionalFijacion = fijacion ? ref.fijacion : 0;
-      const adicionalVariabilidad = variabilidad !== "ninguna" ? ref.variabilidad[variabilidad] : 0;
-      const adicionalZona = zona ? ref.zona : 0;
-      const adicionalCasino = usaCasino ? -casinoMonto : 0;
-      
-      const aporteLey13018 = -Aportes * 0.10;
-      const aporteObra = obra === "carga" ? -Aportes * 0.085 : obra === "mascarga" ? -Aportes * 0.095 : -Aportes * 0.075;
-
-      const total = haber + suplemento + bonificacionTitulo + adicionalVariabilidad +
-                    adicionalFijacion + adicionalZona + adicionalCasino + aporteLey13018 + aporteObra;
-
-
-  document.getElementById("resultado").innerHTML = `
-    <h3 style="color: var(--primary-color); text-align: center; margin-bottom: 20px;">Resultado del Cálculo</h3>
-    
-    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px;">
-      <table style="width: 100%; min-width: 500px; border-collapse: collapse; font-size: 15px;">
-        <thead>
-          <tr>
-            <th style="padding: 12px; background-color: var(--primary-color); color: white; text-align: left; min-width: 200px;">Concepto</th>
-            <th style="padding: 12px; background-color: var(--primary-color); color: white; text-align: right; min-width: 150px;">Importe</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Haber mensual</strong></td>
-            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${haber.toFixed(2)}</td>
-          </tr>
-          <tr style="background-color: #f9f9f9;">
-            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>SAS 2% (${antiguedad} años)</strong></td>
-            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${suplemento.toFixed(2)}</td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Título</strong></td>
-            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${bonificacionTitulo.toFixed(2)}</td>
-          </tr>
-          <tr style="background-color: #f9f9f9;">
-            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Variabilidad</strong></td>
-            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${adicionalVariabilidad.toFixed(2)}</td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Fijación de domicilio</strong></td>
-            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${adicionalFijacion.toFixed(2)}</td>
-          </tr>
-          <tr style="background-color: #f9f9f9;">
-            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Zona Sur</strong></td>
-            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${adicionalZona.toFixed(2)}</td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Casino</strong></td>
-            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${adicionalCasino.toFixed(2)}</td>
-          </tr>
-          <tr style="background-color: #f9f9f9;">
-            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Aporte Ley 13.018 (10%)</strong></td>
-            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${aporteLey13018.toFixed(2)}</td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Aporte Obra Social</strong></td>
-            <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${aporteObra.toFixed(2)}</td>
-          </tr>
-          <tr style="background-color: rgba(52, 152, 219, 0.1); border-top: 2px solid var(--secondary-color);">
-            <td style="padding: 12px;"><strong style="font-size: 16px;">TOTAL ESTIMADO</strong></td>
-            <td style="padding: 12px; text-align: right;"><strong style="font-size: 16px; color: var(--secondary-color);">$${total.toFixed(2)}</strong></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="note-box">
-      <h4>Aclaración:</h4>
-      <p>El resultado es estimativo y no contempla los siguientes rubros:</p>
-      <ul>
-        <li>SUMA FIJA DCTO. 56/2020</li>
-        <li>SUB. POR FALLECIMIENTO</li>
-        <li>SEGURO OBLIGATORIO (C.N.A.S.)</li>
-        <li>ASIST. VARIAS (D.O.S.)</li>
-        <li>Otros...</li>
-      </ul>
-    </div>
-    
-    <style>
-      @media (max-width: 768px) {
-        #resultado table {
-          font-size: 14px;
-        }
-        #resultado th, 
-        #resultado td {
-          padding: 8px 10px;
-        }
+    // Constantes para cálculos
+    const CONSTANTES = {
+      PORCENTAJE_SUPLEMENTO: 0.02,
+      PORCENTAJE_APORTE_JUBILATORIO: 0.10,
+      PORCENTAJES_OBRA_SOCIAL: {
+        basica: 0.075,
+        carga: 0.085,
+        mascarga: 0.095
       }
-    </style>
-  `;
-  
-  document.getElementById("resultado").style.display = "block";
-  document.getElementById("tablaReferencias").style.display = "none";
-}
-    function verificarFijacion() {
-      const gradosConFijacion = [
+    };
+
+    // Grados con fijación
+    const GRADOS_CON_FIJACION = [
+      "INSPECTOR GENERAL", "PREFECTO", "SUBPREFECTO", 
+      "ALCAIDE MAYOR", "ALCAIDE", "SUBALCAIDE"
+    ];
+
+    // Tabla de Escalafón (Grado + Años)
+    const escalafon = {
+      "INSPECTOR GENERAL": 30,
+      "PREFECTO": 27,
+      "SUBPREFECTO": 23,
+      "ALCAIDE MAYOR": 19,
+      "ALCAIDE": 15,
+      "SUBALCAIDE": 12,
+      "ADJUTOR PRINCIPAL": 8,
+      "ADJUTOR": 5,
+      "SUBADJUTOR": 2,
+      "AYUDANTE MAYOR": 21,
+      "AYUDANTE PRINCIPAL": 17,
+      "AYUDANTE DE PRIMERA": 13,
+      "AYUDANTE DE SEGUNDA": 10,
+      "AYUDANTE DE TERCERA": 7,
+      "AYUDANTE DE CUARTA": 4,
+      "AYUDANTE DE QUINTA": 2,
+      "SUBAYUDANTE": 0,
+      "CADETE DE TERCER AÑO": 1,
+      "CADETE DE SEGUNDO AÑO": 0
+    };
+
+    // Tabla de Referencia (Solo datos monetarios)
+    const referencia = {
+      "INSPECTOR GENERAL": {
+        haber: 3135840.45,
+        fijacion: 201423.40,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 470376.07, universitario: 783960.11 },
+        zona: 0
+      },
+      "PREFECTO": {
+        haber: 2869331.40,
+        fijacion: 201423.40,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 430399.71, universitario: 717332.85 },
+        zona: 120790.54
+      },
+      "SUBPREFECTO": {
+        haber: 2516867.25,
+        fijacion: 201423.40,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 377530.09, universitario: 629216.81 },
+        zona: 107151.21
+      },
+      "ALCAIDE MAYOR": {
+        haber: 2103328.51,
+        fijacion: 151076.95,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 315499.28, universitario: 525832.13 },
+        zona: 85727.24
+      },
+      "ALCAIDE": {
+        haber: 1668197.83,
+        fijacion: 151076.95,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 250229.67, universitario: 417049.46 },
+        zona: 74038.77
+      },
+      "SUBALCAIDE": {
+        haber: 1401430.94,
+        fijacion: 100715.88,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 210214.64, universitario: 350357.74 },
+        zona: 62339.87
+      },
+      "ADJUTOR PRINCIPAL": {
+        haber: 1274084.56,
+        fijacion: 0,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 191112.68, universitario: 318521.14 },
+        zona: 56495.63
+      },
+      "ADJUTOR": {
+        haber: 1176082.98,
+        fijacion: 0,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 176412.45, universitario: 294020.74 },
+        zona: 55513.94
+      },
+      "SUBADJUTOR": {
+        haber: 1106571.65,
+        fijacion: 0,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 165985.75, universitario: 276642.91 },
+        zona: 53565.16
+      },
+      "AYUDANTE MAYOR": {
+        haber: 1983675.50,
+        fijacion: 0,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 297551.33, universitario: 495918.88 },
+        zona: 72077.47
+      },
+      "AYUDANTE PRINCIPAL": {
+        haber: 1810608.29,
+        fijacion: 0,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 271591.24, universitario: 452652.07 },
+        zona: 64282.37
+      },
+      "AYUDANTE DE PRIMERA": {
+        haber: 1669984.23,
+        fijacion: 0,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 250497.63, universitario: 417496.06 },
+        zona: 58446.50
+      },
+      "AYUDANTE DE SEGUNDA": {
+        haber: 1250311.05,
+        fijacion: 0,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 187546.66, universitario: 312577.76 },
+        zona: 57460.62
+      },
+      "AYUDANTE DE TERCERA": {
+        haber: 1111571.44,
+        fijacion: 0,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 166735.72, universitario: 277892.86 },
+        zona: 56495.63
+      },
+      "AYUDANTE DE CUARTA": {
+        haber: 1042364.01,
+        fijacion: 0,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 156354.60, universitario: 260591.00 },
+        zona: 54557.30
+      },
+      "AYUDANTE DE QUINTA": {
+        haber: 993227.90,
+        fijacion: 0,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 148984.19, universitario: 248306.98 },
+        zona: 52589.73
+      },
+      "SUBAYUDANTE": {
+        haber: 937884.97,
+        fijacion: 0,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 140682.75, universitario: 234471.24 },
+        zona: 51618.48
+      },
+      "CADETE DE TERCER AÑO": {
+        haber: 653301.44,
+        fijacion: 0,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 0, universitario: 0 },
+        zona: 0
+      },
+      "CADETE DE SEGUNDO AÑO": {
+        haber: 625691.25,
+        fijacion: 0,
+        variabilidad: { unico: 115838.19, familia: 156131.64 },
+        titulo: { terciario: 0, universitario: 0 },
+        zona: 0
+      }
+    };
+
+    // Variable para almacenar todos los grados
+    const todosLosGrados = Object.keys(referencia);
+
+    // Función para determinar jerarquía automáticamente
+    function determinarJerarquia(grado) {
+      const gradosOficiales = [
         "INSPECTOR GENERAL", "PREFECTO", "SUBPREFECTO", 
-        "ALCAIDE MAYOR", "ALCAIDE", "SUBALCAIDE"
+        "ALCAIDE MAYOR", "ALCAIDE", "SUBALCAIDE",
+        "ADJUTOR PRINCIPAL", "ADJUTOR", "SUBADJUTOR"
       ];
       
+      const gradosAspirantes = [
+        "CADETE DE TERCER AÑO", "CADETE DE SEGUNDO AÑO"
+      ];
+      
+      if (gradosOficiales.includes(grado)) {
+        return "Oficial";
+      } else if (gradosAspirantes.includes(grado)) {
+        return "Aspirante";
+      } else {
+        return "Suboficial"; // Todos los demás son Suboficiales
+      }
+    }
+
+    // Función para obtener años del escalafón
+    function obtenerAños(grado) {
+      return escalafon[grado] || 0;
+    }
+
+    // Función para calcular casino automáticamente
+    function calcularCasino(grado) {
+      const jerarquia = determinarJerarquia(grado);
+      const haberSubadjutor = referencia["SUBADJUTOR"].haber;
+      const haberSubayudante = referencia["SUBAYUDANTE"].haber;
+      const haberActual = referencia[grado].haber;
+      
+      switch(jerarquia) {
+        case "Oficial":
+          return haberSubadjutor * 0.012; // 1.2%
+        case "Suboficial":
+          return haberSubayudante * 0.008; // 0.8%
+        case "Aspirante":
+          return haberActual * 0.003; // 0.3%
+        default:
+          return 0;
+      }
+    }
+
+    // Función para formatear moneda
+    function formatearMoneda(valor, decimales = 2) {
+      return `$${valor.toFixed(decimales).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+    }
+
+    function formatearMonedaCompacta(valor) {
+      return `$${valor.toLocaleString("es-AR", {minimumFractionDigits: 0})}`;
+    }
+
+    // Función para inicializar el select de grados
+    function inicializarSelectGrados() {
+      const selectGrado = document.getElementById('grado');
+      selectGrado.innerHTML = ''; // Limpiar opciones existentes
+      
+      todosLosGrados.forEach(grado => {
+        const option = document.createElement('option');
+        option.value = grado;
+        option.textContent = grado; // Solo el nombre del grado, sin letras
+        option.setAttribute('data-jerarquia', determinarJerarquia(grado));
+        selectGrado.appendChild(option);
+      });
+    }
+
+    // Función para filtrar grados por jerarquía
+    function filtrarGrados(jerarquiaFiltro) {
+      const selectGrado = document.getElementById('grado');
+      const opcionesActuales = selectGrado.querySelectorAll('option');
+      const gradoSeleccionado = selectGrado.value;
+      
+      // Actualizar botones activos
+      document.querySelectorAll('.btn-jerarquia').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.querySelector(`[data-jerarquia="${jerarquiaFiltro}"]`).classList.add('active');
+      
+      // Mostrar/ocultar opciones según el filtro
+      opcionesActuales.forEach(opcion => {
+        const jerarquiaOpcion = opcion.getAttribute('data-jerarquia');
+        opcion.style.display = jerarquiaOpcion === jerarquiaFiltro ? '' : 'none';
+      });
+      
+      // Si el grado seleccionado está oculto, seleccionar el primero visible
+      const opcionSeleccionada = selectGrado.querySelector('option[value="' + gradoSeleccionado + '"]');
+      if (opcionSeleccionada && opcionSeleccionada.style.display === 'none') {
+        const primeraOpcionVisible = selectGrado.querySelector('option[style=""]');
+        if (primeraOpcionVisible) {
+          selectGrado.value = primeraOpcionVisible.value;
+          verificarFijacion(); // Actualizar campo de fijación
+        }
+      }
+    }
+
+    // Función para obtener la jerarquía del grado seleccionado
+    function obtenerJerarquiaSeleccionada() {
+      const grado = document.getElementById('grado').value;
+      return determinarJerarquia(grado);
+    }
+
+    // Función para verificar fijación
+    function verificarFijacion() {
       const gradoSeleccionado = document.getElementById("grado").value;
       const campoFijacion = document.getElementById("fijacionCampo");
 
-      campoFijacion.style.display = gradosConFijacion.includes(gradoSeleccionado) ? "block" : "none";
+      campoFijacion.style.display = GRADOS_CON_FIJACION.includes(gradoSeleccionado) ? "block" : "none";
     }
 
-    
-function mostrarTabla() {
-  // Primero calculamos todos los haberes netos para poder ordenarlos
-  const listaConCalculos = Object.entries(referencia).map(([grado, datos]) => {
-    const suplemento = datos.haber * 0.02 * datos.años;
-    const baseSinTitulo = datos.haber + suplemento;
-    const haberNeto = Math.round(
-      baseSinTitulo + datos.fijacion - datos.casino 
-      - (baseSinTitulo * 0.10) 
-      - (baseSinTitulo * 0.085)
-    );
-    
-    return {
-      grado,
-      datos,
-      haberNeto
-    };
-  });
+    // Función para obtener datos del formulario
+    function obtenerDatosFormulario() {
+      return {
+        antiguedad: parseInt(document.getElementById("antiguedad").value),
+        titulo: document.getElementById("titulo").value,
+        variabilidad: document.getElementById("variabilidad").value,
+        fijacion: document.getElementById("fijacion").value === "si",
+        zona: document.getElementById("zona").value === "si",
+        usaCasino: document.getElementById("casino").value === "si",
+        obra: document.getElementById("obra").value
+      };
+    }
 
-  // Ordenamos de mayor a menor según haberNeto
-  const listaOrdenada = listaConCalculos.sort((a, b) => b.haberNeto - a.haberNeto);
+    // Función principal de cálculo
+    function calcularHaber(ref, datosUsuario, grado) {
+      const {
+        antiguedad,
+        titulo,
+        variabilidad,
+        fijacion,
+        zona,
+        usaCasino,
+        obra
+      } = datosUsuario;
 
-  let tablaHTML = `
-    <h3 style="color: var(--primary-color); text-align: center; margin-bottom: 20px;">Tabla de Haberes Estimados</h3>
-    
-    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
-      <table class="result-table" style="min-width: 100%;">
-        <thead>
-          <tr>
-            <th style="min-width: 150px;">Grado</th>
-            <th style="min-width: 80px;">Años (ECG)</th>
-            <th style="min-width: 120px; text-align: right;">Haber Neto</th>
-            <th style="min-width: 150px; text-align: right;">Haber Neto Univ.</th>
+      const añosEscalafon = obtenerAños(grado);
+      const suplemento = ref.haber * CONSTANTES.PORCENTAJE_SUPLEMENTO * antiguedad;
+      const bonificacionTitulo = ref.titulo[titulo] || 0;
+      const baseAportes = ref.haber + suplemento + bonificacionTitulo;
+      
+      // Calcular casino dinámicamente
+      const montoCasino = calcularCasino(grado);
+      const adicionalCasino = usaCasino ? -montoCasino : 0;
+
+      const adicionalFijacion = fijacion ? ref.fijacion : 0;
+      const adicionalVariabilidad = variabilidad !== "ninguna" ? ref.variabilidad[variabilidad] : 0;
+      const adicionalZona = zona ? ref.zona : 0;
+      
+      const aporteJubilatorio = -baseAportes * CONSTANTES.PORCENTAJE_APORTE_JUBILATORIO;
+      const aporteObra = -baseAportes * CONSTANTES.PORCENTAJES_OBRA_SOCIAL[obra];
+
+      const total = baseAportes + adicionalVariabilidad + adicionalFijacion + 
+                    adicionalZona + adicionalCasino + aporteJubilatorio + aporteObra;
+
+      return {
+        haber: ref.haber,
+        suplemento,
+        bonificacionTitulo,
+        adicionalVariabilidad,
+        adicionalFijacion,
+        adicionalZona,
+        adicionalCasino,
+        montoCasino,
+        aporteJubilatorio,
+        aporteObra,
+        total,
+        añosEscalafon
+      };
+    }
+
+    // Función para generar filas de resultado
+    function generarFilasResultado(calculo) {
+      const conceptos = [
+        { label: "Haber mensual", valor: calculo.haber },
+        { label: `SAS 2%`, valor: calculo.suplemento },
+        { label: "Título", valor: calculo.bonificacionTitulo },
+        { label: "Variabilidad", valor: calculo.adicionalVariabilidad },
+        { label: "Fijación de domicilio", valor: calculo.adicionalFijacion },
+        { label: "Zona Sur", valor: calculo.adicionalZona },
+        { label: `Casino (${formatearMoneda(calculo.montoCasino)})`, valor: calculo.adicionalCasino },
+        { label: "Aporte Ley 13.018 (10%)", valor: calculo.aporteJubilatorio },
+        { label: "Aporte Obra Social", valor: calculo.aporteObra }
+      ];
+
+      return conceptos.map((concepto, index) => `
+        <tr style="${index % 2 === 0 ? 'background-color: #f9f9f9;' : ''}">
+          <td style="padding: 10px; border-bottom: 1px solid #eee;">
+            <strong>${concepto.label}</strong>
+          </td>
+          <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">
+            ${formatearMoneda(concepto.valor)}
+          </td>
+        </tr>
+      `).join('') + `
+        <tr style="background-color: rgba(52, 152, 219, 0.1); border-top: 2px solid var(--secondary-color);">
+          <td style="padding: 12px;"><strong style="font-size: 16px;">TOTAL ESTIMADO</strong></td>
+          <td style="padding: 12px; text-align: right;">
+            <strong style="font-size: 16px; color: var(--secondary-color);">
+              ${formatearMoneda(calculo.total)}
+            </strong>
+          </td>
+        </tr>
+      `;
+    }
+
+    // Función para generar nota de aclaración
+    function generarNotaAclaracion() {
+      return `
+        <div class="note-box">
+          <h4>Aclaración:</h4>
+          <p>El resultado es estimativo y no contempla los siguientes rubros:</p>
+          <ul>
+            <li>SUMA FIJA DCTO. 56/2020</li>
+            <li>SUB. POR FALLECIMIENTO</li>
+            <li>SEGURO OBLIGATORIO (C.N.A.S.)</li>
+            <li>ASIST. VARIAS (D.O.S.)</li>
+            <li>Otros...</li>
+          </ul>
+        </div>
+      `;
+    }
+
+    // Función para renderizar resultado
+    function renderizarResultado(calculo, grado) {
+      const tablaHTML = `
+        <h3 style="color: var(--primary-color); text-align: center; margin-bottom: 20px;">
+          Resultado del Cálculo - ${grado}
+        </h3>
+        
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; min-width: 500px; border-collapse: collapse; font-size: 15px;">
+            <thead>
+              <tr>
+                <th style="padding: 12px; background-color: var(--primary-color); color: white; text-align: left;">
+                  Concepto
+                </th>
+                <th style="padding: 12px; background-color: var(--primary-color); color: white; text-align: right;">
+                  Importe
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              ${generarFilasResultado(calculo)}
+            </tbody>
+          </table>
+        </div>
+
+        ${generarNotaAclaracion()}
+      `;
+
+      document.getElementById("resultado").innerHTML = tablaHTML;
+      document.getElementById("resultado").style.display = "block";
+    }
+
+    // Función principal calcular
+    function calcular() {
+      const datosUsuario = obtenerDatosFormulario();
+      const grado = document.getElementById("grado").value;
+      const ref = referencia[grado];
+      
+      const calculo = calcularHaber(ref, datosUsuario, grado);
+      renderizarResultado(calculo, grado);
+      
+      document.getElementById("tablaReferencias").style.display = "none";
+    }
+
+    // Función para calcular haber neto
+    function calcularHaberNeto(datos, grado, conTitulo = false) {
+      const años = obtenerAños(grado);
+      const suplemento = datos.haber * CONSTANTES.PORCENTAJE_SUPLEMENTO * años;
+      const titulo = conTitulo ? datos.titulo.universitario : 0;
+      const base = datos.haber + suplemento + titulo;
+      const montoCasino = calcularCasino(grado);
+      
+      return base + datos.fijacion - montoCasino - 
+             (base * CONSTANTES.PORCENTAJE_APORTE_JUBILATORIO) - 
+             (base * CONSTANTES.PORCENTAJES_OBRA_SOCIAL.carga);
+    }
+
+    // Función para mostrar tabla de referencias
+    function mostrarTabla() {
+      const listaCalculada = Object.keys(referencia).map(grado => {
+        const datos = referencia[grado];
+        const años = obtenerAños(grado);
+        const calculoBase = calcularHaberNeto(datos, grado, false);
+        const calculoConTitulo = calcularHaberNeto(datos, grado, true);
+        
+        return {
+          grado,
+          datos,
+          años,
+          haberNeto: Math.round(calculoBase),
+          haberNetoUniv: Math.round(calculoConTitulo)
+        };
+      });
+
+      const listaOrdenada = listaCalculada.sort((a, b) => b.haberNeto - a.haberNeto);
+      renderizarTablaReferencias(listaOrdenada);
+    }
+
+    // Función para renderizar tabla de referencias
+    function renderizarTablaReferencias(listaOrdenada) {
+      let tablaHTML = `
+        <h3 style="color: var(--primary-color); text-align: center; margin-bottom: 20px;">Tabla de Haberes Estimados</h3>
+        
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+          <table class="result-table" style="min-width: 100%;">
+            <thead>
+              <tr>
+                <th style="min-width: 150px;">Grado</th>
+                <th style="min-width: 80px;">Años (ECG)</th>
+                <th style="min-width: 120px; text-align: right;">Haber Neto</th>
+                <th style="min-width: 150px; text-align: right;">Haber Neto Univ.</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+
+      listaOrdenada.forEach(({grado, años, haberNeto, haberNetoUniv}) => {
+        const jerarquia = determinarJerarquia(grado);
+        let rowStyle = "";
+        switch (jerarquia) {
+          case "Oficial": rowStyle = "background-color: #fff9c4;"; break;
+          case "Suboficial": rowStyle = "background-color: #e0e0e0;"; break;
+          case "Aspirante": rowStyle = "background-color: #ffffff;"; break;
+          default: rowStyle = "background-color: #ffffff;";
+        }
+
+        tablaHTML += `
+          <tr style="${rowStyle}">
+            <td>${grado}</td>
+            <td>${años}</td>        
+            <td style="text-align: right;">${formatearMonedaCompacta(haberNeto)}</td>
+            <td style="text-align: right;">${formatearMonedaCompacta(haberNetoUniv)}</td>
           </tr>
-        </thead>
-        <tbody>
-  `;
+        `;
+      });
 
-  listaOrdenada.forEach(({grado, datos, haberNeto}) => {
-    const suplemento = datos.haber * 0.02 * datos.años;
-    const baseConTitulo = datos.haber + suplemento + datos.titulo.universitario;
-    
-    const haberNetoUniv = Math.round(
-      baseConTitulo + datos.fijacion - datos.casino
-      - (baseConTitulo * 0.10)
-      - (baseConTitulo * 0.085)
-    );
+      tablaHTML += `
+            </tbody>
+          </table>
+        </div>
 
-    let rowStyle = "";
-    switch (datos.jerarquia) {
-      case "Oficial": rowStyle = "background-color: #fff9c4;"; break;
-      case "Suboficial": rowStyle = "background-color: #e0e0e0;"; break;
-      case "Aspirante": rowStyle = "background-color: #ffffff;"; break;
-      default: rowStyle = "background-color: #ffffff;";
+        <div class="note-box" style="margin-top: 20px;">
+          <h4>Fórmulas de Cálculo:</h4>
+          <ul>
+            <li><strong>Haber neto</strong> = (Haber + Suplemento 2%) + Fijación + Casino - Aporte jubilatorio (10%) - Aporte obra social (8.5%)</li>
+            <li><strong>Haber neto universitario</strong> = (Haber + Suplemento 2% + Título univ.) + Fijación + Casino - Aporte jubilatorio (10%) - Aporte obra social (8.5%)</li>
+          </ul>
+          <p>Nota: La tabla está ordenada de mayor a menor según el Haber Neto</p>
+        </div>
+        
+        <style>
+          @media (max-width: 768px) {
+            .result-table {
+              white-space: nowrap;
+            }
+            .result-table th, 
+            .result-table td {
+              padding: 10px 12px;
+              font-size: 14px;
+            }
+            .result-table th {
+              position: sticky;
+              top: 0;
+              background-color: var(--primary-color);
+              color: white;
+            }
+          }
+        </style>
+      `;
+
+      const tablaDiv = document.getElementById("tablaReferencias");
+      tablaDiv.innerHTML = tablaHTML;
+      tablaDiv.style.display = "block";
+      document.getElementById("resultado").style.display = "none";
     }
 
-    tablaHTML += `
-      <tr style="${rowStyle}">
-        <td>${grado}</td>
-        <td>${datos.años}</td>        
-        <td style="text-align: right;">$${haberNeto.toLocaleString("es-AR", {minimumFractionDigits: 0})}</td>
-        <td style="text-align: right;">$${haberNetoUniv.toLocaleString("es-AR", {minimumFractionDigits: 0})}</td>
-      </tr>
-    `;
-  });
-
-  // Resto del código permanece igual...
-  tablaHTML += `
-        </tbody>
-      </table>
-    </div>
-
-    <div class="note-box" style="margin-top: 20px;">
-      <h4>Fórmulas de Cálculo:</h4>
-      <ul>
-        <li><strong>Haber neto</strong> = (Haber + Suplemento 2%) + Fijación + Casino - Aporte jubilatorio (10%) - Aporte obra social (8.5%)</li>
-        <li><strong>Haber neto universitario</strong> = (Haber + Suplemento 2% + Título univ.) + Fijación + Casino - Aporte jubilatorio (10%) - Aporte obra social (8.5%)</li>
-      </ul>
-      <p>Nota: La tabla está ordenada de mayor a menor según el Haber Neto</p>
-    </div>
-    
-    <style>
-      @media (max-width: 768px) {
-        .result-table {
-          white-space: nowrap;
-        }
-        .result-table th, 
-        .result-table td {
-          padding: 10px 12px;
-          font-size: 14px;
-        }
-        .result-table th {
-          position: sticky;
-          top: 0;
-          background-color: var(--primary-color);
-          color: white;
-        }
-      }
-    </style>
-  `;
-
-  const tablaDiv = document.getElementById("tablaReferencias");
-  tablaDiv.innerHTML = tablaHTML;
-  tablaDiv.style.display = "block";
-  document.getElementById("resultado").style.display = "none";
-}
+    // Inicialización al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+      // Inicializar el select de grados
+      inicializarSelectGrados();
+      
+      // Configurar event listeners
+      document.getElementById('grado').addEventListener('change', verificarFijacion);
+      
+      const btnCalcular = document.querySelector('.btn');
+      const btnTabla = document.querySelector('.btn-secondary');
+      
+      btnCalcular.addEventListener('click', calcular);
+      btnTabla.addEventListener('click', mostrarTabla);
+      
+      // Establecer filtro inicial
+      filtrarGrados('Oficial');
+    });
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
