@@ -115,6 +115,14 @@
       background-color: #1a252f;
     }
 
+    .btn-info {
+      background-color: #17a2b8;
+    }
+
+    .btn-info:hover {
+      background-color: #138496;
+    }
+
     .result-table {
       width: 100%;
       border-collapse: collapse;
@@ -250,6 +258,106 @@
       border-color: #219653;
     }
 
+    /* Estilos para ventana emergente */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .modal-header {
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      color: white;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: white;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-btn:hover {
+      color: #f8f9fa;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .info-table th {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 12px;
+      text-align: center;
+      font-weight: 600;
+      border: 1px solid #ddd;
+    }
+
+    .info-table td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    .info-table tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    .info-table .not-applicable {
+      background-color: #f8d7da;
+      color: #721c24;
+      font-weight: bold;
+    }
+
     @media (max-width: 768px) {
       .container {
         padding: 10px;
@@ -275,6 +383,20 @@
       .btn-cuerpo {
         padding: 6px 8px;
         font-size: 10px;
+      }
+      
+      .modal-content {
+        margin: 10px;
+        max-height: 85vh;
+      }
+      
+      .info-table {
+        font-size: 12px;
+      }
+      
+      .info-table th, 
+      .info-table td {
+        padding: 8px 6px;
       }
     }
   </style>
@@ -354,11 +476,34 @@
 
         <button type="button" class="btn" onclick="calcular()">Calcular Haber</button>
         <button type="button" class="btn btn-secondary" onclick="mostrarTabla()">Ver Tabla de Haberes</button>
+        <button type="button" class="btn btn-info" onclick="mostrarTablaAniosMinimos()">Ver Tabla de Años Mínimos</button>
       </form>
     </div>
 
     <div class="card" id="resultado" style="display: none;"></div>
     <div class="card" id="tablaReferencias" style="display: none;"></div>
+  </div>
+
+  <!-- Ventana emergente para tabla de años mínimos -->
+  <div class="modal-overlay" id="modalAniosMinimos">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Tabla de Años Mínimos por Grado y Cuerpo</h3>
+        <button class="close-btn" onclick="cerrarModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="table-container">
+          <table class="info-table" id="tablaAniosMinimos">
+            <!-- La tabla se llenará dinámicamente -->
+          </table>
+        </div>
+        <div class="note-box">
+          <h4>Información:</h4>
+          <p>Esta tabla muestra los años mínimos requeridos en el grado actual para poder ascender al siguiente grado, según el cuerpo al que pertenece.</p>
+          <p><strong>X</strong> indica que el grado no existe en ese cuerpo específico.</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -447,44 +592,44 @@
       "AYUDANTE MAYOR": {
         Cuerpo_General: 21,
         Administrativo: "X",
-        Profesional: 25,
-        Auxiliar_Oficinista: 26,
-        Auxiliar_Intendencia: 31
+        Profesional: 5,
+        Auxiliar_Oficinista: 5,
+        Auxiliar_Intendencia: 5
       },
       "AYUDANTE PRINCIPAL": {
         Cuerpo_General: 17,
         Administrativo: "X",
-        Profesional: 20,
-        Auxiliar_Oficinista: 21,
-        Auxiliar_Intendencia: 26
+        Profesional: 5,
+        Auxiliar_Oficinista: 5,
+        Auxiliar_Intendencia: 5
       },
       "AYUDANTE DE PRIMERA": {
         Cuerpo_General: 13,
         Administrativo: "X",
-        Profesional: 15,
-        Auxiliar_Oficinista: 16,
-        Auxiliar_Intendencia: 19
+        Profesional: 4,
+        Auxiliar_Oficinista: 4,
+        Auxiliar_Intendencia: 5
       },
       "AYUDANTE DE SEGUNDA": {
         Cuerpo_General: 10,
         Administrativo: "X",
-        Profesional: 11,
-        Auxiliar_Oficinista: 12,
-        Auxiliar_Intendencia: 14
+        Profesional: 4,
+        Auxiliar_Oficinista: 4,
+        Auxiliar_Intendencia: 5
       },
       "AYUDANTE DE TERCERA": {
         Cuerpo_General: 7,
         Administrativo: "X",
-        Profesional: 7,
-        Auxiliar_Oficinista: 8,
-        Auxiliar_Intendencia: 9
+        Profesional: 3,
+        Auxiliar_Oficinista: 3,
+        Auxiliar_Intendencia: 3
       },
       "AYUDANTE DE CUARTA": {
         Cuerpo_General: 4,
         Administrativo: "X",
-        Profesional: 4,
-        Auxiliar_Oficinista: 5,
-        Auxiliar_Intendencia: 6
+        Profesional: 2,
+        Auxiliar_Oficinista: 3,
+        Auxiliar_Intendencia: 3
       },
       "AYUDANTE DE QUINTA": {
         Cuerpo_General: 2,
@@ -513,6 +658,114 @@
         Profesional: "X",
         Auxiliar_Oficinista: "X",
         Auxiliar_Intendencia: "X"
+      }
+    };
+    // Tabla de Años Mínimos para Ascenso
+    const aniosMinimos = {
+      "PREFECTO": {
+        Cuerpo_General: 4,
+        Administrativo: 5,
+        Profesional: 1,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "SUBPREFECTO": {
+        Cuerpo_General: 4,
+        Administrativo: 5,
+        Profesional: 5,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "ALCAIDE MAYOR": {
+        Cuerpo_General: 4,
+        Administrativo: 4,
+        Profesional: 5,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "ALCAIDE": {
+        Cuerpo_General: 4,
+        Administrativo: 4,
+        Profesional: 4,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "SUBALCAIDE": {
+        Cuerpo_General: 3,
+        Administrativo: 3,
+        Profesional: 4,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "ADJUTOR PRINCIPAL": {
+        Cuerpo_General: 4,
+        Administrativo: 4,
+        Profesional: 4,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "ADJUTOR": {
+        Cuerpo_General: 3,
+        Administrativo: 3,
+        Profesional: 3,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "SUBADJUTOR": {
+        Cuerpo_General: 3,
+        Administrativo: 3,
+        Profesional: 3,
+        Auxiliar_Oficinista: "X",
+        Auxiliar_Intendencia: "X"
+      },
+      "AYUDANTE PRINCIPAL": {
+        Cuerpo_General: 4,
+        Administrativo: "X",
+        Profesional: 5,
+        Auxiliar_Oficinista: 5,
+        Auxiliar_Intendencia: 5
+      },
+      "AYUDANTE DE PRIMERA": {
+        Cuerpo_General: 4,
+        Administrativo: "X",
+        Profesional: 5,
+        Auxiliar_Oficinista: 5,
+        Auxiliar_Intendencia: 5
+      },
+      "AYUDANTE DE SEGUNDA": {
+        Cuerpo_General: 3,
+        Administrativo: "X",
+        Profesional: 4,
+        Auxiliar_Oficinista: 4,
+        Auxiliar_Intendencia: 5
+      },
+      "AYUDANTE DE TERCERA": {
+        Cuerpo_General: 3,
+        Administrativo: "X",
+        Profesional: 4,
+        Auxiliar_Oficinista: 4,
+        Auxiliar_Intendencia: 5
+      },
+      "AYUDANTE DE CUARTA": {
+        Cuerpo_General: 3,
+        Administrativo: "X",
+        Profesional: 3,
+        Auxiliar_Oficinista: 3,
+        Auxiliar_Intendencia: 3
+      },
+      "AYUDANTE DE QUINTA": {
+        Cuerpo_General: 2,
+        Administrativo: "X",
+        Profesional: 2,
+        Auxiliar_Oficinista: 3,
+        Auxiliar_Intendencia: 3
+      },
+      "SUBAYUDANTE": {
+        Cuerpo_General: 2,
+        Administrativo: "X",
+        Profesional: 2,
+        Auxiliar_Oficinista: 2,
+        Auxiliar_Intendencia: 3
       }
     };
 
@@ -658,6 +911,66 @@
 
     // Variable para almacenar todos los grados
     const todosLosGrados = Object.keys(referencia);
+
+    // Función para mostrar ventana emergente con tabla de años mínimos
+    function mostrarTablaAniosMinimos() {
+      const modal = document.getElementById('modalAniosMinimos');
+      const tabla = document.getElementById('tablaAniosMinimos');
+      
+      // Construir la tabla
+      let tablaHTML = `
+        <thead>
+          <tr>
+            <th>Grado</th>
+            <th>Cuerpo General</th>
+            <th>Administrativo</th>
+            <th>Profesional</th>
+            <th>Auxiliar Oficinista</th>
+            <th>Auxiliar Intendencia</th>
+          </tr>
+        </thead>
+        <tbody>
+      `;
+      
+      Object.keys(aniosMinimos).forEach(grado => {
+        const datos = aniosMinimos[grado];
+        tablaHTML += `
+          <tr>
+            <td><strong>${grado}</strong></td>
+            <td>${datos.Cuerpo_General === "X" ? '<span class="not-applicable">X</span>' : datos.Cuerpo_General}</td>
+            <td>${datos.Administrativo === "X" ? '<span class="not-applicable">X</span>' : datos.Administrativo}</td>
+            <td>${datos.Profesional === "X" ? '<span class="not-applicable">X</span>' : datos.Profesional}</td>
+            <td>${datos.Auxiliar_Oficinista === "X" ? '<span class="not-applicable">X</span>' : datos.Auxiliar_Oficinista}</td>
+            <td>${datos.Auxiliar_Intendencia === "X" ? '<span class="not-applicable">X</span>' : datos.Auxiliar_Intendencia}</td>
+          </tr>
+        `;
+      });
+      
+      tablaHTML += `</tbody>`;
+      tabla.innerHTML = tablaHTML;
+      
+      // Mostrar la ventana emergente
+      modal.style.display = 'flex';
+    }
+
+    // Función para cerrar ventana emergente
+    function cerrarModal() {
+      document.getElementById('modalAniosMinimos').style.display = 'none';
+    }
+
+    // Cerrar modal al hacer clic fuera del contenido
+    document.getElementById('modalAniosMinimos').addEventListener('click', function(e) {
+      if (e.target === this) {
+        cerrarModal();
+      }
+    });
+
+    // Cerrar modal con tecla ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        cerrarModal();
+      }
+    });
 
     // Función para determinar jerarquía automáticamente
     function determinarJerarquia(grado) {
@@ -1024,7 +1337,7 @@
             <thead>
               <tr>
                 <th style="min-width: 150px;">Grado</th>
-                <th style="min-width: 80px;">Antiguedad estimada</th>
+                <th style="min-width: 80px;">Años (ECG)</th>
                 <th style="min-width: 120px; text-align: right;">Haber Neto</th>
                 <th style="min-width: 150px; text-align: right;">Haber Neto Univ.</th>
               </tr>
@@ -1113,4 +1426,3 @@
   </script>
 </body>
 </html>
-
