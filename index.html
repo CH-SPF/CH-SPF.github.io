@@ -439,6 +439,52 @@
       font-weight: bold;
     }
 
+    /* Estilos para tabla de resultados en móviles */
+    .mobile-result-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+      background-color: white;
+    }
+
+    .mobile-result-item:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    .mobile-result-item.total {
+      background-color: rgba(52, 152, 219, 0.1);
+      font-weight: bold;
+      border-top: 2px solid var(--secondary-color);
+      margin-top: 10px;
+    }
+
+    .mobile-result-label {
+      font-weight: 600;
+      color: var(--dark-color);
+      flex: 1;
+    }
+
+    .mobile-result-value {
+      text-align: right;
+      font-weight: 500;
+      color: #333;
+      flex: 1;
+    }
+
+    .mobile-result-total {
+      color: var(--secondary-color);
+      font-size: 18px;
+    }
+
+    .mobile-result-container {
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      margin: 20px 0;
+    }
+
     @media (max-width: 768px) {
       .container {
         padding: 10px;
@@ -499,6 +545,28 @@
         background-position: right 12px center;
         background-size: 16px;
         padding-right: 40px;
+      }
+      
+      /* Ocultar tabla tradicional en móviles */
+      .desktop-table {
+        display: none;
+      }
+      
+      /* Mostrar vista móvil */
+      .mobile-view {
+        display: block;
+      }
+    }
+
+    @media (min-width: 769px) {
+      /* Ocultar vista móvil en escritorio */
+      .mobile-view {
+        display: none;
+      }
+      
+      /* Mostrar tabla tradicional en escritorio */
+      .desktop-table {
+        display: block;
       }
     }
   </style>
@@ -1723,8 +1791,43 @@
       };
     }
 
-    // Función para generar filas de resultado
-    function generarFilasResultado(calculo) {
+    // Función para generar filas de resultado para vista móvil
+    function generarFilasResultadoMobile(calculo) {
+      const conceptos = [
+        { label: "Haber mensual", valor: calculo.haber },
+        { label: `SAS 2%`, valor: calculo.suplemento },
+        { label: "Título", valor: calculo.bonificacionTitulo },
+        { label: "Variabilidad", valor: calculo.adicionalVariabilidad },
+        { label: "Fijación de domicilio", valor: calculo.adicionalFijacion },
+        { label: "Zona Sur", valor: calculo.adicionalZona },
+        { label: `Casino (${formatearMoneda(calculo.montoCasino)})`, valor: calculo.adicionalCasino },
+        { label: "Aporte Ley 13.018 (10%)", valor: calculo.aporteJubilatorio },
+        { label: "Aporte Obra Social", valor: calculo.aporteObra }
+      ];
+
+      let mobileHTML = '';
+      
+      conceptos.forEach((concepto, index) => {
+        mobileHTML += `
+          <div class="mobile-result-item ${index % 2 === 0 ? '' : 'even'}">
+            <div class="mobile-result-label">${concepto.label}</div>
+            <div class="mobile-result-value">${formatearMoneda(concepto.valor)}</div>
+          </div>
+        `;
+      });
+      
+      mobileHTML += `
+        <div class="mobile-result-item total">
+          <div class="mobile-result-label">TOTAL ESTIMADO</div>
+          <div class="mobile-result-value mobile-result-total">${formatearMoneda(calculo.total)}</div>
+        </div>
+      `;
+      
+      return mobileHTML;
+    }
+
+    // Función para generar filas de resultado para vista escritorio
+    function generarFilasResultadoDesktop(calculo) {
       const conceptos = [
         { label: "Haber mensual", valor: calculo.haber },
         { label: `SAS 2%`, valor: calculo.suplemento },
@@ -1782,22 +1885,32 @@
           Resultado del Cálculo - ${grado}
         </h3>
         
-        <div style="overflow-x: auto;">
-          <table style="width: 100%; min-width: 500px; border-collapse: collapse; font-size: 15px;">
-            <thead>
-              <tr>
-                <th style="padding: 12px; background-color: var(--primary-color); color: white; text-align: left;">
-                  Concepto
-                </th>
-                <th style="padding: 12px; background-color: var(--primary-color); color: white; text-align: right;">
-                  Importe
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              ${generarFilasResultado(calculo)}
-            </tbody>
-          </table>
+        <!-- Vista para escritorio -->
+        <div class="desktop-table">
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; min-width: 500px; border-collapse: collapse; font-size: 15px;">
+              <thead>
+                <tr>
+                  <th style="padding: 12px; background-color: var(--primary-color); color: white; text-align: left;">
+                    Concepto
+                  </th>
+                  <th style="padding: 12px; background-color: var(--primary-color); color: white; text-align: right;">
+                    Importe
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                ${generarFilasResultadoDesktop(calculo)}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- Vista para móviles -->
+        <div class="mobile-view">
+          <div class="mobile-result-container">
+            ${generarFilasResultadoMobile(calculo)}
+          </div>
         </div>
 
         ${generarNotaAclaracion()}
