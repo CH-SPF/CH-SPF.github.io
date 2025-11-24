@@ -123,6 +123,15 @@
       background-color: #138496;
     }
 
+    .btn-warning {
+      background-color: #ffc107;
+      color: #212529;
+    }
+
+    .btn-warning:hover {
+      background-color: #e0a800;
+    }
+
     .result-table {
       width: 100%;
       border-collapse: collapse;
@@ -194,7 +203,7 @@
       text-decoration: underline;
     }
 
-    /* Nuevos estilos para botones de jerarquía */
+    /* Estilos para botones de jerarquía */
     .btn-jerarquia {
       flex: 1;
       padding: 10px 15px;
@@ -256,6 +265,51 @@
     .btn-cuerpo.active:hover {
       background-color: #219653;
       border-color: #219653;
+    }
+
+    /* Estilos para botones de opciones */
+    .btn-opcion {
+      flex: 1;
+      padding: 10px 15px;
+      background-color: #f8f9fa;
+      border: 2px solid #dee2e6;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      transition: var(--transition);
+      color: #6c757d;
+      margin: 2px;
+    }
+
+    .btn-opcion:hover {
+      background-color: #e9ecef;
+      border-color: var(--secondary-color);
+      color: var(--secondary-color);
+    }
+
+    .btn-opcion.active {
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color);
+      color: white;
+    }
+
+    .btn-opcion.active:hover {
+      background-color: #2980b9;
+      border-color: #2980b9;
+    }
+
+    .btn-opcion-group {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn-opcion-group label {
+      width: 100%;
+      margin-bottom: 8px;
     }
 
     /* Estilos para ventana emergente */
@@ -358,6 +412,33 @@
       font-weight: bold;
     }
 
+    /* Estilos para comparación */
+    .comparison-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .comparison-form {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .comparison-result {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .difference-positive {
+      color: var(--success-color);
+      font-weight: bold;
+    }
+
+    .difference-negative {
+      color: var(--accent-color);
+      font-weight: bold;
+    }
+
     @media (max-width: 768px) {
       .container {
         padding: 10px;
@@ -385,6 +466,11 @@
         font-size: 10px;
       }
       
+      .btn-opcion {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+      
       .modal-content {
         margin: 10px;
         max-height: 85vh;
@@ -397,6 +483,10 @@
       .info-table th, 
       .info-table td {
         padding: 8px 6px;
+      }
+      
+      .comparison-container {
+        flex-direction: column;
       }
     }
   </style>
@@ -413,7 +503,7 @@
       <form id="calculadoraForm">
         <!-- Selector de Jerarquía -->
         <label for="jerarquia">Jerarquía:</label>
-        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <div class="btn-opcion-group">
           <button type="button" class="btn-jerarquia active" data-jerarquia="Oficial" onclick="filtrarGrados('Oficial')">
             Oficial
           </button>
@@ -433,40 +523,68 @@
         <label for="antiguedad">Años de servicio:</label>
         <input type="number" id="antiguedad" min="0" max="50" value="0">
 
-        <label for="titulo">Título:</label>
-        <select id="titulo">
-          <option value="ninguno">Ninguno</option>
-          <option value="terciario">Terciario</option>
-          <option value="universitario">Universitario</option>
-        </select>
-
-        <label for="variabilidad">¿Variabilidad?</label>
-        <select id="variabilidad">
-          <option value="ninguna">Ninguna</option>
-          <option value="unico">Residente único</option>
-          <option value="familia">Residente con familia</option>
-        </select>
-
-        <div id="fijacionCampo" style="display: none;">
-          <label for="fijacion">Fijación de domicilio:</label>
-          <select id="fijacion">
-            <option value="no">No</option>
-            <option value="si">Sí</option>
-          </select>
+        <!-- Título convertido a botones -->
+        <div class="btn-opcion-group">
+          <label for="titulo">Título:</label>
+          <button type="button" class="btn-opcion active" data-titulo="ninguno" onclick="seleccionarOpcion('titulo', 'ninguno')">
+            Ninguno
+          </button>
+          <button type="button" class="btn-opcion" data-titulo="terciario" onclick="seleccionarOpcion('titulo', 'terciario')">
+            Terciario
+          </button>
+          <button type="button" class="btn-opcion" data-titulo="universitario" onclick="seleccionarOpcion('titulo', 'universitario')">
+            Universitario
+          </button>
         </div>
 
-        <label for="zona">¿Zona Sur?</label>
-        <select id="zona">
-          <option value="no">No</option>
-          <option value="si">Sí</option>
-        </select>
+        <!-- Variabilidad convertida a botones -->
+        <div class="btn-opcion-group">
+          <label for="variabilidad">¿Variabilidad?</label>
+          <button type="button" class="btn-opcion active" data-variabilidad="ninguna" onclick="seleccionarOpcion('variabilidad', 'ninguna')">
+            Ninguna
+          </button>
+          <button type="button" class="btn-opcion" data-variabilidad="unico" onclick="seleccionarOpcion('variabilidad', 'unico')">
+            Residente único
+          </button>
+          <button type="button" class="btn-opcion" data-variabilidad="familia" onclick="seleccionarOpcion('variabilidad', 'familia')">
+            Residente con familia
+          </button>
+        </div>
 
-        <label for="casino">¿Casino?</label>
-        <select id="casino">
-          <option value="si">Sí</option>
-          <option value="no">No</option>
-        </select>
+        <!-- Fijación de domicilio convertida a botones -->
+        <div id="fijacionCampo" style="display: none;" class="btn-opcion-group">
+          <label for="fijacion">Fijación de domicilio:</label>
+          <button type="button" class="btn-opcion" data-fijacion="no" onclick="seleccionarOpcion('fijacion', 'no')">
+            No
+          </button>
+          <button type="button" class="btn-opcion" data-fijacion="si" onclick="seleccionarOpcion('fijacion', 'si')">
+            Sí
+          </button>
+        </div>
 
+        <!-- Zona Sur convertida a botones -->
+        <div class="btn-opcion-group">
+          <label for="zona">¿Zona Sur?</label>
+          <button type="button" class="btn-opcion active" data-zona="no" onclick="seleccionarOpcion('zona', 'no')">
+            No
+          </button>
+          <button type="button" class="btn-opcion" data-zona="si" onclick="seleccionarOpcion('zona', 'si')">
+            Sí
+          </button>
+        </div>
+
+        <!-- Casino convertido a botones -->
+        <div class="btn-opcion-group">
+          <label for="casino">¿Casino?</label>
+          <button type="button" class="btn-opcion active" data-casino="si" onclick="seleccionarOpcion('casino', 'si')">
+            Sí
+          </button>
+          <button type="button" class="btn-opcion" data-casino="no" onclick="seleccionarOpcion('casino', 'no')">
+            No
+          </button>
+        </div>
+
+        <!-- Obra social se mantiene como lista desplegable -->
         <label for="obra">Obra social:</label>
         <select id="obra">
           <option value="basica">Básica</option>
@@ -477,6 +595,7 @@
         <button type="button" class="btn" onclick="calcular()">CALCULAR</button>
         <button type="button" class="btn btn-secondary" onclick="mostrarTabla()">HABERES ESTIMADOS</button>
         <button type="button" class="btn btn-info" onclick="mostrarTablaAniosMinimos()">ANTIGUEDAD MINIMA</button>
+        <button type="button" class="btn btn-warning" onclick="mostrarComparacion()">COMPARAR</button>
       </form>
     </div>
 
@@ -502,6 +621,201 @@
           <p>Esta tabla muestra los años mínimos requeridos en el grado actual para poder ascender al siguiente grado, según el escalafon al que pertenece.</p>
           <p><strong>X</strong> indica que el grado no existe en ese escalafón específico.</p>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ventana emergente para comparación -->
+  <div class="modal-overlay" id="modalComparacion">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Comparar Haberes</h3>
+        <button class="close-btn" onclick="cerrarModalComparacion()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="comparison-container">
+          <!-- Formulario 1 -->
+          <div class="comparison-form">
+            <h4>Escenario 1</h4>
+            <div class="btn-opcion-group">
+              <label>Jerarquía:</label>
+              <button type="button" class="btn-jerarquia active" data-jerarquia="Oficial" onclick="filtrarGradosComparacion('Oficial', 1)">
+                Oficial
+              </button>
+              <button type="button" class="btn-jerarquia" data-jerarquia="Suboficial" onclick="filtrarGradosComparacion('Suboficial', 1)">
+                Suboficial
+              </button>
+              <button type="button" class="btn-jerarquia" data-jerarquia="Aspirante" onclick="filtrarGradosComparacion('Aspirante', 1)">
+                Aspirante
+              </button>
+            </div>
+
+            <label for="grado1">Grado:</label>
+            <select id="grado1" name="grado1">
+              <!-- Las opciones se llenarán dinámicamente -->
+            </select>
+
+            <label for="antiguedad1">Años de servicio:</label>
+            <input type="number" id="antiguedad1" min="0" max="50" value="0">
+
+            <div class="btn-opcion-group">
+              <label>Título:</label>
+              <button type="button" class="btn-opcion active" data-titulo="ninguno" onclick="seleccionarOpcionComparacion('titulo', 'ninguno', 1)">
+                Ninguno
+              </button>
+              <button type="button" class="btn-opcion" data-titulo="terciario" onclick="seleccionarOpcionComparacion('titulo', 'terciario', 1)">
+                Terciario
+              </button>
+              <button type="button" class="btn-opcion" data-titulo="universitario" onclick="seleccionarOpcionComparacion('titulo', 'universitario', 1)">
+                Universitario
+              </button>
+            </div>
+
+            <div class="btn-opcion-group">
+              <label>¿Variabilidad?</label>
+              <button type="button" class="btn-opcion active" data-variabilidad="ninguna" onclick="seleccionarOpcionComparacion('variabilidad', 'ninguna', 1)">
+                Ninguna
+              </button>
+              <button type="button" class="btn-opcion" data-variabilidad="unico" onclick="seleccionarOpcionComparacion('variabilidad', 'unico', 1)">
+                Residente único
+              </button>
+              <button type="button" class="btn-opcion" data-variabilidad="familia" onclick="seleccionarOpcionComparacion('variabilidad', 'familia', 1)">
+                Residente con familia
+              </button>
+            </div>
+
+            <div id="fijacionCampo1" style="display: none;" class="btn-opcion-group">
+              <label>Fijación de domicilio:</label>
+              <button type="button" class="btn-opcion" data-fijacion="no" onclick="seleccionarOpcionComparacion('fijacion', 'no', 1)">
+                No
+              </button>
+              <button type="button" class="btn-opcion" data-fijacion="si" onclick="seleccionarOpcionComparacion('fijacion', 'si', 1)">
+                Sí
+              </button>
+            </div>
+
+            <div class="btn-opcion-group">
+              <label>¿Zona Sur?</label>
+              <button type="button" class="btn-opcion active" data-zona="no" onclick="seleccionarOpcionComparacion('zona', 'no', 1)">
+                No
+              </button>
+              <button type="button" class="btn-opcion" data-zona="si" onclick="seleccionarOpcionComparacion('zona', 'si', 1)">
+                Sí
+              </button>
+            </div>
+
+            <div class="btn-opcion-group">
+              <label>¿Casino?</label>
+              <button type="button" class="btn-opcion active" data-casino="si" onclick="seleccionarOpcionComparacion('casino', 'si', 1)">
+                Sí
+              </button>
+              <button type="button" class="btn-opcion" data-casino="no" onclick="seleccionarOpcionComparacion('casino', 'no', 1)">
+                No
+              </button>
+            </div>
+
+            <label for="obra1">Obra social:</label>
+            <select id="obra1">
+              <option value="basica">Básica</option>
+              <option value="carga">Con carga de familia (1 o 2)</option>
+              <option value="mascarga">Con carga de familia (3 o +)</option>
+            </select>
+          </div>
+
+          <!-- Formulario 2 -->
+          <div class="comparison-form">
+            <h4>Escenario 2</h4>
+            <div class="btn-opcion-group">
+              <label>Jerarquía:</label>
+              <button type="button" class="btn-jerarquia active" data-jerarquia="Oficial" onclick="filtrarGradosComparacion('Oficial', 2)">
+                Oficial
+              </button>
+              <button type="button" class="btn-jerarquia" data-jerarquia="Suboficial" onclick="filtrarGradosComparacion('Suboficial', 2)">
+                Suboficial
+              </button>
+              <button type="button" class="btn-jerarquia" data-jerarquia="Aspirante" onclick="filtrarGradosComparacion('Aspirante', 2)">
+                Aspirante
+              </button>
+            </div>
+
+            <label for="grado2">Grado:</label>
+            <select id="grado2" name="grado2">
+              <!-- Las opciones se llenarán dinámicamente -->
+            </select>
+
+            <label for="antiguedad2">Años de servicio:</label>
+            <input type="number" id="antiguedad2" min="0" max="50" value="0">
+
+            <div class="btn-opcion-group">
+              <label>Título:</label>
+              <button type="button" class="btn-opcion active" data-titulo="ninguno" onclick="seleccionarOpcionComparacion('titulo', 'ninguno', 2)">
+                Ninguno
+              </button>
+              <button type="button" class="btn-opcion" data-titulo="terciario" onclick="seleccionarOpcionComparacion('titulo', 'terciario', 2)">
+                Terciario
+              </button>
+              <button type="button" class="btn-opcion" data-titulo="universitario" onclick="seleccionarOpcionComparacion('titulo', 'universitario', 2)">
+                Universitario
+              </button>
+            </div>
+
+            <div class="btn-opcion-group">
+              <label>¿Variabilidad?</label>
+              <button type="button" class="btn-opcion active" data-variabilidad="ninguna" onclick="seleccionarOpcionComparacion('variabilidad', 'ninguna', 2)">
+                Ninguna
+              </button>
+              <button type="button" class="btn-opcion" data-variabilidad="unico" onclick="seleccionarOpcionComparacion('variabilidad', 'unico', 2)">
+                Residente único
+              </button>
+              <button type="button" class="btn-opcion" data-variabilidad="familia" onclick="seleccionarOpcionComparacion('variabilidad', 'familia', 2)">
+                Residente con familia
+              </button>
+            </div>
+
+            <div id="fijacionCampo2" style="display: none;" class="btn-opcion-group">
+              <label>Fijación de domicilio:</label>
+              <button type="button" class="btn-opcion" data-fijacion="no" onclick="seleccionarOpcionComparacion('fijacion', 'no', 2)">
+                No
+              </button>
+              <button type="button" class="btn-opcion" data-fijacion="si" onclick="seleccionarOpcionComparacion('fijacion', 'si', 2)">
+                Sí
+              </button>
+            </div>
+
+            <div class="btn-opcion-group">
+              <label>¿Zona Sur?</label>
+              <button type="button" class="btn-opcion active" data-zona="no" onclick="seleccionarOpcionComparacion('zona', 'no', 2)">
+                No
+              </button>
+              <button type="button" class="btn-opcion" data-zona="si" onclick="seleccionarOpcionComparacion('zona', 'si', 2)">
+                Sí
+              </button>
+            </div>
+
+            <div class="btn-opcion-group">
+              <label>¿Casino?</label>
+              <button type="button" class="btn-opcion active" data-casino="si" onclick="seleccionarOpcionComparacion('casino', 'si', 2)">
+                Sí
+              </button>
+              <button type="button" class="btn-opcion" data-casino="no" onclick="seleccionarOpcionComparacion('casino', 'no', 2)">
+                No
+              </button>
+            </div>
+
+            <label for="obra2">Obra social:</label>
+            <select id="obra2">
+              <option value="basica">Básica</option>
+              <option value="carga">Con carga de familia (1 o 2)</option>
+              <option value="mascarga">Con carga de familia (3 o +)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="comparison-result" id="comparisonResult" style="display: none;">
+          <!-- Aquí se mostrará el resultado de la comparación -->
+        </div>
+
+        <button type="button" class="btn" onclick="calcularComparacion()">CALCULAR COMPARACIÓN</button>
       </div>
     </div>
   </div>
@@ -913,6 +1227,94 @@
     // Variable para almacenar todos los grados
     const todosLosGrados = Object.keys(referencia);
 
+    // Objeto para almacenar las selecciones actuales
+    const selecciones = {
+      titulo: 'ninguno',
+      variabilidad: 'ninguna',
+      fijacion: 'no',
+      zona: 'no',
+      casino: 'si',
+      obra: 'basica'
+    };
+
+    // Objeto para almacenar las selecciones de comparación
+    const seleccionesComparacion = {
+      1: {
+        titulo: 'ninguno',
+        variabilidad: 'ninguna',
+        fijacion: 'no',
+        zona: 'no',
+        casino: 'si',
+        obra: 'basica'
+      },
+      2: {
+        titulo: 'ninguno',
+        variabilidad: 'ninguna',
+        fijacion: 'no',
+        zona: 'no',
+        casino: 'si',
+        obra: 'basica'
+      }
+    };
+
+    // Función para seleccionar opciones en los botones
+    function seleccionarOpcion(campo, valor) {
+      // Actualizar la selección
+      selecciones[campo] = valor;
+      
+      // Actualizar la apariencia de los botones
+      const grupo = document.querySelectorAll(`[data-${campo}]`);
+      grupo.forEach(boton => {
+        if (boton.getAttribute(`data-${campo}`) === valor) {
+          boton.classList.add('active');
+        } else {
+          boton.classList.remove('active');
+        }
+      });
+    }
+
+    // Función para seleccionar opciones en los botones de comparación
+    function seleccionarOpcionComparacion(campo, valor, formulario) {
+      // Actualizar la selección
+      seleccionesComparacion[formulario][campo] = valor;
+      
+      // Actualizar la apariencia de los botones
+      const grupo = document.querySelectorAll(`[data-${campo}][data-form="${formulario}"]`);
+      grupo.forEach(boton => {
+        if (boton.getAttribute(`data-${campo}`) === valor) {
+          boton.classList.add('active');
+        } else {
+          boton.classList.remove('active');
+        }
+      });
+    }
+
+    // Función para obtener datos del formulario (modificada para usar las selecciones)
+    function obtenerDatosFormulario() {
+      return {
+        antiguedad: parseInt(document.getElementById("antiguedad").value),
+        titulo: selecciones.titulo,
+        variabilidad: selecciones.variabilidad,
+        fijacion: selecciones.fijacion === "si",
+        zona: selecciones.zona === "si",
+        usaCasino: selecciones.casino === "si",
+        obra: document.getElementById("obra").value
+      };
+    }
+
+    // Función para obtener datos del formulario de comparación
+    function obtenerDatosFormularioComparacion(formulario) {
+      return {
+        antiguedad: parseInt(document.getElementById(`antiguedad${formulario}`).value),
+        titulo: seleccionesComparacion[formulario].titulo,
+        variabilidad: seleccionesComparacion[formulario].variabilidad,
+        fijacion: seleccionesComparacion[formulario].fijacion === "si",
+        zona: seleccionesComparacion[formulario].zona === "si",
+        usaCasino: seleccionesComparacion[formulario].casino === "si",
+        obra: document.getElementById(`obra${formulario}`).value
+      };
+    }
+
     // Función para mostrar ventana emergente con tabla de años mínimos
     function mostrarTablaAniosMinimos() {
       const modal = document.getElementById('modalAniosMinimos');
@@ -959,6 +1361,24 @@
       document.getElementById('modalAniosMinimos').style.display = 'none';
     }
 
+    // Función para mostrar ventana emergente de comparación
+    function mostrarComparacion() {
+      const modal = document.getElementById('modalComparacion');
+      
+      // Inicializar los formularios de comparación
+      inicializarSelectGradosComparacion();
+      filtrarGradosComparacion('Oficial', 1);
+      filtrarGradosComparacion('Oficial', 2);
+      
+      // Mostrar la ventana emergente
+      modal.style.display = 'flex';
+    }
+
+    // Función para cerrar ventana emergente de comparación
+    function cerrarModalComparacion() {
+      document.getElementById('modalComparacion').style.display = 'none';
+    }
+
     // Cerrar modal al hacer clic fuera del contenido
     document.getElementById('modalAniosMinimos').addEventListener('click', function(e) {
       if (e.target === this) {
@@ -966,10 +1386,17 @@
       }
     });
 
+    document.getElementById('modalComparacion').addEventListener('click', function(e) {
+      if (e.target === this) {
+        cerrarModalComparacion();
+      }
+    });
+
     // Cerrar modal con tecla ESC
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
         cerrarModal();
+        cerrarModalComparacion();
       }
     });
 
@@ -1042,6 +1469,29 @@
       });
     }
 
+    // Función para inicializar el select de grados de comparación
+    function inicializarSelectGradosComparacion() {
+      const selectGrado1 = document.getElementById('grado1');
+      const selectGrado2 = document.getElementById('grado2');
+      
+      selectGrado1.innerHTML = ''; // Limpiar opciones existentes
+      selectGrado2.innerHTML = ''; // Limpiar opciones existentes
+      
+      todosLosGrados.forEach(grado => {
+        const option1 = document.createElement('option');
+        option1.value = grado;
+        option1.textContent = grado;
+        option1.setAttribute('data-jerarquia', determinarJerarquia(grado));
+        selectGrado1.appendChild(option1);
+        
+        const option2 = document.createElement('option');
+        option2.value = grado;
+        option2.textContent = grado;
+        option2.setAttribute('data-jerarquia', determinarJerarquia(grado));
+        selectGrado2.appendChild(option2);
+      });
+    }
+
     // Función para filtrar grados por jerarquía
     function filtrarGrados(jerarquiaFiltro) {
       const selectGrado = document.getElementById('grado');
@@ -1067,6 +1517,35 @@
         if (primeraOpcionVisible) {
           selectGrado.value = primeraOpcionVisible.value;
           verificarFijacion(); // Actualizar campo de fijación
+        }
+      }
+    }
+
+    // Función para filtrar grados por jerarquía en comparación
+    function filtrarGradosComparacion(jerarquiaFiltro, formulario) {
+      const selectGrado = document.getElementById(`grado${formulario}`);
+      const opcionesActuales = selectGrado.querySelectorAll('option');
+      const gradoSeleccionado = selectGrado.value;
+      
+      // Actualizar botones activos
+      document.querySelectorAll(`[data-jerarquia][data-form="${formulario}"]`).forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.querySelector(`[data-jerarquia="${jerarquiaFiltro}"][data-form="${formulario}"]`).classList.add('active');
+      
+      // Mostrar/ocultar opciones según el filtro
+      opcionesActuales.forEach(opcion => {
+        const jerarquiaOpcion = opcion.getAttribute('data-jerarquia');
+        opcion.style.display = jerarquiaOpcion === jerarquiaFiltro ? '' : 'none';
+      });
+      
+      // Si el grado seleccionado está oculto, seleccionar el primero visible
+      const opcionSeleccionada = selectGrado.querySelector('option[value="' + gradoSeleccionado + '"]');
+      if (opcionSeleccionada && opcionSeleccionada.style.display === 'none') {
+        const primeraOpcionVisible = selectGrado.querySelector('option[style=""]');
+        if (primeraOpcionVisible) {
+          selectGrado.value = primeraOpcionVisible.value;
+          verificarFijacionComparacion(formulario); // Actualizar campo de fijación
         }
       }
     }
@@ -1101,17 +1580,12 @@
       campoFijacion.style.display = GRADOS_CON_FIJACION.includes(gradoSeleccionado) ? "block" : "none";
     }
 
-    // Función para obtener datos del formulario
-    function obtenerDatosFormulario() {
-      return {
-        antiguedad: parseInt(document.getElementById("antiguedad").value),
-        titulo: document.getElementById("titulo").value,
-        variabilidad: document.getElementById("variabilidad").value,
-        fijacion: document.getElementById("fijacion").value === "si",
-        zona: document.getElementById("zona").value === "si",
-        usaCasino: document.getElementById("casino").value === "si",
-        obra: document.getElementById("obra").value
-      };
+    // Función para verificar fijación en comparación
+    function verificarFijacionComparacion(formulario) {
+      const gradoSeleccionado = document.getElementById(`grado${formulario}`).value;
+      const campoFijacion = document.getElementById(`fijacionCampo${formulario}`);
+
+      campoFijacion.style.display = GRADOS_CON_FIJACION.includes(gradoSeleccionado) ? "block" : "none";
     }
 
     // Función principal de cálculo
@@ -1407,6 +1881,63 @@
       document.getElementById("resultado").style.display = "none";
     }
 
+    // Función para calcular comparación
+    function calcularComparacion() {
+      const datosUsuario1 = obtenerDatosFormularioComparacion(1);
+      const grado1 = document.getElementById("grado1").value;
+      const ref1 = referencia[grado1];
+      
+      const datosUsuario2 = obtenerDatosFormularioComparacion(2);
+      const grado2 = document.getElementById("grado2").value;
+      const ref2 = referencia[grado2];
+      
+      const calculo1 = calcularHaber(ref1, datosUsuario1, grado1);
+      const calculo2 = calcularHaber(ref2, datosUsuario2, grado2);
+      
+      const diferencia = calculo2.total - calculo1.total;
+      
+      renderizarComparacion(calculo1, calculo2, grado1, grado2, diferencia);
+    }
+
+    // Función para renderizar comparación
+    function renderizarComparacion(calculo1, calculo2, grado1, grado2, diferencia) {
+      const diferenciaClass = diferencia >= 0 ? 'difference-positive' : 'difference-negative';
+      const diferenciaTexto = diferencia >= 0 ? 'mayor' : 'menor';
+      
+      const resultadoHTML = `
+        <h3 style="color: var(--primary-color); text-align: center; margin-bottom: 20px;">
+          Resultado de la Comparación
+        </h3>
+        
+        <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
+          <div style="flex: 1; min-width: 250px; text-align: center;">
+            <h4>Escenario 1</h4>
+            <p><strong>Grado:</strong> ${grado1}</p>
+            <p><strong>Total:</strong> ${formatearMoneda(calculo1.total)}</p>
+          </div>
+          
+          <div style="flex: 1; min-width: 250px; text-align: center;">
+            <h4>Escenario 2</h4>
+            <p><strong>Grado:</strong> ${grado2}</p>
+            <p><strong>Total:</strong> ${formatearMoneda(calculo2.total)}</p>
+          </div>
+        </div>
+        
+        <div style="text-align: center; padding: 20px; background-color: #f8f9fa; border-radius: var(--border-radius);">
+          <h4>Diferencia</h4>
+          <p class="${diferenciaClass}" style="font-size: 24px;">
+            ${formatearMoneda(Math.abs(diferencia))}
+          </p>
+          <p>El Escenario 2 es <strong>${formatearMoneda(Math.abs(diferencia))}</strong> ${diferenciaTexto} que el Escenario 1</p>
+        </div>
+        
+        ${generarNotaAclaracion()}
+      `;
+      
+      document.getElementById("comparisonResult").innerHTML = resultadoHTML;
+      document.getElementById("comparisonResult").style.display = "block";
+    }
+
     // Inicialización al cargar la página
     document.addEventListener('DOMContentLoaded', function() {
       // Inicializar el select de grados
@@ -1423,11 +1954,16 @@
       
       // Establecer filtro inicial
       filtrarGrados('Oficial');
+      
+      // Configurar event listeners para comparación
+      document.getElementById('grado1').addEventListener('change', function() {
+        verificarFijacionComparacion(1);
+      });
+      
+      document.getElementById('grado2').addEventListener('change', function() {
+        verificarFijacionComparacion(2);
+      });
     });
   </script>
 </body>
 </html>
-
-
-
-
