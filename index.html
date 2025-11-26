@@ -12,22 +12,29 @@
       --light-color: #ecf0f1;
       --dark-color: #2c3e50;
       --success-color: #27ae60;
-      --border-radius: 8px;
-      --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --warning-color: #f39c12;
+      --border-radius: 10px;
+      --box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
       --transition: all 0.3s ease;
+      --card-padding: 25px;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       line-height: 1.6;
       color: #333;
-      background-color: #f5f7fa;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ed 100%);
       padding: 20px;
       margin: 0;
+      min-height: 100vh;
     }
 
     .container {
-      max-width: 800px;
+      max-width: 1200px;
       margin: 0 auto;
     }
 
@@ -35,13 +42,15 @@
       background: white;
       border-radius: var(--border-radius);
       box-shadow: var(--box-shadow);
-      padding: 25px;
+      padding: var(--card-padding);
       margin-bottom: 25px;
       transition: var(--transition);
+      overflow: hidden;
     }
 
     .card:hover {
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      transform: translateY(-5px);
     }
 
     .header {
@@ -49,17 +58,24 @@
       margin-bottom: 30px;
       border-bottom: 2px solid var(--light-color);
       padding-bottom: 20px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, #34495e 100%);
+      color: white;
+      margin-top: 0;
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
     }
 
     .header h2 {
-      color: var(--primary-color);
+      color: white;
       margin-bottom: 10px;
-      font-size: 28px;
+      font-size: 32px;
+      font-weight: 700;
     }
 
     .header p {
-      color: #7f8c8d;
+      color: rgba(255, 255, 255, 0.9);
       font-size: 16px;
+      max-width: 700px;
+      margin: 0 auto;
     }
 
     label {
@@ -71,10 +87,10 @@
 
     select, input {
       width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
+      padding: 14px;
+      border: 2px solid #e1e8ed;
       border-radius: var(--border-radius);
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       font-size: 16px;
       transition: var(--transition);
       background-color: white;
@@ -88,10 +104,10 @@
 
     .btn {
       display: inline-block;
-      background-color: var(--secondary-color);
+      background: linear-gradient(to right, var(--secondary-color), #2980b9);
       color: white;
       border: none;
-      padding: 12px 24px;
+      padding: 16px 28px;
       border-radius: var(--border-radius);
       cursor: pointer;
       font-size: 16px;
@@ -100,36 +116,25 @@
       transition: var(--transition);
       width: 100%;
       margin-top: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     .btn:hover {
-      background-color: #2980b9;
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+      box-shadow: 0 7px 14px rgba(0, 0, 0, 0.15);
     }
 
     .btn-secondary {
-      background-color: var(--primary-color);
-    }
-
-    .btn-secondary:hover {
-      background-color: #1a252f;
+      background: linear-gradient(to right, var(--primary-color), #1a252f);
     }
 
     .btn-info {
-      background-color: #17a2b8;
-    }
-
-    .btn-info:hover {
-      background-color: #138496;
+      background: linear-gradient(to right, #17a2b8, #138496);
     }
 
     .btn-warning {
-      background-color: #ffc107;
-      color: #212529;
-    }
-
-    .btn-warning:hover {
-      background-color: #e0a800;
+      background: linear-gradient(to right, var(--warning-color), #e67e22);
+      color: white;
     }
 
     .result-table {
@@ -143,15 +148,15 @@
     }
 
     .result-table th {
-      background-color: var(--primary-color);
+      background: linear-gradient(to right, var(--primary-color), #34495e);
       color: white;
       text-align: left;
-      padding: 15px;
+      padding: 18px;
       font-weight: 600;
     }
 
     .result-table td {
-      padding: 12px 15px;
+      padding: 15px 18px;
       border-bottom: 1px solid #eee;
     }
 
@@ -175,8 +180,8 @@
 
     .note-box {
       background-color: #f8f9fa;
-      border-left: 4px solid var(--secondary-color);
-      padding: 15px;
+      border-left: 5px solid var(--secondary-color);
+      padding: 20px;
       margin-top: 20px;
       border-radius: 0 var(--border-radius) var(--border-radius) 0;
     }
@@ -194,83 +199,22 @@
     }
 
     .update-info a {
-      color: var(--secondary-color);
+      color: white;
       text-decoration: none;
       font-weight: 600;
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 5px 10px;
+      border-radius: 4px;
     }
 
     .update-info a:hover {
-      text-decoration: underline;
+      background-color: rgba(255, 255, 255, 0.3);
     }
 
-    /* Estilos para botones de jerarquía */
-    .btn-jerarquia {
-      flex: 1;
-      padding: 10px 15px;
-      background-color: #f8f9fa;
-      border: 2px solid #dee2e6;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-      text-align: center;
-      transition: var(--transition);
-      color: #6c757d;
-    }
-
-    .btn-jerarquia:hover {
-      background-color: #e9ecef;
-      border-color: var(--secondary-color);
-      color: var(--secondary-color);
-    }
-
-    .btn-jerarquia.active {
-      background-color: var(--secondary-color);
-      border-color: var(--secondary-color);
-      color: white;
-    }
-
-    .btn-jerarquia.active:hover {
-      background-color: #2980b9;
-      border-color: #2980b9;
-    }
-
-    /* Estilos para botones de cuerpo */
-    .btn-cuerpo {
-      padding: 8px 12px;
-      background-color: #f8f9fa;
-      border: 2px solid #dee2e6;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 600;
-      text-align: center;
-      transition: var(--transition);
-      color: #6c757d;
-      margin: 2px;
-    }
-
-    .btn-cuerpo:hover {
-      background-color: #e9ecef;
-      border-color: var(--secondary-color);
-      color: var(--secondary-color);
-    }
-
-    .btn-cuerpo.active {
-      background-color: var(--success-color);
-      border-color: var(--success-color);
-      color: white;
-    }
-
-    .btn-cuerpo.active:hover {
-      background-color: #219653;
-      border-color: #219653;
-    }
-
-    /* Estilos para botones de opciones - CORREGIDO */
+    /* Estilos para botones de opciones */
     .btn-opcion {
       flex: 1;
-      padding: 10px 15px;
+      padding: 12px 16px;
       background-color: #f8f9fa;
       border: 2px solid #dee2e6;
       border-radius: var(--border-radius);
@@ -281,7 +225,7 @@
       transition: var(--transition);
       color: #6c757d;
       margin: 2px;
-      min-width: 0; /* CORRECCIÓN IMPORTANTE */
+      min-width: 0;
     }
 
     .btn-opcion:hover {
@@ -291,14 +235,21 @@
     }
 
     .btn-opcion.active {
-      background-color: var(--secondary-color);
+      background: linear-gradient(to right, var(--secondary-color), #2980b9);
       border-color: var(--secondary-color);
       color: white;
     }
 
-    .btn-opcion.active:hover {
-      background-color: #2980b9;
-      border-color: #2980b9;
+    .btn-opcion-group {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-opcion-group label {
+      width: 100%;
+      margin-bottom: 10px;
     }
 
     /* Estilos para botones deshabilitados */
@@ -308,19 +259,6 @@
       pointer-events: none;
     }
 
-    .btn-opcion-group {
-      display: flex;
-      gap: 5px;
-      margin-bottom: 15px;
-      flex-wrap: wrap;
-    }
-
-    .btn-opcion-group label {
-      width: 100%;
-      margin-bottom: 8px;
-    }
-
-    /* Estilos para grupo deshabilitado */
     .btn-opcion-group.disabled {
       opacity: 0.5;
       pointer-events: none;
@@ -348,7 +286,7 @@
     .modal-content {
       background: white;
       border-radius: var(--border-radius);
-      box-shadow: var(--box-shadow);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
       max-width: 900px;
       width: 100%;
       max-height: 90vh;
@@ -362,7 +300,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: var(--primary-color);
+      background: linear-gradient(to right, var(--primary-color), #34495e);
       color: white;
       border-radius: var(--border-radius) var(--border-radius) 0 0;
     }
@@ -391,7 +329,7 @@
     }
 
     .modal-body {
-      padding: 20px;
+      padding: 25px;
     }
 
     .table-container {
@@ -406,7 +344,7 @@
     }
 
     .info-table th {
-      background-color: var(--primary-color);
+      background: linear-gradient(to right, var(--primary-color), #34495e);
       color: white;
       padding: 12px;
       text-align: center;
@@ -462,7 +400,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 15px;
+      padding: 15px;
       border-bottom: 1px solid #eee;
       background-color: white;
     }
@@ -503,6 +441,194 @@
       margin: 20px 0;
     }
 
+    /* Estilos para botones de cuerpo */
+    .btn-cuerpo {
+      padding: 8px 12px;
+      background-color: #f8f9fa;
+      border: 2px solid #dee2e6;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      transition: var(--transition);
+      color: #6c757d;
+      margin: 2px;
+    }
+
+    .btn-cuerpo:hover {
+      background-color: #e9ecef;
+      border-color: var(--secondary-color);
+      color: var(--secondary-color);
+    }
+
+    .btn-cuerpo.active {
+      background-color: var(--success-color);
+      border-color: var(--success-color);
+      color: white;
+    }
+
+    .btn-cuerpo.active:hover {
+      background-color: #219653;
+      border-color: #219653;
+    }
+
+    /* Nuevos estilos para mejor UX */
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+
+    .calculation-section {
+      grid-column: 1;
+    }
+
+    .results-section {
+      grid-column: 2;
+    }
+
+    .secondary-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .secondary-actions .btn {
+      width: auto;
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group-title {
+      font-size: 18px;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--light-color);
+    }
+
+    .quick-results {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .quick-results h3 {
+      margin-top: 0;
+      color: var(--primary-color);
+    }
+
+    .result-highlight {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--secondary-color);
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    .result-breakdown {
+      margin-top: 20px;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .feature-card h3 {
+      margin-top: 0;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+    }
+
+    .feature-card h3 i {
+      margin-right: 10px;
+      color: var(--secondary-color);
+    }
+
+    .feature-card p {
+      color: #6c757d;
+      margin-bottom: 15px;
+    }
+
+    .feature-icon {
+      font-size: 24px;
+      margin-right: 10px;
+    }
+
+    .calculation-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .calculation-steps::before {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #e1e8ed;
+      z-index: 1;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .step-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #e1e8ed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-bottom: 5px;
+      transition: var(--transition);
+    }
+
+    .step.active .step-circle {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+
+    .step-label {
+      font-size: 12px;
+      color: #6c757d;
+      text-align: center;
+    }
+
+    .step.active .step-label {
+      color: var(--secondary-color);
+      font-weight: 600;
+    }
+
     @media (max-width: 768px) {
       .container {
         padding: 10px;
@@ -513,25 +639,15 @@
       }
       
       select, input, .btn {
-        padding: 10px;
+        padding: 12px;
       }
       
       .result-table td, .result-table th {
-        padding: 10px;
-      }
-      
-      .btn-jerarquia {
-        padding: 8px 12px;
-        font-size: 12px;
-      }
-      
-      .btn-cuerpo {
-        padding: 6px 8px;
-        font-size: 10px;
+        padding: 12px;
       }
       
       .btn-opcion {
-        padding: 8px 12px;
+        padding: 10px 12px;
         font-size: 12px;
       }
       
@@ -574,6 +690,23 @@
       .mobile-view {
         display: block;
       }
+      
+      /* Cambiar diseño de grid en móviles */
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .calculation-section, .results-section {
+        grid-column: 1;
+      }
+      
+      .secondary-actions {
+        flex-direction: column;
+      }
+      
+      .calculation-steps {
+        display: none; /* Ocultar en móviles por espacio */
+      }
     }
 
     @media (min-width: 769px) {
@@ -597,108 +730,161 @@
       <p class="update-info">Última actualización: <a href="https://www.boletinoficial.gob.ar/detalleAviso/primera/329387/20250806" target="_blank">RESOL-2025-944-APN-MSG (a percibir en diciembre)</a></p>
     </div>
 
-    <div class="card">
-      <form id="calculadoraForm">
-        <!-- Selector de Jerarquía -->
-        <label for="jerarquia">Jerarquía:</label>
-        <div class="btn-opcion-group">
-          <button type="button" class="btn-jerarquia active" data-jerarquia="Oficial" onclick="filtrarGrados('Oficial')">
-            Oficial
-          </button>
-          <button type="button" class="btn-jerarquia" data-jerarquia="Suboficial" onclick="filtrarGrados('Suboficial')">
-            Suboficial
-          </button>
-          <button type="button" class="btn-jerarquia" data-jerarquia="Aspirante" onclick="filtrarGrados('Aspirante')">
-            Aspirante
-          </button>
+    <div class="main-content">
+      <div class="calculation-section">
+        <div class="card">
+          <div class="calculation-steps">
+            <div class="step active">
+              <div class="step-circle">1</div>
+              <div class="step-label">Jerarquía</div>
+            </div>
+            <div class="step">
+              <div class="step-circle">2</div>
+              <div class="step-label">Grado</div>
+            </div>
+            <div class="step">
+              <div class="step-circle">3</div>
+              <div class="step-label">Antigüedad</div>
+            </div>
+            <div class="step">
+              <div class="step-circle">4</div>
+              <div class="step-label">Opciones</div>
+            </div>
+          </div>
+
+          <form id="calculadoraForm">
+            <div class="form-group">
+              <div class="form-group-title">Datos Principales</div>
+              
+              <label for="jerarquia">Jerarquía:</label>
+              <div class="btn-opcion-group">
+                <button type="button" class="btn-opcion active" data-jerarquia="Oficial" onclick="filtrarGrados('Oficial')">
+                  Oficial
+                </button>
+                <button type="button" class="btn-opcion" data-jerarquia="Suboficial" onclick="filtrarGrados('Suboficial')">
+                  Suboficial
+                </button>
+                <button type="button" class="btn-opcion" data-jerarquia="Aspirante" onclick="filtrarGrados('Aspirante')">
+                  Aspirante
+                </button>
+              </div>
+
+              <label for="grado">Grado:</label>
+              <select id="grado" name="grado">
+                <!-- Las opciones se llenarán dinámicamente -->
+              </select>
+
+              <label for="antiguedad">Años de servicio:</label>
+              <input type="number" id="antiguedad" min="0" max="50" value="0">
+            </div>
+
+            <div class="form-group">
+              <div class="form-group-title">Opciones Adicionales</div>
+              
+              <div class="btn-opcion-group">
+                <label for="titulo">Título:</label>
+                <button type="button" class="btn-opcion active" data-titulo="ninguno" onclick="seleccionarOpcion('titulo', 'ninguno')">
+                  Ninguno
+                </button>
+                <button type="button" class="btn-opcion" data-titulo="terciario" onclick="seleccionarOpcion('titulo', 'terciario')">
+                  Terciario
+                </button>
+                <button type="button" class="btn-opcion" data-titulo="universitario" onclick="seleccionarOpcion('titulo', 'universitario')">
+                  Universitario
+                </button>
+              </div>
+
+              <div class="btn-opcion-group">
+                <label for="variabilidad">¿Variabilidad?</label>
+                <button type="button" class="btn-opcion active" data-variabilidad="ninguna" onclick="seleccionarOpcion('variabilidad', 'ninguna')">
+                  Ninguna
+                </button>
+                <button type="button" class="btn-opcion" data-variabilidad="unico" onclick="seleccionarOpcion('variabilidad', 'unico')">
+                  Residente único
+                </button>
+                <button type="button" class="btn-opcion" data-variabilidad="familia" onclick="seleccionarOpcion('variabilidad', 'familia')">
+                  Residente con familia
+                </button>
+              </div>
+
+              <div id="fijacionCampo" class="btn-opcion-group">
+                <label for="fijacion">Fijación de domicilio:</label>
+                <button type="button" class="btn-opcion active" data-fijacion="no" onclick="seleccionarOpcion('fijacion', 'no')">
+                  No
+                </button>
+                <button type="button" class="btn-opcion" data-fijacion="si" onclick="seleccionarOpcion('fijacion', 'si')">
+                  Sí
+                </button>
+              </div>
+
+              <div class="btn-opcion-group">
+                <label for="zona">¿Zona Sur?</label>
+                <button type="button" class="btn-opcion active" data-zona="no" onclick="seleccionarOpcion('zona', 'no')">
+                  No
+                </button>
+                <button type="button" class="btn-opcion" data-zona="si" onclick="seleccionarOpcion('zona', 'si')">
+                  Sí
+                </button>
+              </div>
+
+              <div class="btn-opcion-group">
+                <label for="casino">¿Casino?</label>
+                <button type="button" class="btn-opcion active" data-casino="si" onclick="seleccionarOpcion('casino', 'si')">
+                  Sí
+                </button>
+                <button type="button" class="btn-opcion" data-casino="no" onclick="seleccionarOpcion('casino', 'no')">
+                  No
+                </button>
+              </div>
+
+              <label for="obra">Obra social:</label>
+              <select id="obra">
+                <option value="basica">Básica</option>
+                <option value="carga">Con carga de familia (1 o 2)</option>
+                <option value="mascarga">Con carga de familia (3 o +)</option>
+              </select>
+            </div>
+
+            <button type="button" class="btn" onclick="calcular()">CALCULAR HABER</button>
+            
+            <div class="secondary-actions">
+              <button type="button" class="btn btn-secondary" onclick="mostrarTabla()">TABLA DE HABERES</button>
+              <button type="button" class="btn btn-info" onclick="mostrarTablaAniosMinimos()">ANTIGÜEDAD MÍNIMA</button>
+              <button type="button" class="btn btn-warning" onclick="mostrarComparacion()">COMPARAR</button>
+            </div>
+          </form>
         </div>
 
-        <label for="grado">Grado:</label>
-        <select id="grado" name="grado">
-          <!-- Las opciones se llenarán dinámicamente -->
-        </select>
-
-        <label for="antiguedad">Años de servicio:</label>
-        <input type="number" id="antiguedad" min="0" max="50" value="0">
-
-        <!-- Título convertido a botones -->
-        <div class="btn-opcion-group">
-          <label for="titulo">Título:</label>
-          <button type="button" class="btn-opcion active" data-titulo="ninguno" onclick="seleccionarOpcion('titulo', 'ninguno')">
-            Ninguno
-          </button>
-          <button type="button" class="btn-opcion" data-titulo="terciario" onclick="seleccionarOpcion('titulo', 'terciario')">
-            Terciario
-          </button>
-          <button type="button" class="btn-opcion" data-titulo="universitario" onclick="seleccionarOpcion('titulo', 'universitario')">
-            Universitario
-          </button>
+        <div class="card feature-card" onclick="mostrarTabla()">
+          <h3><span class="feature-icon">📊</span> Tabla de Haberes Estimados</h3>
+          <p>Consulte los haberes estimados para todos los grados y cuerpos en una tabla completa y ordenada.</p>
         </div>
 
-        <!-- Variabilidad convertida a botones -->
-        <div class="btn-opcion-group">
-          <label for="variabilidad">¿Variabilidad?</label>
-          <button type="button" class="btn-opcion active" data-variabilidad="ninguna" onclick="seleccionarOpcion('variabilidad', 'ninguna')">
-            Ninguna
-          </button>
-          <button type="button" class="btn-opcion" data-variabilidad="unico" onclick="seleccionarOpcion('variabilidad', 'unico')">
-            Residente único
-          </button>
-          <button type="button" class="btn-opcion" data-variabilidad="familia" onclick="seleccionarOpcion('variabilidad', 'familia')">
-            Residente con familia
-          </button>
+        <div class="card feature-card" onclick="mostrarTablaAniosMinimos()">
+          <h3><span class="feature-icon">⏱️</span> Antigüedad Mínima</h3>
+          <p>Verifique los años mínimos requeridos para ascender al siguiente grado según su escalafón.</p>
         </div>
 
-        <!-- Fijación de domicilio - MODIFICADO: Siempre visible -->
-        <div id="fijacionCampo" class="btn-opcion-group">
-          <label for="fijacion">Fijación de domicilio:</label>
-          <button type="button" class="btn-opcion active" data-fijacion="no" onclick="seleccionarOpcion('fijacion', 'no')">
-            No
-          </button>
-          <button type="button" class="btn-opcion" data-fijacion="si" onclick="seleccionarOpcion('fijacion', 'si')">
-            Sí
-          </button>
+        <div class="card feature-card" onclick="mostrarComparacion()">
+          <h3><span class="feature-icon">⚖️</span> Comparar Haberes</h3>
+          <p>Compare diferentes escenarios para evaluar el impacto de cambios en su situación.</p>
+        </div>
+      </div>
+
+      <div class="results-section">
+        <div class="card" id="resultado" style="display: none;">
+          <!-- Aquí se mostrará el resultado del cálculo -->
         </div>
 
-        <!-- Zona Sur convertida a botones -->
-        <div class="btn-opcion-group">
-          <label for="zona">¿Zona Sur?</label>
-          <button type="button" class="btn-opcion active" data-zona="no" onclick="seleccionarOpcion('zona', 'no')">
-            No
-          </button>
-          <button type="button" class="btn-opcion" data-zona="si" onclick="seleccionarOpcion('zona', 'si')">
-            Sí
-          </button>
+        <div class="card quick-results" id="quickResults" style="display: none;">
+          <h3>Resumen Rápido</h3>
+          <div class="result-highlight" id="quickTotal"></div>
+          <div class="result-breakdown" id="quickBreakdown"></div>
         </div>
 
-        <!-- Casino convertido a botones -->
-        <div class="btn-opcion-group">
-          <label for="casino">¿Casino?</label>
-          <button type="button" class="btn-opcion active" data-casino="si" onclick="seleccionarOpcion('casino', 'si')">
-            Sí
-          </button>
-          <button type="button" class="btn-opcion" data-casino="no" onclick="seleccionarOpcion('casino', 'no')">
-            No
-          </button>
-        </div>
-
-        <!-- Obra social se mantiene como lista desplegable -->
-        <label for="obra">Obra social:</label>
-        <select id="obra">
-          <option value="basica">Básica</option>
-          <option value="carga">Con carga de familia (1 o 2)</option>
-          <option value="mascarga">Con carga de familia (3 o +)</option>
-        </select>
-
-        <button type="button" class="btn" onclick="calcular()">CALCULAR</button>
-        <button type="button" class="btn btn-secondary" onclick="mostrarTabla()">HABERES ESTIMADOS</button>
-        <button type="button" class="btn btn-info" onclick="mostrarTablaAniosMinimos()">ANTIGUEDAD MINIMA</button>
-        <button type="button" class="btn btn-warning" onclick="mostrarComparacion()">COMPARAR</button>
-      </form>
+        <div class="card" id="tablaReferencias" style="display: none;"></div>
+      </div>
     </div>
-
-    <div class="card" id="resultado" style="display: none;"></div>
-    <div class="card" id="tablaReferencias" style="display: none;"></div>
   </div>
 
   <!-- Ventana emergente para tabla de años mínimos -->
@@ -737,13 +923,13 @@
             <h4>Escenario 1</h4>
             <div class="btn-opcion-group">
               <label>Jerarquía:</label>
-              <button type="button" class="btn-jerarquia active" data-jerarquia="Oficial" data-form="1" onclick="filtrarGradosComparacion('Oficial', 1)">
+              <button type="button" class="btn-opcion active" data-jerarquia="Oficial" data-form="1" onclick="filtrarGradosComparacion('Oficial', 1)">
                 Oficial
               </button>
-              <button type="button" class="btn-jerarquia" data-jerarquia="Suboficial" data-form="1" onclick="filtrarGradosComparacion('Suboficial', 1)">
+              <button type="button" class="btn-opcion" data-jerarquia="Suboficial" data-form="1" onclick="filtrarGradosComparacion('Suboficial', 1)">
                 Suboficial
               </button>
-              <button type="button" class="btn-jerarquia" data-jerarquia="Aspirante" data-form="1" onclick="filtrarGradosComparacion('Aspirante', 1)">
+              <button type="button" class="btn-opcion" data-jerarquia="Aspirante" data-form="1" onclick="filtrarGradosComparacion('Aspirante', 1)">
                 Aspirante
               </button>
             </div>
@@ -782,7 +968,7 @@
               </button>
             </div>
 
-            <!-- Fijación de domicilio - MODIFICADO: Siempre visible -->
+            <!-- Fijación de domicilio -->
             <div id="fijacionCampo1" class="btn-opcion-group">
               <label>Fijación de domicilio:</label>
               <button type="button" class="btn-opcion active" data-fijacion="no" data-form="1" onclick="seleccionarOpcionComparacion('fijacion', 'no', 1)">
@@ -826,13 +1012,13 @@
             <h4>Escenario 2</h4>
             <div class="btn-opcion-group">
               <label>Jerarquía:</label>
-              <button type="button" class="btn-jerarquia active" data-jerarquia="Oficial" data-form="2" onclick="filtrarGradosComparacion('Oficial', 2)">
+              <button type="button" class="btn-opcion active" data-jerarquia="Oficial" data-form="2" onclick="filtrarGradosComparacion('Oficial', 2)">
                 Oficial
               </button>
-              <button type="button" class="btn-jerarquia" data-jerarquia="Suboficial" data-form="2" onclick="filtrarGradosComparacion('Suboficial', 2)">
+              <button type="button" class="btn-opcion" data-jerarquia="Suboficial" data-form="2" onclick="filtrarGradosComparacion('Suboficial', 2)">
                 Suboficial
               </button>
-              <button type="button" class="btn-jerarquia" data-jerarquia="Aspirante" data-form="2" onclick="filtrarGradosComparacion('Aspirante', 2)">
+              <button type="button" class="btn-opcion" data-jerarquia="Aspirante" data-form="2" onclick="filtrarGradosComparacion('Aspirante', 2)">
                 Aspirante
               </button>
             </div>
@@ -871,7 +1057,7 @@
               </button>
             </div>
 
-            <!-- Fijación de domicilio - MODIFICADO: Siempre visible -->
+            <!-- Fijación de domicilio -->
             <div id="fijacionCampo2" class="btn-opcion-group">
               <label>Fijación de domicilio:</label>
               <button type="button" class="btn-opcion active" data-fijacion="no" data-form="2" onclick="seleccionarOpcionComparacion('fijacion', 'no', 2)">
@@ -919,7 +1105,6 @@
       </div>
     </div>
   </div>
-
 
   <script>
     // Constantes para cálculos
@@ -1724,7 +1909,7 @@
       const gradoSeleccionado = selectGrado.value;
       
       // Actualizar botones activos
-      document.querySelectorAll('.btn-jerarquia').forEach(btn => {
+      document.querySelectorAll('.btn-opcion[data-jerarquia]').forEach(btn => {
         btn.classList.remove('active');
       });
       document.querySelector(`[data-jerarquia="${jerarquiaFiltro}"]`).classList.add('active');
@@ -2055,6 +2240,20 @@
 
       document.getElementById("resultado").innerHTML = tablaHTML;
       document.getElementById("resultado").style.display = "block";
+      
+      // Actualizar resumen rápido
+      document.getElementById("quickResults").style.display = "block";
+      document.getElementById("quickTotal").textContent = formatearMoneda(calculo.total);
+      document.getElementById("quickBreakdown").innerHTML = `
+        <p><strong>Haber básico:</strong> ${formatearMoneda(calculo.haber)}</p>
+        <p><strong>Suplemento por antigüedad:</strong> ${formatearMoneda(calculo.suplemento)}</p>
+        <p><strong>Adicionales:</strong> ${formatearMoneda(calculo.adicionalVariabilidad + calculo.adicionalFijacion + calculo.adicionalZona)}</p>
+      `;
+      
+      // Actualizar pasos de cálculo
+      document.querySelectorAll('.step').forEach((step, index) => {
+        step.classList.add('active');
+      });
     }
 
     // Función principal calcular
@@ -2217,6 +2416,7 @@
       tablaDiv.innerHTML = tablaHTML;
       tablaDiv.style.display = "block";
       document.getElementById("resultado").style.display = "none";
+      document.getElementById("quickResults").style.display = "none";
     }
 
     // Función para calcular comparación
