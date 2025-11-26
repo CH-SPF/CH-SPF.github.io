@@ -267,7 +267,7 @@
       border-color: #219653;
     }
 
-    /* Estilos para botones de opciones */
+    /* Estilos para botones de opciones - CORREGIDO */
     .btn-opcion {
       flex: 1;
       padding: 10px 15px;
@@ -281,6 +281,7 @@
       transition: var(--transition);
       color: #6c757d;
       margin: 2px;
+      min-width: 0; /* CORRECCIÓN IMPORTANTE */
     }
 
     .btn-opcion:hover {
@@ -300,6 +301,13 @@
       border-color: #2980b9;
     }
 
+    /* Estilos para botones deshabilitados */
+    .btn-opcion:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
     .btn-opcion-group {
       display: flex;
       gap: 5px;
@@ -310,6 +318,16 @@
     .btn-opcion-group label {
       width: 100%;
       margin-bottom: 8px;
+    }
+
+    /* Estilos para grupo deshabilitado */
+    .btn-opcion-group.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .btn-opcion-group.disabled label {
+      color: #6c757d;
     }
 
     /* Estilos para ventana emergente */
@@ -631,16 +649,16 @@
           </button>
         </div>
 
-        <!-- Fijación de domicilio convertida a botones - CORREGIDO -->
-<div id="fijacionCampo" style="display: none;" class="btn-opcion-group">
-  <label for="fijacion">Fijación de domicilio:</label>
-  <button type="button" class="btn-opcion" data-fijacion="no" onclick="seleccionarOpcion('fijacion', 'no')">
-    No
-  </button>
-  <button type="button" class="btn-opcion" data-fijacion="si" onclick="seleccionarOpcion('fijacion', 'si')">
-    Sí
-  </button>
-</div>
+        <!-- Fijación de domicilio - MODIFICADO: Siempre visible -->
+        <div id="fijacionCampo" class="btn-opcion-group">
+          <label for="fijacion">Fijación de domicilio:</label>
+          <button type="button" class="btn-opcion active" data-fijacion="no" onclick="seleccionarOpcion('fijacion', 'no')">
+            No
+          </button>
+          <button type="button" class="btn-opcion" data-fijacion="si" onclick="seleccionarOpcion('fijacion', 'si')">
+            Sí
+          </button>
+        </div>
 
         <!-- Zona Sur convertida a botones -->
         <div class="btn-opcion-group">
@@ -764,16 +782,16 @@
               </button>
             </div>
 
-            <!-- Fijación de domicilio convertida a botones - CORREGIDO -->
-<div id="fijacionCampo1" style="display: none;" class="btn-opcion-group">
-  <label>Fijación de domicilio:</label>
-  <button type="button" class="btn-opcion" data-fijacion="no" data-form="1" onclick="seleccionarOpcionComparacion('fijacion', 'no', 1)">
-    No
-  </button>
-  <button type="button" class="btn-opcion" data-fijacion="si" data-form="1" onclick="seleccionarOpcionComparacion('fijacion', 'si', 1)">
-    Sí
-  </button>
-</div>
+            <!-- Fijación de domicilio - MODIFICADO: Siempre visible -->
+            <div id="fijacionCampo1" class="btn-opcion-group">
+              <label>Fijación de domicilio:</label>
+              <button type="button" class="btn-opcion active" data-fijacion="no" data-form="1" onclick="seleccionarOpcionComparacion('fijacion', 'no', 1)">
+                No
+              </button>
+              <button type="button" class="btn-opcion" data-fijacion="si" data-form="1" onclick="seleccionarOpcionComparacion('fijacion', 'si', 1)">
+                Sí
+              </button>
+            </div>
 
             <div class="btn-opcion-group">
               <label>¿Zona Sur?</label>
@@ -853,15 +871,16 @@
               </button>
             </div>
 
-      <div id="fijacionCampo2" style="display: none;" class="btn-opcion-group">
-  <label>Fijación de domicilio:</label>
-  <button type="button" class="btn-opcion" data-fijacion="no" data-form="2" onclick="seleccionarOpcionComparacion('fijacion', 'no', 2)">
-    No
-  </button>
-  <button type="button" class="btn-opcion" data-fijacion="si" data-form="2" onclick="seleccionarOpcionComparacion('fijacion', 'si', 2)">
-    Sí
-  </button>
-</div>
+            <!-- Fijación de domicilio - MODIFICADO: Siempre visible -->
+            <div id="fijacionCampo2" class="btn-opcion-group">
+              <label>Fijación de domicilio:</label>
+              <button type="button" class="btn-opcion active" data-fijacion="no" data-form="2" onclick="seleccionarOpcionComparacion('fijacion', 'no', 2)">
+                No
+              </button>
+              <button type="button" class="btn-opcion" data-fijacion="si" data-form="2" onclick="seleccionarOpcionComparacion('fijacion', 'si', 2)">
+                Sí
+              </button>
+            </div>
 
             <div class="btn-opcion-group">
               <label>¿Zona Sur?</label>
@@ -900,6 +919,7 @@
       </div>
     </div>
   </div>
+
 
   <script>
     // Constantes para cálculos
@@ -1338,6 +1358,86 @@
       }
     };
 
+    // Función para verificar si la fijación debe estar habilitada
+    function fijacionHabilitada() {
+      const gradoSeleccionado = document.getElementById("grado").value;
+      const variabilidadSeleccionada = selecciones.variabilidad;
+      
+      // La fijación está habilitada solo si:
+      // 1. El grado tiene fijación disponible Y
+      // 2. La variabilidad es "ninguna"
+      return GRADOS_CON_FIJACION.includes(gradoSeleccionado) && variabilidadSeleccionada === 'ninguna';
+    }
+
+    // Función para verificar si la fijación debe estar habilitada en comparación
+    function fijacionHabilitadaComparacion(formulario) {
+      const gradoSeleccionado = document.getElementById(`grado${formulario}`).value;
+      const variabilidadSeleccionada = seleccionesComparacion[formulario].variabilidad;
+      
+      // La fijación está habilitada solo si:
+      // 1. El grado tiene fijación disponible Y
+      // 2. La variabilidad es "ninguna"
+      return GRADOS_CON_FIJACION.includes(gradoSeleccionado) && variabilidadSeleccionada === 'ninguna';
+    }
+
+    // Función para actualizar el estado de los botones de fijación
+    function actualizarEstadoFijacion() {
+      const habilitado = fijacionHabilitada();
+      const campoFijacion = document.getElementById("fijacionCampo");
+      const botonesFijacion = document.querySelectorAll('[data-fijacion]');
+      
+      if (habilitado) {
+        campoFijacion.classList.remove('disabled');
+        botonesFijacion.forEach(boton => {
+          boton.disabled = false;
+        });
+      } else {
+        campoFijacion.classList.add('disabled');
+        botonesFijacion.forEach(boton => {
+          boton.disabled = true;
+        });
+        
+        // Si está deshabilitado, resetear a "No"
+        if (!habilitado && selecciones.fijacion === 'si') {
+          selecciones.fijacion = 'no';
+          const botonNo = document.querySelector('[data-fijacion="no"]');
+          const botonSi = document.querySelector('[data-fijacion="si"]');
+          
+          if (botonNo) botonNo.classList.add('active');
+          if (botonSi) botonSi.classList.remove('active');
+        }
+      }
+    }
+
+    // Función para actualizar el estado de los botones de fijación en comparación
+    function actualizarEstadoFijacionComparacion(formulario) {
+      const habilitado = fijacionHabilitadaComparacion(formulario);
+      const campoFijacion = document.getElementById(`fijacionCampo${formulario}`);
+      const botonesFijacion = document.querySelectorAll(`[data-fijacion][data-form="${formulario}"]`);
+      
+      if (habilitado) {
+        campoFijacion.classList.remove('disabled');
+        botonesFijacion.forEach(boton => {
+          boton.disabled = false;
+        });
+      } else {
+        campoFijacion.classList.add('disabled');
+        botonesFijacion.forEach(boton => {
+          boton.disabled = true;
+        });
+        
+        // Si está deshabilitado, resetear a "No"
+        if (!habilitado && seleccionesComparacion[formulario].fijacion === 'si') {
+          seleccionesComparacion[formulario].fijacion = 'no';
+          const botonNo = document.querySelector(`[data-fijacion="no"][data-form="${formulario}"]`);
+          const botonSi = document.querySelector(`[data-fijacion="si"][data-form="${formulario}"]`);
+          
+          if (botonNo) botonNo.classList.add('active');
+          if (botonSi) botonSi.classList.remove('active');
+        }
+      }
+    }
+
     // Función para seleccionar opciones en los botones
     function seleccionarOpcion(campo, valor) {
       // Actualizar la selección
@@ -1353,21 +1453,24 @@
         }
       });
       
-      // Si es variabilidad, verificar si mostrar fijación
-      if (campo === 'variabilidad' && valor !== 'ninguna') {
-        document.getElementById('fijacionCampo').style.display = 'block';
-      } else if (campo === 'variabilidad' && valor === 'ninguna') {
-        document.getElementById('fijacionCampo').style.display = 'none';
-        // También resetear la selección de fijación
-        selecciones.fijacion = 'no';
-        const botonesFijacion = document.querySelectorAll('[data-fijacion]');
-        botonesFijacion.forEach(boton => {
-          if (boton.getAttribute('data-fijacion') === 'no') {
-            boton.classList.add('active');
-          } else {
-            boton.classList.remove('active');
-          }
-        });
+      // Si es variabilidad, resetear fijación si no es "ninguna"
+      if (campo === 'variabilidad') {
+        // MODIFICACIÓN: Resetear fijación cuando se cambia de "Ninguna" a otra opción
+        if (valor !== 'ninguna') {
+          // Resetear la selección de fijación a "No"
+          selecciones.fijacion = 'no';
+          const botonesFijacion = document.querySelectorAll('[data-fijacion]');
+          botonesFijacion.forEach(boton => {
+            if (boton.getAttribute('data-fijacion') === 'no') {
+              boton.classList.add('active');
+            } else {
+              boton.classList.remove('active');
+            }
+          });
+        }
+        
+        // Actualizar el estado de los botones de fijación
+        actualizarEstadoFijacion();
       }
     }
 
@@ -1386,21 +1489,24 @@
         }
       });
       
-      // Si es variabilidad, verificar si mostrar fijación
-      if (campo === 'variabilidad' && valor !== 'ninguna') {
-        document.getElementById(`fijacionCampo${formulario}`).style.display = 'block';
-      } else if (campo === 'variabilidad' && valor === 'ninguna') {
-        document.getElementById(`fijacionCampo${formulario}`).style.display = 'none';
-        // También resetear la selección de fijación
-        seleccionesComparacion[formulario].fijacion = 'no';
-        const botonesFijacion = document.querySelectorAll(`[data-fijacion][data-form="${formulario}"]`);
-        botonesFijacion.forEach(boton => {
-          if (boton.getAttribute('data-fijacion') === 'no') {
-            boton.classList.add('active');
-          } else {
-            boton.classList.remove('active');
-          }
-        });
+      // Si es variabilidad, resetear fijación si no es "ninguna"
+      if (campo === 'variabilidad') {
+        // MODIFICACIÓN: Resetear fijación cuando se cambia de "Ninguna" a otra opción
+        if (valor !== 'ninguna') {
+          // Resetear la selección de fijación a "No"
+          seleccionesComparacion[formulario].fijacion = 'no';
+          const botonesFijacion = document.querySelectorAll(`[data-fijacion][data-form="${formulario}"]`);
+          botonesFijacion.forEach(boton => {
+            if (boton.getAttribute('data-fijacion') === 'no') {
+              boton.classList.add('active');
+            } else {
+              boton.classList.remove('active');
+            }
+          });
+        }
+        
+        // Actualizar el estado de los botones de fijación
+        actualizarEstadoFijacionComparacion(formulario);
       }
     }
 
@@ -1484,6 +1590,10 @@
       inicializarSelectGradosComparacion();
       filtrarGradosComparacion('Oficial', 1);
       filtrarGradosComparacion('Oficial', 2);
+      
+      // Actualizar estado de fijación en comparación
+      actualizarEstadoFijacionComparacion(1);
+      actualizarEstadoFijacionComparacion(2);
       
       // Mostrar la ventana emergente
       modal.style.display = 'flex';
@@ -1732,17 +1842,43 @@
     // Función para verificar fijación
     function verificarFijacion() {
       const gradoSeleccionado = document.getElementById("grado").value;
-      const campoFijacion = document.getElementById("fijacionCampo");
-
-      campoFijacion.style.display = GRADOS_CON_FIJACION.includes(gradoSeleccionado) ? "block" : "none";
+      
+      // MODIFICACIÓN: Resetear fijación si el grado no tiene fijación disponible
+      if (!GRADOS_CON_FIJACION.includes(gradoSeleccionado) && selecciones.fijacion === 'si') {
+        selecciones.fijacion = 'no';
+        const botonesFijacion = document.querySelectorAll('[data-fijacion]');
+        botonesFijacion.forEach(boton => {
+          if (boton.getAttribute('data-fijacion') === 'no') {
+            boton.classList.add('active');
+          } else {
+            boton.classList.remove('active');
+          }
+        });
+      }
+      
+      // Actualizar el estado de los botones de fijación
+      actualizarEstadoFijacion();
     }
 
     // Función para verificar fijación en comparación
     function verificarFijacionComparacion(formulario) {
       const gradoSeleccionado = document.getElementById(`grado${formulario}`).value;
-      const campoFijacion = document.getElementById(`fijacionCampo${formulario}`);
-
-      campoFijacion.style.display = GRADOS_CON_FIJACION.includes(gradoSeleccionado) ? "block" : "none";
+      
+      // MODIFICACIÓN: Resetear fijación si el grado no tiene fijación disponible
+      if (!GRADOS_CON_FIJACION.includes(gradoSeleccionado) && seleccionesComparacion[formulario].fijacion === 'si') {
+        seleccionesComparacion[formulario].fijacion = 'no';
+        const botonesFijacion = document.querySelectorAll(`[data-fijacion][data-form="${formulario}"]`);
+        botonesFijacion.forEach(boton => {
+          if (boton.getAttribute('data-fijacion') === 'no') {
+            boton.classList.add('active');
+          } else {
+            boton.classList.remove('active');
+          }
+        });
+      }
+      
+      // Actualizar el estado de los botones de fijación
+      actualizarEstadoFijacionComparacion(formulario);
     }
 
     // Función principal de cálculo
@@ -2157,6 +2293,9 @@
       // Establecer filtro inicial
       filtrarGrados('Oficial');
       
+      // Actualizar estado inicial de fijación
+      actualizarEstadoFijacion();
+      
       // Configurar event listeners para comparación
       document.getElementById('grado1').addEventListener('change', function() {
         verificarFijacionComparacion(1);
@@ -2169,6 +2308,3 @@
   </script>
 </body>
 </html>
-
-
-
