@@ -1766,13 +1766,21 @@
           return;
         }
 
-        let columnaIndex = periodoIndex + 1;
+        // La columna 0 es la de "Grado", así que la primera columna de datos es la 1
+        // Pero el botón está en la columna del periodo, así que debemos usar el índice directamente
+        // porque el botón ya está en la columna correcta
+        let columnaIndex = periodoIndex + 1; // +1 porque la columna 0 es "Grado"
         let filaIndex = 0;
 
         filas.forEach((fila) => {
+          // Obtenemos todos los inputs de la fila
           const inputs = fila.querySelectorAll('input');
+          // El input en la columna correcta
           if (inputs.length > columnaIndex && values[filaIndex] !== undefined) {
             inputs[columnaIndex].value = values[filaIndex];
+            // Disparar evento change para actualizar posibles listeners
+            const event = new Event('change', { bubbles: true });
+            inputs[columnaIndex].dispatchEvent(event);
             filaIndex++;
           }
         });
@@ -1783,7 +1791,7 @@
         console.error('Error al leer portapapeles:', err);
       });
     }
-
+    
     function mostrarPasteStatus(tablaId, mensaje, tipo) {
       const tabla = document.getElementById(tablaId);
       let statusEl = tabla.querySelector('.paste-status');
