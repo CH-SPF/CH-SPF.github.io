@@ -1766,32 +1766,37 @@
           return;
         }
 
-        // La columna 0 es la de "Grado", así que la primera columna de datos es la 1
-        // Pero el botón está en la columna del periodo, así que debemos usar el índice directamente
-        // porque el botón ya está en la columna correcta
-        let columnaIndex = periodoIndex + 1; // +1 porque la columna 0 es "Grado"
+        // La columna 0 es "Grado", la columna 1 es el primer periodo
+        // El periodoIndex ya viene con el índice correcto (0 para el primer periodo)
+        // Pero necesitamos sumar 1 porque la columna 0 es "Grado"
+        const columnaDestino = periodoIndex + 1;
         let filaIndex = 0;
 
         filas.forEach((fila) => {
-          // Obtenemos todos los inputs de la fila
           const inputs = fila.querySelectorAll('input');
-          // El input en la columna correcta
-          if (inputs.length > columnaIndex && values[filaIndex] !== undefined) {
-            inputs[columnaIndex].value = values[filaIndex];
-            // Disparar evento change para actualizar posibles listeners
-            const event = new Event('change', { bubbles: true });
-            inputs[columnaIndex].dispatchEvent(event);
-            filaIndex++;
+          // Verificar que la columna existe en esta fila
+          if (inputs.length > columnaDestino) {
+            if (values[filaIndex] !== undefined && !isNaN(values[filaIndex])) {
+              inputs[columnaDestino].value = values[filaIndex];
+              // Disparar evento change
+              const event = new Event('change', { bubbles: true });
+              inputs[columnaDestino].dispatchEvent(event);
+              filaIndex++;
+            }
           }
         });
 
-        mostrarPasteStatus(tablaId, `Se pegaron ${filaIndex} valores`, 'success');
+        const nombrePeriodo = periodosNombres[periodoIndex] || `Periodo ${periodoIndex + 1}`;
+        const mensaje = filaIndex > 0 ? 
+          `✅ Se pegaron ${filaIndex} valores en "${nombrePeriodo}"` : 
+          '⚠️ No se pudieron pegar valores. Verifica que los datos sean números.';
+        mostrarPasteStatus(tablaId, mensaje, filaIndex > 0 ? 'success' : 'error');
+        
       }).catch(err => {
-        mostrarPasteStatus(tablaId, 'Error al leer el portapapeles', 'error');
+        mostrarPasteStatus(tablaId, '❌ Error al leer el portapapeles', 'error');
         console.error('Error al leer portapapeles:', err);
       });
-    }
-    
+    }    
     function mostrarPasteStatus(tablaId, mensaje, tipo) {
       const tabla = document.getElementById(tablaId);
       let statusEl = tabla.querySelector('.paste-status');
