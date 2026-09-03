@@ -1103,13 +1103,56 @@
         </div>
 
         <div class="btn-opcion-group" data-retiro-disabled>
-          <label for="zona">¿Zona Sur?</label>
-          <button type="button" class="btn-opcion active" data-zona="no" onclick="seleccionarOpcion('zona', 'no')">
-            No
-          </button>
-          <button type="button" class="btn-opcion" data-zona="si" onclick="seleccionarOpcion('zona', 'si')">
-            Sí
-          </button>
+          <label for="provincia">Provincia:</label>
+          <select id="provincia" name="provincia">
+            <option value="">-- Seleccione una provincia --</option>
+          </select>
+          <small style="display:block;margin-top:6px;color:#666;">La zona se determina automáticamente según la provincia seleccionada. CABA no recibe suplemento de Zona.</small>
+        </div>
+
+        <div class="section-title">Suplementos</div>
+        <div id="suplementosContainer">
+          <div class="btn-opcion-group suplemento-grupo-incompatible" data-suplemento="contactoAltoRiesgo">
+            <label>Contacto Alto Riesgo:</label>
+            <button type="button" class="btn-opcion active" data-suplemento-value="no" onclick="seleccionarSuplemento('contactoAltoRiesgo','no')">No</button>
+            <button type="button" class="btn-opcion" data-suplemento-value="si" onclick="seleccionarSuplemento('contactoAltoRiesgo','si')">Sí</button>
+          </div>
+          <div class="btn-opcion-group suplemento-grupo-incompatible" data-suplemento="controlRegistro">
+            <label>Control y Registro:</label>
+            <button type="button" class="btn-opcion active" data-suplemento-value="no" onclick="seleccionarSuplemento('controlRegistro','no')">No</button>
+            <button type="button" class="btn-opcion" data-suplemento-value="si" onclick="seleccionarSuplemento('controlRegistro','si')">Sí</button>
+          </div>
+          <div class="btn-opcion-group suplemento-grupo-incompatible" data-suplemento="gruposEspeciales">
+            <label>Grupos Especiales:</label>
+            <button type="button" class="btn-opcion active" data-suplemento-value="no" onclick="seleccionarSuplemento('gruposEspeciales','no')">No</button>
+            <button type="button" class="btn-opcion" data-suplemento-value="si" onclick="seleccionarSuplemento('gruposEspeciales','si')">Sí</button>
+          </div>
+          <div class="btn-opcion-group suplemento-grupo-incompatible" data-suplemento="seguridadAdicional">
+            <label>Servicios de Seguridad Adicional:</label>
+            <button type="button" class="btn-opcion active" data-suplemento-value="no" onclick="seleccionarSuplemento('seguridadAdicional','no')">No</button>
+            <button type="button" class="btn-opcion" data-suplemento-value="si" onclick="seleccionarSuplemento('seguridadAdicional','si')">Sí</button>
+            <div class="horas-suplemento" id="horasSeguridadAdicional" style="display:none;">
+              <label>Horas Servicio Continuo:</label><input type="number" min="0" step="0.5" id="horasServicioContinuo" value="0">
+              <label>Horas Servicio Discontinuo:</label><input type="number" min="0" step="0.5" id="horasServicioDiscontinuo" value="0">
+              <div class="horas-ayuda">Cada 4 horas equivalen a 1 Servicio; entre 4:00 y 4:30 continúa contando como 1. Más de 4:30 cuenta como 2.</div>
+            </div>
+          </div>
+          <div class="btn-opcion-group" data-suplemento="recargoServicio">
+            <label>Recargo de Servicio:</label>
+            <button type="button" class="btn-opcion active" data-suplemento-value="no" onclick="seleccionarSuplemento('recargoServicio','no')">No</button>
+            <button type="button" class="btn-opcion" data-suplemento-value="si" onclick="seleccionarSuplemento('recargoServicio','si')">Sí</button>
+            <div class="horas-suplemento" id="horasRecargoServicio" style="display:none;">
+              <label>Tipo de Recargo:</label>
+              <select id="tipoRecargoServicio"><option value="ordinario">Ordinario</option><option value="extraordinario">Extraordinario</option></select>
+              <label>Horas Recargo:</label><input type="number" min="0" step="0.5" id="horasRecargo" value="0">
+              <div class="horas-ayuda">Ordinario: unidades según horas ÷ 3. Extraordinario: horas ÷ 5 y cualquier resto se redondea hacia arriba.</div>
+            </div>
+          </div>
+          <div class="btn-opcion-group" data-suplemento="sanidad">
+            <label>Sanidad:</label>
+            <button type="button" class="btn-opcion active" data-suplemento-value="no" onclick="seleccionarSuplemento('sanidad','no')">No</button>
+            <button type="button" class="btn-opcion" data-suplemento-value="si" onclick="seleccionarSuplemento('sanidad','si')">Sí</button>
+          </div>
         </div>
 
         <div class="btn-opcion-group" data-retiro-disabled>
@@ -1326,7 +1369,14 @@
             <button class="admin-tab" data-tab="tab-variabilidad" onclick="cambiarTabAdmin('tab-variabilidad')">Variabilidad</button>
             <button class="admin-tab" data-tab="tab-terciario" onclick="cambiarTabAdmin('tab-terciario')">Título Terciario</button>
             <button class="admin-tab" data-tab="tab-universitario" onclick="cambiarTabAdmin('tab-universitario')">Título Universitario</button>
-            <button class="admin-tab" data-tab="tab-zona" onclick="cambiarTabAdmin('tab-zona')">Zona Sur</button>
+            <button class="admin-tab" data-tab="tab-zona-noa" onclick="cambiarTabAdmin('tab-zona-noa')">Zona NOA</button>
+            <button class="admin-tab" data-tab="tab-zona-nea" onclick="cambiarTabAdmin('tab-zona-nea')">Zona NEA</button>
+            <button class="admin-tab" data-tab="tab-zona-cuyo" onclick="cambiarTabAdmin('tab-zona-cuyo')">Zona Cuyo</button>
+            <button class="admin-tab" data-tab="tab-zona-centro" onclick="cambiarTabAdmin('tab-zona-centro')">Zona Centro</button>
+            <button class="admin-tab" data-tab="tab-zona-sur" onclick="cambiarTabAdmin('tab-zona-sur')">Zona Sur</button>
+            <button class="admin-tab" data-tab="tab-zona-pba" onclick="cambiarTabAdmin('tab-zona-pba')">Zona PBA</button>
+            <button class="admin-tab" data-tab="tab-seguridad" onclick="cambiarTabAdmin('tab-seguridad')">Seguridad Adicional</button>
+            <button class="admin-tab" data-tab="tab-recargo" onclick="cambiarTabAdmin('tab-recargo')">Recargo</button>
           </div>
 
           <div id="tab-haber" class="admin-tab-content active">
@@ -1344,9 +1394,14 @@
           <div id="tab-universitario" class="admin-tab-content">
             <div class="table-container"><table class="admin-table" id="adminTableUniversitario"><thead></thead><tbody></tbody></table></div>
           </div>
-          <div id="tab-zona" class="admin-tab-content">
-            <div class="table-container"><table class="admin-table" id="adminTableZona"><thead></thead><tbody></tbody></table></div>
-          </div>
+          <div id="tab-zona-noa" class="admin-tab-content"><div class="table-container"><table class="admin-table" id="adminTableZonaNOA"><thead></thead><tbody></tbody></table></div></div>
+          <div id="tab-zona-nea" class="admin-tab-content"><div class="table-container"><table class="admin-table" id="adminTableZonaNEA"><thead></thead><tbody></tbody></table></div></div>
+          <div id="tab-zona-cuyo" class="admin-tab-content"><div class="table-container"><table class="admin-table" id="adminTableZonaCUYO"><thead></thead><tbody></tbody></table></div></div>
+          <div id="tab-zona-centro" class="admin-tab-content"><div class="table-container"><table class="admin-table" id="adminTableZonaCENTRO"><thead></thead><tbody></tbody></table></div></div>
+          <div id="tab-zona-sur" class="admin-tab-content"><div class="table-container"><table class="admin-table" id="adminTableZonaSUR"><thead></thead><tbody></tbody></table></div></div>
+          <div id="tab-zona-pba" class="admin-tab-content"><div class="table-container"><table class="admin-table" id="adminTableZonaPBA"><thead></thead><tbody></tbody></table></div></div>
+          <div id="tab-seguridad" class="admin-tab-content"><div class="table-container"><table class="admin-table" id="adminTableSeguridad"><thead></thead><tbody></tbody></table></div></div>
+          <div id="tab-recargo" class="admin-tab-content"><div class="table-container"><table class="admin-table" id="adminTableRecargo"><thead></thead><tbody></tbody></table></div></div>
 
           <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
             <button class="btn btn-success" onclick="guardarValoresAdmin()">Guardar Todos los Valores</button>
@@ -1392,13 +1447,30 @@
       "AYUDANTE MAYOR", "AYUDANTE PRINCIPAL", "AYUDANTE DE PRIMERA",
       "AYUDANTE DE SEGUNDA", "AYUDANTE DE TERCERA", "AYUDANTE DE CUARTA",
       "AYUDANTE DE QUINTA", "SUBAYUDANTE",
-      "CADETE DE TERCER AÑO", "CADETE DE SEGUNDO AÑO"
+      "CADETE DE TERCER AÑO", "CADETE DE SEGUNDO AÑO", "CADETE DE PRIMER AÑO", "ASPIRANTE SUBOFICIAL"
     ];
 
     const GRADOS_CON_FIJACION = [
       "INSPECTOR GENERAL", "PREFECTO", "SUBPREFECTO",
       "ALCAIDE MAYOR", "ALCAIDE", "SUBALCAIDE"
     ];
+
+    const ZONAS = {
+      NOA: ["JUJUY", "SALTA", "TUCUMÁN", "CATAMARCA", "LA RIOJA"],
+      NEA: ["MISIONES", "CORRIENTES", "ENTRE RÍOS", "FORMOSA", "CHACO"],
+      CUYO: ["SAN JUAN", "MENDOZA", "SAN LUIS"],
+      CENTRO: ["CÓRDOBA", "SANTIAGO DEL ESTERO", "SANTA FE", "LA PAMPA"],
+      SUR: ["NEUQUÉN", "RÍO NEGRO", "CHUBUT", "SANTA CRUZ", "TIERRA DEL FUEGO, ANTÁRTIDA E ISLAS DEL ATLÁNTICO SUR"],
+      PBA: ["BUENOS AIRES"]
+    };
+    const PROVINCIAS_ARGENTINAS = ["BUENOS AIRES", "CATAMARCA", "CHACO", "CHUBUT", "CÓRDOBA", "CORRIENTES", "ENTRE RÍOS", "FORMOSA", "JUJUY", "LA PAMPA", "LA RIOJA", "MENDOZA", "MISIONES", "NEUQUÉN", "RÍO NEGRO", "SALTA", "SAN JUAN", "SAN LUIS", "SANTA CRUZ", "SANTA FE", "SANTIAGO DEL ESTERO", "TIERRA DEL FUEGO, ANTÁRTIDA E ISLAS DEL ATLÁNTICO SUR", "TUCUMÁN", "CABA"];
+    const COEFICIENTES_SUPLEMENTOS = {
+      contactoAltoRiesgo: {"INSPECTOR GENERAL":.311,"PREFECTO":.326,"SUBPREFECTO":.364,"ALCAIDE MAYOR":.407,"ALCAIDE":.479,"SUBALCAIDE":.527,"ADJUTOR PRINCIPAL":.533,"ADJUTOR":.547,"SUBADJUTOR":.548,"AYUDANTE MAYOR":.429,"AYUDANTE PRINCIPAL":.453,"AYUDANTE DE PRIMERA":.462,"AYUDANTE DE SEGUNDA":.550,"AYUDANTE DE TERCERA":.589,"AYUDANTE DE CUARTA":.606,"AYUDANTE DE QUINTA":.615,"SUBAYUDANTE":.629},
+      controlRegistro: {"INSPECTOR GENERAL":.045,"PREFECTO":.049,"SUBPREFECTO":.056,"ALCAIDE MAYOR":.067,"ALCAIDE":.084,"SUBALCAIDE":.100,"ADJUTOR PRINCIPAL":.110,"ADJUTOR":.120,"SUBADJUTOR":.127,"AYUDANTE MAYOR":.071,"AYUDANTE PRINCIPAL":.078,"AYUDANTE DE PRIMERA":.084,"AYUDANTE DE SEGUNDA":.113,"AYUDANTE DE TERCERA":.127,"AYUDANTE DE CUARTA":.135,"AYUDANTE DE QUINTA":.142,"SUBAYUDANTE":.150},
+      gruposEspeciales: {"INSPECTOR GENERAL":.230,"PREFECTO":.251,"SUBPREFECTO":.287,"ALCAIDE MAYOR":.343,"ALCAIDE":.432,"SUBALCAIDE":.515,"ADJUTOR PRINCIPAL":.566,"ADJUTOR":.613,"SUBADJUTOR":.652,"AYUDANTE MAYOR":.364,"AYUDANTE PRINCIPAL":.398,"AYUDANTE DE PRIMERA":.432,"AYUDANTE DE SEGUNDA":.577,"AYUDANTE DE TERCERA":.649,"AYUDANTE DE CUARTA":.692,"AYUDANTE DE QUINTA":.726,"SUBAYUDANTE":.769},
+      sanidad: {"INSPECTOR GENERAL":.090,"PREFECTO":.098,"SUBPREFECTO":.112,"ALCAIDE MAYOR":.134,"ALCAIDE":.169,"SUBALCAIDE":.201,"ADJUTOR PRINCIPAL":.221,"ADJUTOR":.239,"SUBADJUTOR":.254,"AYUDANTE MAYOR":.142,"AYUDANTE PRINCIPAL":.155,"AYUDANTE DE PRIMERA":.168,"AYUDANTE DE SEGUNDA":.225,"AYUDANTE DE TERCERA":.253,"AYUDANTE DE CUARTA":.270,"AYUDANTE DE QUINTA":.283,"SUBAYUDANTE":.300}
+    };
+    const RECARGOS_INICIALES = {"INSPECTOR GENERAL":[35274.06,70548.11],"PREFECTO":[32328.50,64657.00],"SUBPREFECTO":[28577.20,57154.41],"ALCAIDE MAYOR":[22809.37,45618.74],"ALCAIDE":[19504.97,39009.94],"SUBALCAIDE":[16993.10,33986.20],"ADJUTOR PRINCIPAL":[15681.03,31362.06],"ADJUTOR":[15220.92,30441.84],"SUBADJUTOR":[14763.02,29526.03],"AYUDANTE MAYOR":[19634.86,39269.71],"AYUDANTE PRINCIPAL":[17323.32,34646.64],"AYUDANTE DE PRIMERA":[16061.88,32123.76],"AYUDANTE DE SEGUNDA":[15606.18,31212.36],"AYUDANTE DE TERCERA":[15152.68,30305.35],"AYUDANTE DE CUARTA":[14815.85,29631.70],"AYUDANTE DE QUINTA":[14252.28,28504.56],"SUBAYUDANTE":[13805.38,27610.76]};
 
     const COEFICIENTES_RETIRO = {
       "Oficial": { 10: 0.30, 11: 0.34, 12: 0.38, 13: 0.42, 14: 0.46, 15: 0.5, 16: 0.53, 17: 0.56, 18: 0.59, 19: 0.62, 20: 0.65,
@@ -1516,8 +1588,9 @@
         titulo: { terciario: 140682.75, universitario: 234471.24 }, zona: 51618.48 },
       "CADETE DE TERCER AÑO": { haber: 653301.44, fijacion: 0, variabilidad: { unico: 115838.19, familia: 156131.64 },
         titulo: { terciario: 0, universitario: 0 }, zona: 0 },
-      "CADETE DE SEGUNDO AÑO": { haber: 625691.25, fijacion: 0, variabilidad: { unico: 115838.19, familia: 156131.64 },
-        titulo: { terciario: 0, universitario: 0 }, zona: 0 }
+      "CADETE DE SEGUNDO AÑO": { haber: 625691.25, fijacion: 0, variabilidad: { unico: 0, familia: 0 }, titulo: { terciario: 0, universitario: 0 }, zona: {} },
+      "CADETE DE PRIMER AÑO": { haber: 1, fijacion: 0, variabilidad: { unico: 0, familia: 0 }, titulo: { terciario: 0, universitario: 0 }, zona: {} },
+      "ASPIRANTE SUBOFICIAL": { haber: 1, fijacion: 0, variabilidad: { unico: 0, familia: 0 }, titulo: { terciario: 0, universitario: 0 }, zona: {} }
     };
 
     // ============== VARIABLES GLOBALES ==============
@@ -1527,7 +1600,7 @@
     let cuerpoSeleccionado = "Cuerpo_General";
     let datosCargados = false;
 
-    const selecciones = { titulo: 'ninguno', variabilidad: 'ninguna', fijacion: 'no', zona: 'no', casino: 'si', obra: 'basica' };
+    const selecciones = { titulo: 'ninguno', variabilidad: 'ninguna', fijacion: 'no', provincia: '', casino: 'si', obra: 'basica', contactoAltoRiesgo:'no', controlRegistro:'no', gruposEspeciales:'no', seguridadAdicional:'no', recargoServicio:'no', sanidad:'no' };
     const seleccionesComparacion = {
       1: { titulo: 'ninguno', variabilidad: 'ninguna', fijacion: 'no', zona: 'no', casino: 'si', obra: 'basica' },
       2: { titulo: 'ninguno', variabilidad: 'ninguna', fijacion: 'no', zona: 'no', casino: 'si', obra: 'basica' }
@@ -1621,7 +1694,8 @@
     // Función manual para sincronizar desde la nube
     function sincronizarDesdeNube() {
       cargarDesdeFirebase().then(() => {
-        actualizarSelectPeriodos();
+        asegurarNuevosDatos();
+      actualizarSelectPeriodos();
         if (document.getElementById('adminPanel').classList.contains('show')) {
           cargarValoresAdmin();
         }
@@ -1753,44 +1827,20 @@
       document.querySelector(`.admin-tab[data-tab="${tabId}"]`).classList.add('active');
     }
 
+    function parsearNumeroPegado(texto){ let t=String(texto).trim().replace(/\s/g,''); if(t.includes(',')&&t.includes('.')){ if(t.lastIndexOf(',')>t.lastIndexOf('.')) t=t.replace(/\./g,'').replace(',','.'); else t=t.replace(/,/g,''); } else if(t.includes(',')){ t=t.replace(',','.'); } return parseFloat(t); }
+
     function pegarDatosColumna(tablaId, periodoIndex) {
-      navigator.clipboard.readText().then(text => {
-        const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
-        const values = lines.map(line => parseFloat(line.trim().replace(/,/g, '')) || 0);
-
-        const tabla = document.getElementById(tablaId);
-        const filas = tabla.querySelectorAll('tbody tr');
-
-        if (values.length === 0) {
-          mostrarPasteStatus(tablaId, 'No hay datos en el portapapeles', 'error');
-          return;
-        }
-
-        const nombrePeriodo = periodosNombres[periodoIndex] || `Periodo ${periodoIndex + 1}`;
-        let filaIndex = 0;
-
-        filas.forEach(fila => {
-          const inputs = fila.querySelectorAll('input');
-          // El primer input de cada fila es el Periodo 1, por lo que
-          // periodoIndex coincide directamente con el índice del input.
-          if (periodoIndex < inputs.length && values[filaIndex] !== undefined) {
-            inputs[periodoIndex].value = values[filaIndex];
-            inputs[periodoIndex].dispatchEvent(new Event('change', { bubbles: true }));
-            filaIndex++;
-          }
-        });
-
-        const mensaje = filaIndex > 0
-          ? `✅ Se pegaron ${filaIndex} valores en "${nombrePeriodo}"`
-          : '⚠️ No se pudieron pegar valores. Verifica que los datos sean números.';
-        mostrarPasteStatus(tablaId, mensaje, filaIndex > 0 ? 'success' : 'error');
-
-      }).catch(err => {
-        mostrarPasteStatus(tablaId, '❌ Error al leer el portapapeles', 'error');
-        console.error('Error al leer portapapeles:', err);
-      });
+      navigator.clipboard.readText().then(text=>{
+        const lines=text.split(/\r?\n/).filter(l=>l.trim()!==''); const values=lines.map(parsearNumeroPegado).filter(v=>Number.isFinite(v)); const tabla=document.getElementById(tablaId), filas=tabla.querySelectorAll('tbody tr');
+        if(!values.length){mostrarPasteStatus(tablaId,'No hay datos numéricos en el portapapeles','error');return;}
+        const nombrePeriodo=periodosNombres[periodoIndex]||`Periodo ${periodoIndex+1}`; let count=0;
+        if(tablaId==='adminTableRecargo'){
+          let vi=0; filas.forEach(fila=>{ const inputs=fila.querySelectorAll('input'); const base=periodoIndex*2; if(inputs[base]&&values[vi]!==undefined){inputs[base].value=values[vi++];inputs[base].dispatchEvent(new Event('change',{bubbles:true}));count++;} if(inputs[base+1]&&values[vi]!==undefined){inputs[base+1].value=values[vi++];inputs[base+1].dispatchEvent(new Event('change',{bubbles:true}));count++;} });
+        } else { filas.forEach(fila=>{const inputs=fila.querySelectorAll('input'); if(inputs[periodoIndex]&&values[count]!==undefined){inputs[periodoIndex].value=values[count++];inputs[periodoIndex].dispatchEvent(new Event('change',{bubbles:true}));}}); }
+        mostrarPasteStatus(tablaId,count?`✅ Se pegaron ${count} valores en "${nombrePeriodo}"`:'⚠️ No se pudieron pegar valores.',''+(count?'success':'error'));
+      }).catch(err=>{mostrarPasteStatus(tablaId,'❌ Error al leer el portapapeles','error');console.error('Error al leer portapapeles:',err);});
     }
-    
+
     function mostrarPasteStatus(tablaId, mensaje, tipo) {
       const tabla = document.getElementById(tablaId);
       let statusEl = tabla.querySelector('.paste-status');
@@ -1805,164 +1855,70 @@
     }
 
     function generarAdminTabla(tablaId, campo, subcampo = null) {
-      const tabla = document.getElementById(tablaId);
-      const thead = tabla.querySelector('thead');
-      const tbody = tabla.querySelector('tbody');
-
-      let headerHTML = `<tr><th>${campo === 'variabilidad' ? 'Tipo de residente' : 'Grado'}</th>`;
-      periodosNombres.forEach((nombre, idx) => {
-        const label = nombre || `Periodo ${idx + 1}`;
-        headerHTML += `<th class="periodo-header-cell">
-          <span class="periodo-nombre">${label}</span>
-          <button class="btn-paste" onclick="pegarDatosColumna('${tablaId}', ${idx})">📋 Pegar</button>
-        </th>`;
-      });
-      headerHTML += `</tr>`;
-      thead.innerHTML = headerHTML;
-
-      let bodyHTML = '';
+      const tabla = document.getElementById(tablaId); if (!tabla) return;
+      const thead = tabla.querySelector('thead'), tbody = tabla.querySelector('tbody');
+      const esVariabilidad = campo === 'variabilidad';
+      const headerLabel = esVariabilidad ? 'Tipo de residente' : 'Grado';
+      let headerHTML = `<tr><th>${headerLabel}</th>`;
+      periodosNombres.forEach((nombre, idx) => { headerHTML += `<th class="periodo-header-cell"><span class="periodo-nombre">${nombre || `Periodo ${idx+1}`}</span><button class="btn-paste" onclick="pegarDatosColumna('${tablaId}', ${idx})">📋 Pegar</button></th>`; });
+      thead.innerHTML = headerHTML + '</tr>';
       const ref = getReferenciaActiva();
-
-      // Fijación: solamente corresponde a los seis grados indicados.
-      const gradosParaTabla = campo === 'fijacion'
-        ? GRADOS_CON_FIJACION
-        : TODOS_LOS_GRADOS;
-
-      // Variabilidad: un único valor para todos los grados que no sean Aspirantes.
-      // Se muestran solamente dos filas y cada columna contiene ambos valores.
-      if (campo === 'variabilidad') {
-        const gradoReferencia = TODOS_LOS_GRADOS.find(g => determinarJerarquia(g) !== 'Aspirante');
-        const filasVariabilidad = [
-          { subcampo: 'unico', etiqueta: 'Residente único' },
-          { subcampo: 'familia', etiqueta: 'Residente con familia' }
-        ];
-
-        filasVariabilidad.forEach(fila => {
-          bodyHTML += `<tr><td class="grado-cell">${fila.etiqueta}</td>`;
-          periodosNombres.forEach((nombre, idx) => {
-            const periodoNombre = nombre || `Periodo ${idx + 1}`;
-            const data = periodosData[periodoNombre] || ref;
-            const valor = data[gradoReferencia]?.variabilidad?.[fila.subcampo] ?? 0;
-
-            bodyHTML += `<td>
-              <div class="cell-with-paste">
-                <input type="number" step="0.01" class="admin-input"
-                       data-grado="__VARIABILIDAD_GENERAL__" data-periodo="${idx}"
-                       data-campo="variabilidad" data-subcampo="${fila.subcampo}"
-                       value="${valor}">
-              </div>
-            </td>`;
-          });
-          bodyHTML += `</tr>`;
-        });
-      } else {
-        gradosParaTabla.forEach(grado => {
-          bodyHTML += `<tr><td class="grado-cell">${grado}</td>`;
-          periodosNombres.forEach((nombre, idx) => {
-            const periodoNombre = nombre || `Periodo ${idx + 1}`;
-            const data = periodosData[periodoNombre] || ref;
-            let valor = 0;
-            if (subcampo) {
-              valor = data[grado]?.[campo]?.[subcampo] ?? 0;
-            } else {
-              valor = data[grado]?.[campo] ?? 0;
-            }
-            bodyHTML += `<td>
-              <div class="cell-with-paste">
-                <input type="number" step="0.01" class="admin-input"
-                       data-grado="${grado}" data-periodo="${idx}"
-                       data-campo="${campo}" data-subcampo="${subcampo || ''}"
-                       value="${valor}">
-              </div>
-            </td>`;
-          });
-          bodyHTML += `</tr>`;
-        });
-      }
-
-      tbody.innerHTML = bodyHTML;
+      let filas = [];
+      if (esVariabilidad) filas = [{key:'unico',label:'Residente único'},{key:'familia',label:'Residente con familia'}];
+      else if (campo === 'fijacion') filas = GRADOS_CON_FIJACION.map(g=>({key:g,label:g}));
+      else if (campo === 'zona') filas = TODOS_LOS_GRADOS.map(g=>({key:g,label:g}));
+      else if (campo === 'seguridad') filas = [{key:'continuo',label:'Servicio Continuo'},{key:'discontinuo',label:'Servicio Discontinuo'}];
+      else if (campo === 'recargo') filas = TODOS_LOS_GRADOS.filter(g=>determinarJerarquia(g)!=='Aspirante').map(g=>({key:g,label:g}));
+      else filas = TODOS_LOS_GRADOS.map(g=>({key:g,label:g}));
+      let html='';
+      filas.forEach(f=>{ html += `<tr><td class="grado-cell">${f.label}</td>`; periodosNombres.forEach((nombre,idx)=>{
+        const pn=nombre || `Periodo ${idx+1}`, data=periodosData[pn]||ref; let val=1; let sc=subcampo||''; let cg=f.key;
+        if(esVariabilidad){ const gr=TODOS_LOS_GRADOS.find(g=>determinarJerarquia(g)!=='Aspirante'); val=data[gr]?.variabilidad?.[f.key]??0; cg='__VARIABILIDAD_GENERAL__'; sc=f.key; }
+        else if(campo==='zona'){ val=data[f.key]?.zona?.[subcampo] ?? data[f.key]?.zona?.[zonaKeyPorCampo(subcampo)] ?? 1; }
+        else if(campo==='seguridad'){ val=data.__SUPLEMENTOS__?.seguridad?.[f.key] ?? (f.key==='continuo'?22332:29714.34); cg='__SUPLEMENTO_GLOBAL__'; sc=f.key; }
+        else if(campo==='recargo'){ const pair=RECARGOS_INICIALES[f.key]||[1,1]; val=data[f.key]?.recargo?.[f.key==='x'?0:0]??pair[0]; }
+        else if(subcampo) val=data[f.key]?.[campo]?.[subcampo]??0;
+        else val=data[f.key]?.[campo]??0;
+        if(campo==='recargo'){ val=data[f.key]?.recargo?.ordinario ?? (RECARGOS_INICIALES[f.key]?.[0]??1); sc='ordinario'; }
+        html += `<td><div class="cell-with-paste"><input type="number" step="0.01" class="admin-input" data-grado="${cg}" data-periodo="${idx}" data-campo="${campo}" data-subcampo="${sc}" value="${val}"></div></td>`;
+        if(campo==='recargo'){ /* second value inserted by separate row below */ }
+      }); html+='</tr>'; });
+      if(campo==='recargo'){ html='';
+        TODOS_LOS_GRADOS.filter(g=>determinarJerarquia(g)!=='Aspirante').forEach(g=>{ html+=`<tr><td class="grado-cell">${g}</td>`; periodosNombres.forEach((nombre,idx)=>{const pn=nombre||`Periodo ${idx+1}`, d=periodosData[pn]||ref, pair=RECARGOS_INICIALES[g]||[1,1], a=d[g]?.recargo?.ordinario??pair[0], b=d[g]?.recargo?.extraordinario??pair[1]; html+=`<td><div style="display:grid;gap:4px"><label style="font-size:10px">Ordinario (3 h)</label><input title="Ordinario" type="number" step="0.01" class="admin-input" data-grado="${g}" data-periodo="${idx}" data-campo="recargo" data-subcampo="ordinario" value="${a}"><label style="font-size:10px">Extraordinario (3-5 h)</label><input title="Extraordinario" type="number" step="0.01" class="admin-input" data-grado="${g}" data-periodo="${idx}" data-campo="recargo" data-subcampo="extraordinario" value="${b}"></div></td>`;}); html+='</tr>';}); }
+      if(campo==='zona'){ html=''; const zonaNombre=subcampo; TODOS_LOS_GRADOS.filter(g=>determinarJerarquia(g)!=='Aspirante').forEach(g=>{html+=`<tr><td class="grado-cell">${g}</td>`;periodosNombres.forEach((nombre,idx)=>{const pn=nombre||`Periodo ${idx+1}`,d=periodosData[pn]||ref,v=d[g]?.zona?.[zonaNombre]??1;html+=`<td><input type="number" step="1" class="admin-input" data-grado="${g}" data-periodo="${idx}" data-campo="zona" data-subcampo="${zonaNombre}" value="${v}"></td>`;});html+='</tr>';}); }
+      tbody.innerHTML=html;
     }
 
+    function zonaKeyPorCampo(k){return k;}
+
     function cargarValoresAdmin() {
-      generarAdminTabla('adminTableHaber', 'haber');
-      generarAdminTabla('adminTableFijacion', 'fijacion');
-      generarAdminTabla('adminTableVariabilidad', 'variabilidad', 'unico');
-      generarAdminTabla('adminTableTerciario', 'titulo', 'terciario');
-      generarAdminTabla('adminTableUniversitario', 'titulo', 'universitario');
-      generarAdminTabla('adminTableZona', 'zona');
+      generarAdminTabla('adminTableHaber','haber');
+      generarAdminTabla('adminTableFijacion','fijacion');
+      generarAdminTabla('adminTableVariabilidad','variabilidad');
+      generarAdminTabla('adminTableTerciario','titulo','terciario');
+      generarAdminTabla('adminTableUniversitario','titulo','universitario');
+      generarAdminTabla('adminTableZonaNOA','zona','NOA');
+      generarAdminTabla('adminTableZonaNEA','zona','NEA');
+      generarAdminTabla('adminTableZonaCUYO','zona','CUYO');
+      generarAdminTabla('adminTableZonaCENTRO','zona','CENTRO');
+      generarAdminTabla('adminTableZonaSUR','zona','SUR');
+      generarAdminTabla('adminTableZonaPBA','zona','PBA');
+      generarAdminTabla('adminTableSeguridad','seguridad');
+      generarAdminTabla('adminTableRecargo','recargo');
     }
 
     function guardarValoresAdmin() {
-      const inputs = document.querySelectorAll('.admin-input');
-      inputs.forEach(input => {
-        const grado = input.dataset.grado;
-        const periodoIdx = parseInt(input.dataset.periodo);
-        const campo = input.dataset.campo;
-        const subcampo = input.dataset.subcampo;
-        const valor = parseFloat(input.value) || 0;
-
-        const periodoNombre = periodosNombres[periodoIdx];
-        if (!periodoNombre) return;
-
-        if (!periodosData[periodoNombre]) {
-          periodosData[periodoNombre] = JSON.parse(JSON.stringify(DEFAULT_REFERENCIA));
-        }
-
-        // Variabilidad: los dos valores son generales para todos los grados
-        // excepto Aspirantes. Se replica el valor en cada grado para que los
-        // cálculos existentes puedan seguir utilizando ref.variabilidad[...].
-        if (grado === '__VARIABILIDAD_GENERAL__') {
-          TODOS_LOS_GRADOS.forEach(gradoVariabilidad => {
-            if (determinarJerarquia(gradoVariabilidad) === 'Aspirante') return;
-
-            if (!periodosData[periodoNombre][gradoVariabilidad]) {
-              periodosData[periodoNombre][gradoVariabilidad] = JSON.parse(JSON.stringify(
-                DEFAULT_REFERENCIA[gradoVariabilidad] || {
-                  haber: 0,
-                  fijacion: 0,
-                  variabilidad: { unico: 0, familia: 0 },
-                  titulo: { terciario: 0, universitario: 0 },
-                  zona: 0
-                }
-              ));
-            }
-
-            if (!periodosData[periodoNombre][gradoVariabilidad].variabilidad) {
-              periodosData[periodoNombre][gradoVariabilidad].variabilidad = {};
-            }
-            periodosData[periodoNombre][gradoVariabilidad].variabilidad[subcampo] = valor;
-          });
-          return;
-        }
-
-        if (!periodosData[periodoNombre][grado]) {
-          periodosData[periodoNombre][grado] = JSON.parse(JSON.stringify(DEFAULT_REFERENCIA[grado] || {
-            haber: 0,
-            fijacion: 0,
-            variabilidad: { unico: 0, familia: 0 },
-            titulo: { terciario: 0, universitario: 0 },
-            zona: 0
-          }));
-        }
-
-        if (subcampo) {
-          if (!periodosData[periodoNombre][grado][campo]) {
-            periodosData[periodoNombre][grado][campo] = {};
-          }
-          periodosData[periodoNombre][grado][campo][subcampo] = valor;
-        } else {
-          periodosData[periodoNombre][grado][campo] = valor;
-        }
+      document.querySelectorAll('.admin-input').forEach(input=>{
+        const grado=input.dataset.grado, idx=parseInt(input.dataset.periodo), campo=input.dataset.campo, sub=input.dataset.subcampo, valor=parseFloat(input.value)||0, pn=periodosNombres[idx]; if(!pn) return;
+        if(!periodosData[pn]) periodosData[pn]=JSON.parse(JSON.stringify(DEFAULT_REFERENCIA));
+        if(campo==='variabilidad' && grado==='__VARIABILIDAD_GENERAL__'){ TODOS_LOS_GRADOS.forEach(g=>{if(determinarJerarquia(g)!=='Aspirante'){periodosData[pn][g]??=JSON.parse(JSON.stringify(DEFAULT_REFERENCIA[g]||{haber:0,fijacion:0,variabilidad:{},titulo:{},zona:{}}));periodosData[pn][g].variabilidad??={};periodosData[pn][g].variabilidad[sub]=valor;}}); return;}
+        if(campo==='zona'){ periodosData[pn][grado]??=JSON.parse(JSON.stringify(DEFAULT_REFERENCIA[grado]||{haber:0,fijacion:0,variabilidad:{},titulo:{},zona:{}})); periodosData[pn][grado].zona??={}; periodosData[pn][grado].zona[sub]=valor; return;}
+        if(campo==='seguridad') { periodosData[pn].__SUPLEMENTOS__??={seguridad:{}}; periodosData[pn].__SUPLEMENTOS__.seguridad[sub]=valor; return; }
+        periodosData[pn][grado]??=JSON.parse(JSON.stringify(DEFAULT_REFERENCIA[grado]||{haber:0,fijacion:0,variabilidad:{},titulo:{},zona:{}}));
+        if(campo==='recargo'){periodosData[pn][grado].recargo??={};periodosData[pn][grado].recargo[sub]=valor;return;}
+        if(sub){periodosData[pn][grado][campo]??={};periodosData[pn][grado][campo][sub]=valor;}else periodosData[pn][grado][campo]=valor;
       });
-
-      // Guardar en Firebase y localStorage
-      guardarEnFirebase();
-
-      const status = document.getElementById('adminSaveStatus');
-      status.textContent = '✓ Valores guardados en la nube';
-      status.className = 'save-status success';
-      status.style.display = 'inline-block';
-      setTimeout(() => { status.style.display = 'none'; }, 3000);
+      guardarEnFirebase(); const status=document.getElementById('adminSaveStatus'); status.textContent='✓ Valores guardados en la nube'; status.className='save-status success'; status.style.display='inline-block'; setTimeout(()=>status.style.display='none',3000);
     }
 
     function guardarPeriodos() {
@@ -2022,7 +1978,7 @@
       const gradosOficiales = ["INSPECTOR GENERAL", "PREFECTO", "SUBPREFECTO", "ALCAIDE MAYOR", "ALCAIDE", "SUBALCAIDE",
         "ADJUTOR PRINCIPAL", "ADJUTOR", "SUBADJUTOR"
       ];
-      const gradosAspirantes = ["CADETE DE TERCER AÑO", "CADETE DE SEGUNDO AÑO"];
+      const gradosAspirantes = ["CADETE DE TERCER AÑO", "CADETE DE SEGUNDO AÑO", "CADETE DE PRIMER AÑO", "ASPIRANTE SUBOFICIAL"];
       if (gradosOficiales.includes(grado)) return "Oficial";
       if (gradosAspirantes.includes(grado)) return "Aspirante";
       return "Suboficial";
@@ -2165,15 +2121,7 @@
     }
 
     function obtenerDatosFormulario() {
-      return {
-        antiguedad: parseInt(document.getElementById("antiguedad").value) || 0,
-        titulo: selecciones.titulo,
-        variabilidad: selecciones.variabilidad,
-        fijacion: selecciones.fijacion === "si",
-        zona: selecciones.zona === "si",
-        usaCasino: selecciones.casino === "si",
-        obra: document.getElementById("obra").value
-      };
+      return {antiguedad:parseInt(document.getElementById('antiguedad').value)||0,titulo:selecciones.titulo,variabilidad:selecciones.variabilidad,fijacion:selecciones.fijacion==='si',provincia:document.getElementById('provincia').value,usaCasino:selecciones.casino==='si',obra:document.getElementById('obra').value,contactoAltoRiesgo:selecciones.contactoAltoRiesgo,controlRegistro:selecciones.controlRegistro,gruposEspeciales:selecciones.gruposEspeciales,seguridadAdicional:selecciones.seguridadAdicional,recargoServicio:selecciones.recargoServicio,sanidad:selecciones.sanidad,horasServicioContinuo:parseFloat(document.getElementById('horasServicioContinuo').value)||0,horasServicioDiscontinuo:parseFloat(document.getElementById('horasServicioDiscontinuo').value)||0,horasRecargo:parseFloat(document.getElementById('horasRecargo').value)||0,tipoRecargo:document.getElementById('tipoRecargoServicio').value};
     }
 
     function obtenerDatosFormularioComparacion(formulario) {
@@ -2237,6 +2185,7 @@
         });
       }
       verificarFijacion();
+      actualizarEstadoSuplementos();
     }
 
     function filtrarGradosComparacion(jerarquiaFiltro, formulario) {
@@ -2283,24 +2232,29 @@
 
     // ============== FUNCIONES DE CÁLCULO ==============
 
+    function obtenerZonaPorProvincia(provincia){ if(!provincia || provincia==='CABA') return null; for(const [zona,lista] of Object.entries(ZONAS)){ if(lista.includes(provincia)) return zona; } return null; }
+    function obtenerMontoZona(ref, grado, provincia){ if(determinarJerarquia(grado)==='Aspirante') return 0; const zona=obtenerZonaPorProvincia(provincia); if(!zona) return 0; return ref?.zona?.[zona] ?? 0; }
+    function unidadesServicio(horas){ if(horas<=0) return 0; return Math.ceil(horas/4.5); }
+    function unidadesRecargo(horas,tipo){ if(horas<=0) return 0; return tipo==='ordinario' ? horas/3 : Math.ceil(horas/5); }
+    function validarHorasSuplementos(){ const s=parseFloat(document.getElementById('horasServicioContinuo')?.value)||0,d=parseFloat(document.getElementById('horasServicioDiscontinuo')?.value)||0,r=parseFloat(document.getElementById('horasRecargo')?.value)||0; const total=s+d+r; if(total>180){alert('Error: las horas de Servicio y Recargo sumadas no pueden superar 180 horas.'); return false;} return true; }
+    function seleccionarSuplemento(campo,valor){ selecciones[campo]=valor; const incompatibles=['contactoAltoRiesgo','controlRegistro','gruposEspeciales','seguridadAdicional']; if(valor==='si' && incompatibles.includes(campo)){ incompatibles.forEach(c=>{if(c!==campo) selecciones[c]='no';}); } Object.keys(selecciones).filter(k=>incompatibles.includes(k)).forEach(c=>{document.querySelectorAll(`[data-suplemento="${c}"] .btn-opcion`).forEach(b=>b.classList.toggle('active',b.dataset.suplementoValue===selecciones[c]));}); const a=document.getElementById('horasSeguridadAdicional'); if(a)a.style.display=selecciones.seguridadAdicional==='si'?'block':'none'; const r=document.getElementById('horasRecargoServicio'); if(r)r.style.display=selecciones.recargoServicio==='si'?'block':'none'; }
+    function actualizarEstadoSuplementos(){ const aspirante=determinarJerarquia(document.getElementById('grado').value)==='Aspirante'; const c=document.getElementById('suplementosContainer'); if(c)c.style.display=aspirante?'none':''; if(aspirante){ ['contactoAltoRiesgo','controlRegistro','gruposEspeciales','seguridadAdicional','recargoServicio','sanidad'].forEach(k=>selecciones[k]='no'); } }
+    function inicializarProvincias(){ const s=document.getElementById('provincia'); if(!s)return; PROVINCIAS_ARGENTINAS.forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;s.appendChild(o);}); }
+    function obtenerDatosSuplementos(grado,ref,datos){ const haber=ref?.haber||0; const res={}; ['contactoAltoRiesgo','controlRegistro','gruposEspeciales','sanidad'].forEach(k=>{res[k]=datos[k]==='si'?haber*(COEFICIENTES_SUPLEMENTOS[k]?.[grado]||0):0;}); const hs=datos.seguridadAdicional==='si'; const hc=hs?unidadesServicio(datos.horasServicioContinuo):0, hd=hs?unidadesServicio(datos.horasServicioDiscontinuo):0; const valores=periodosData[periodoActivo]?.__SUPLEMENTOS__?.seguridad||{continuo:22332,discontinuo:29714.34}; res.seguridadAdicional=hs?(hc*(valores.continuo||0)+hd*(valores.discontinuo||0)):0; const hr=datos.recargoServicio==='si'?unidadesRecargo(datos.horasRecargo,datos.tipoRecargo):0; const rv=periodosData[periodoActivo]?.[grado]?.recargo||{}; res.recargoServicio=datos.recargoServicio==='si'?hr*(rv[datos.tipoRecargo]||0):0; return res; }
+
     function calcularHaber(ref, datosUsuario, grado) {
-      const { antiguedad, titulo, variabilidad, fijacion, zona, usaCasino, obra } = datosUsuario;
-      const añosEscalafon = obtenerAños(grado) || 0;
-      const suplemento = ref.haber * 0.02 * antiguedad;
-      const bonificacionTitulo = ref.titulo[titulo] || 0;
-      const baseAportes = ref.haber + suplemento + bonificacionTitulo;
-      const montoCasino = calcularCasino(grado);
-      const adicionalCasino = usaCasino ? -montoCasino : 0;
-      const adicionalFijacion = fijacion ? ref.fijacion : 0;
-      const jerarquia = determinarJerarquia(grado);
-      const adicionalVariabilidad = jerarquia !== "Aspirante" && variabilidad !== "ninguna" ? ref.variabilidad[variabilidad] : 0;
-      const adicionalZona = zona ? ref.zona : 0;
-      const aporteJubilatorio = -baseAportes * 0.10;
-      const aporteObra = -baseAportes * (obra === 'basica' ? 0.075 : obra === 'carga' ? 0.085 : 0.095);
-      const total = baseAportes + adicionalVariabilidad + adicionalFijacion + adicionalZona + adicionalCasino +
-        aporteJubilatorio + aporteObra;
-      return { haber: ref.haber, suplemento, bonificacionTitulo, adicionalVariabilidad, adicionalFijacion, adicionalZona,
-        adicionalCasino, montoCasino, aporteJubilatorio, aporteObra, total, añosEscalafon };
+      const { antiguedad, titulo, variabilidad, fijacion, provincia, usaCasino, obra } = datosUsuario;
+      const añosEscalafon=obtenerAños(grado)||0, suplemento=ref.haber*0.02*antiguedad, bonificacionTitulo=ref.titulo?.[titulo]||0, baseAportes=ref.haber+suplemento+bonificacionTitulo;
+      const montoCasino=calcularCasino(grado), adicionalCasino=usaCasino?-montoCasino:0, adicionalFijacion=fijacion?ref.fijacion:0;
+      const jerarquia=determinarJerarquia(grado), adicionalVariabilidad=jerarquia!=='Aspirante'&&variabilidad!=='ninguna'?(ref.variabilidad?.[variabilidad]||0):0;
+      const adicionalZona=obtenerMontoZona(ref,grado,provincia), suplementos=obtenerDatosSuplementos(grado,ref,datosUsuario);
+      const aporteJubilatorio=-(baseAportes+suplementos.seguridadAdicional+suplementos.recargoServicio)*0.10;
+      const baseObra=baseAportes+suplementos.seguridadAdicional+suplementos.recargoServicio;
+      const aporteObra=-baseObra*(obra==='basica'?.075:obra==='carga'?.085:.095);
+      // Contacto, Control, Grupos y Sanidad no tienen deducciones. Seguridad no tiene Retiro pero sí Obra Social. Recargo tiene ambas.
+      const aporteJubilatorioFinal=-(baseAportes+suplementos.recargoServicio)*0.10;
+      const total=baseAportes+adicionalVariabilidad+adicionalFijacion+adicionalZona+adicionalCasino+Object.values(suplementos).reduce((a,b)=>a+b,0)+aporteJubilatorioFinal+aporteObra;
+      return {haber:ref.haber,suplemento,bonificacionTitulo,adicionalVariabilidad,adicionalFijacion,adicionalZona,adicionalCasino,montoCasino,aporteJubilatorio:aporteJubilatorioFinal,aporteObra,total,añosEscalafon,...suplementos};
     }
 
     function calcularHaberRetiro(ref, datosUsuario, grado) {
@@ -2332,7 +2286,13 @@
         conceptos.push(
           { label: "Variabilidad", valor: calculo.adicionalVariabilidad },
           { label: "Fijación de domicilio", valor: calculo.adicionalFijacion },
-          { label: "Zona Sur", valor: calculo.adicionalZona },
+          { label: "Zona", valor: calculo.adicionalZona },
+          { label: "Contacto Alto Riesgo", valor: calculo.contactoAltoRiesgo || 0 },
+          { label: "Control y Registro", valor: calculo.controlRegistro || 0 },
+          { label: "Grupos Especiales", valor: calculo.gruposEspeciales || 0 },
+          { label: "Servicios de Seguridad Adicional", valor: calculo.seguridadAdicional || 0 },
+          { label: "Recargo de Servicio", valor: calculo.recargoServicio || 0 },
+          { label: "Sanidad", valor: calculo.sanidad || 0 },
           { label: "Casino", valor: calculo.adicionalCasino },
           { label: "Aporte Ley 13.018 (10%)", valor: calculo.aporteJubilatorio }
         );
@@ -2375,7 +2335,13 @@
         conceptos.push(
           { label: "Variabilidad", valor: calculo.adicionalVariabilidad },
           { label: "Fijación de domicilio", valor: calculo.adicionalFijacion },
-          { label: "Zona Sur", valor: calculo.adicionalZona },
+          { label: "Zona", valor: calculo.adicionalZona },
+          { label: "Contacto Alto Riesgo", valor: calculo.contactoAltoRiesgo || 0 },
+          { label: "Control y Registro", valor: calculo.controlRegistro || 0 },
+          { label: "Grupos Especiales", valor: calculo.gruposEspeciales || 0 },
+          { label: "Servicios de Seguridad Adicional", valor: calculo.seguridadAdicional || 0 },
+          { label: "Recargo de Servicio", valor: calculo.recargoServicio || 0 },
+          { label: "Sanidad", valor: calculo.sanidad || 0 },
           { label: "Casino", valor: calculo.adicionalCasino },
           { label: "Aporte Ley 13.018 (10%)", valor: calculo.aporteJubilatorio }
         );
@@ -2412,7 +2378,7 @@
             <h4>Aclaración - Haber de Retiro:</h4>
             <p>El cálculo del haber de retiro considera:</p>
             <ul>
-              <li>No se aplican conceptos de Variabilidad, Fijación de domicilio, Zona Sur ni Casino</li>
+              <li>No se aplican conceptos de Variabilidad, Fijación de domicilio, Zona ni suplementos adicionales</li>
               <li>No se aplica Aporte Ley 13.018 (10%)</li>
               <li>Los aportes de Obra Social son: Básica (5.5%), Con carga de familia 1-2 (6.5%), Con carga de familia 3+ (7.5%)</li>
               <li>Se aplica un coeficiente según años de servicio y jerarquía (Oficial/Suboficial)</li>
@@ -2471,6 +2437,7 @@
       }
       const ref = getReferenciaActiva();
       const datosUsuario = obtenerDatosFormulario();
+      if (!validarHorasSuplementos()) return;
       const grado = document.getElementById("grado").value;
       const calculo = calcularHaber(ref[grado] || DEFAULT_REFERENCIA[grado], datosUsuario, grado);
       renderizarResultado(calculo, grado, false);
@@ -2636,6 +2603,8 @@
 
     // ============== INICIALIZACIÓN ==============
 
+    function asegurarNuevosDatos(){ periodosNombres.forEach((pn,idx)=>{ periodosData[pn]??=JSON.parse(JSON.stringify(DEFAULT_REFERENCIA)); periodosData[pn].__SUPLEMENTOS__??={seguridad:{continuo:22332,discontinuo:29714.34}}; periodosData[pn].__SUPLEMENTOS__.seguridad??={continuo:22332,discontinuo:29714.34}; if(idx!==0 && periodosData[pn].__SUPLEMENTOS__.seguridad.continuo==null)periodosData[pn].__SUPLEMENTOS__.seguridad.continuo=1; TODOS_LOS_GRADOS.forEach(g=>{periodosData[pn][g]??=JSON.parse(JSON.stringify(DEFAULT_REFERENCIA[g]||{haber:1,fijacion:0,variabilidad:{unico:0,familia:0},titulo:{terciario:0,universitario:0},zona:{}})); if(!periodosData[pn][g].zona||typeof periodosData[pn][g].zona!=='object')periodosData[pn][g].zona={}; periodosData[pn][g].recargo??={}; if(idx===0&&RECARGOS_INICIALES[g]){periodosData[pn][g].recargo.ordinario??=RECARGOS_INICIALES[g][0];periodosData[pn][g].recargo.extraordinario??=RECARGOS_INICIALES[g][1];} else {periodosData[pn][g].recargo.ordinario??=1;periodosData[pn][g].recargo.extraordinario??=1;} ['NOA','NEA','CUYO','CENTRO','SUR','PBA'].forEach(z=>periodosData[pn][g].zona[z]??=1);}); }); }
+
     document.addEventListener('DOMContentLoaded', async function() {
       // Mostrar loading
       mostrarLoading(true);
@@ -2664,11 +2633,13 @@
       }
 
       // Actualizar UI
+      asegurarNuevosDatos();
       actualizarSelectPeriodos();
       inicializarSelectGrados();
+      inicializarProvincias();
 
       // Event listeners
-      document.getElementById('grado').addEventListener('change', verificarFijacion);
+      document.getElementById('grado').addEventListener('change', function(){ verificarFijacion(); actualizarEstadoSuplementos(); });
       document.getElementById('periodo').addEventListener('change', function() {
         if (this.value) {
           periodoActivo = this.value;
