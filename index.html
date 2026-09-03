@@ -1753,77 +1753,74 @@
       document.querySelector(`.admin-tab[data-tab="${tabId}"]`).classList.add('active');
     }
 
-    function pegarDatosColumna(tablaId, periodoIndex) {
-      navigator.clipboard.readText().then(text => {
-        const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
-        const values = lines.map(line => parseFloat(line.trim().replace(/,/g, '')) || 0);
+function pegarDatosColumna(tablaId, periodoIndex) {
+    navigator.clipboard.readText().then(text => {
+
+        const lines = text
+            .split(/\r?\n/)
+            .filter(line => line.trim() !== '');
+
+        const values = lines.map(line =>
+            parseFloat(line.trim().replace(/,/g, '')) || 0
+        );
 
         const tabla = document.getElementById(tablaId);
         const filas = tabla.querySelectorAll('tbody tr');
-        const encabezados = tabla.querySelectorAll('thead th');
 
         if (values.length === 0) {
-          mostrarPasteStatus(tablaId, 'No hay datos en el portapapeles', 'error');
-          return;
+            mostrarPasteStatus(
+                tablaId,
+                'No hay datos en el portapapeles',
+                'error'
+            );
+            return;
         }
 
-        const nombrePeriodo = periodosNombres[periodoIndex] || `Periodo ${periodoIndex + 1}`;
-        
-        // Buscar la columna buscando el botón que fue clickeado
-        // Como el botón está dentro del th, podemos encontrar su posición
-        let columnaDestino = -1;
-        
-        // Buscar el th que contiene el botón con el onclick correspondiente
-        const botones = document.querySelectorAll(`.btn-paste`);
-        botones.forEach((btn, idx) => {
-          // El onclick contiene el periodoIndex, así que podemos buscar el botón correcto
-          const onclickAttr = btn.getAttribute('onclick');
-          if (onclickAttr && onclickAttr.includes(`'${tablaId}', ${periodoIndex}`)) {
-            // Encontrar en qué th está este botón
-            const th = btn.closest('th');
-            if (th) {
-              const allThs = document.querySelectorAll(`#${tablaId} thead th`);
-              allThs.forEach((thEl, thIdx) => {
-                if (thEl === th) {
-                  columnaDestino = thIdx;
-                }
-              });
-            }
-          }
-        });
-
-        // Si no encontró por el botón, usar el índice + 1
-        if (columnaDestino === -1) {
-          columnaDestino = periodoIndex + 1;
-          console.warn(`⚠️ No se encontró la columna para "${nombrePeriodo}", usando índice ${columnaDestino}`);
-        }
-
-        console.log(`📌 Pegando en columna ${columnaDestino} para "${nombrePeriodo}"`);
+        const nombrePeriodo =
+            periodosNombres[periodoIndex] ||
+            `Periodo ${periodoIndex + 1}`;
 
         let filaIndex = 0;
 
-        filas.forEach((fila) => {
-          const inputs = fila.querySelectorAll('input');
-          if (inputs.length > columnaDestino) {
-            if (values[filaIndex] !== undefined && !isNaN(values[filaIndex])) {
-              inputs[columnaDestino].value = values[filaIndex];
-              const event = new Event('change', { bubbles: true });
-              inputs[columnaDestino].dispatchEvent(event);
-              filaIndex++;
+        filas.forEach(fila => {
+
+            const inputs = fila.querySelectorAll('input');
+
+            // periodoIndex coincide directamente con el input
+            if (
+                periodoIndex < inputs.length &&
+                values[filaIndex] !== undefined
+            ) {
+                inputs[periodoIndex].value = values[filaIndex];
+
+                inputs[periodoIndex].dispatchEvent(
+                    new Event('change', { bubbles: true })
+                );
+
+                filaIndex++;
             }
-          }
         });
 
-        const mensaje = filaIndex > 0 ? 
-          `✅ Se pegaron ${filaIndex} valores en "${nombrePeriodo}"` : 
-          '⚠️ No se pudieron pegar valores. Verifica que los datos sean números.';
-        mostrarPasteStatus(tablaId, mensaje, filaIndex > 0 ? 'success' : 'error');
-        
-      }).catch(err => {
-        mostrarPasteStatus(tablaId, '❌ Error al leer el portapapeles', 'error');
+        const mensaje = filaIndex > 0
+            ? `✅ Se pegaron ${filaIndex} valores en "${nombrePeriodo}"`
+            : '⚠️ No se pudieron pegar valores. Verifica que los datos sean números.';
+
+        mostrarPasteStatus(
+            tablaId,
+            mensaje,
+            filaIndex > 0 ? 'success' : 'error'
+        );
+
+    }).catch(err => {
+        mostrarPasteStatus(
+            tablaId,
+            '❌ Error al leer el portapapeles',
+            'error'
+        );
+
         console.error('Error al leer portapapeles:', err);
-      });
-    }
+    });
+}
     
     function mostrarPasteStatus(tablaId, mensaje, tipo) {
       const tabla = document.getElementById(tablaId);
