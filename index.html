@@ -1753,44 +1753,31 @@
       document.querySelector(`.admin-tab[data-tab="${tabId}"]`).classList.add('active');
     }
 
-        function pegarDatosColumna(tablaId, periodoIndex) {
+    function pegarDatosColumna(tablaId, periodoIndex) {
       navigator.clipboard.readText().then(text => {
         const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
         const values = lines.map(line => parseFloat(line.trim().replace(/,/g, '')) || 0);
 
         const tabla = document.getElementById(tablaId);
         const filas = tabla.querySelectorAll('tbody tr');
-        const encabezados = tabla.querySelectorAll('thead th');
 
         if (values.length === 0) {
           mostrarPasteStatus(tablaId, 'No hay datos en el portapapeles', 'error');
           return;
         }
 
-        // Encontrar la columna correcta buscando el nombre del periodo en el encabezado
-        const nombrePeriodo = periodosNombres[periodoIndex] || `Periodo ${periodoIndex + 1}`;
-        let columnaDestino = -1;
-        
-        encabezados.forEach((th, idx) => {
-          const texto = th.textContent.trim();
-          // Buscar el nombre del periodo en el encabezado
-          if (texto.includes(nombrePeriodo) || texto.includes(`Periodo ${periodoIndex + 1}`)) {
-            columnaDestino = idx;
-          }
-        });
-
-        // Si no encontró por nombre, usar el índice + 1
-        if (columnaDestino === -1) {
-          columnaDestino = periodoIndex + 1;
-        }
-
+        // La columna 0 es "Grado", la columna 1 es el primer periodo (índice 0)
+        // Por lo tanto: columna = periodoIndex + 1
+        const columnaDestino = periodoIndex + 1;
         let filaIndex = 0;
 
         filas.forEach((fila) => {
           const inputs = fila.querySelectorAll('input');
+          // Verificar que la columna existe en esta fila
           if (inputs.length > columnaDestino) {
             if (values[filaIndex] !== undefined && !isNaN(values[filaIndex])) {
               inputs[columnaDestino].value = values[filaIndex];
+              // Disparar evento change
               const event = new Event('change', { bubbles: true });
               inputs[columnaDestino].dispatchEvent(event);
               filaIndex++;
@@ -1798,6 +1785,7 @@
           }
         });
 
+        const nombrePeriodo = periodosNombres[periodoIndex] || `Periodo ${periodoIndex + 1}`;
         const mensaje = filaIndex > 0 ? 
           `✅ Se pegaron ${filaIndex} valores en "${nombrePeriodo}"` : 
           '⚠️ No se pudieron pegar valores. Verifica que los datos sean números.';
@@ -1807,8 +1795,7 @@
         mostrarPasteStatus(tablaId, '❌ Error al leer el portapapeles', 'error');
         console.error('Error al leer portapapeles:', err);
       });
-    }
-    
+    }    
     function mostrarPasteStatus(tablaId, mensaje, tipo) {
       const tabla = document.getElementById(tablaId);
       let statusEl = tabla.querySelector('.paste-status');
