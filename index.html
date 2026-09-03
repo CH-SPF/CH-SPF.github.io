@@ -1753,74 +1753,43 @@
       document.querySelector(`.admin-tab[data-tab="${tabId}"]`).classList.add('active');
     }
 
-function pegarDatosColumna(tablaId, periodoIndex) {
-    navigator.clipboard.readText().then(text => {
-
-        const lines = text
-            .split(/\r?\n/)
-            .filter(line => line.trim() !== '');
-
-        const values = lines.map(line =>
-            parseFloat(line.trim().replace(/,/g, '')) || 0
-        );
+    function pegarDatosColumna(tablaId, periodoIndex) {
+      navigator.clipboard.readText().then(text => {
+        const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+        const values = lines.map(line => parseFloat(line.trim().replace(/,/g, '')) || 0);
 
         const tabla = document.getElementById(tablaId);
         const filas = tabla.querySelectorAll('tbody tr');
 
         if (values.length === 0) {
-            mostrarPasteStatus(
-                tablaId,
-                'No hay datos en el portapapeles',
-                'error'
-            );
-            return;
+          mostrarPasteStatus(tablaId, 'No hay datos en el portapapeles', 'error');
+          return;
         }
 
-        const nombrePeriodo =
-            periodosNombres[periodoIndex] ||
-            `Periodo ${periodoIndex + 1}`;
-
+        const nombrePeriodo = periodosNombres[periodoIndex] || `Periodo ${periodoIndex + 1}`;
         let filaIndex = 0;
 
         filas.forEach(fila => {
-
-            const inputs = fila.querySelectorAll('input');
-
-            // periodoIndex coincide directamente con el input
-            if (
-                periodoIndex < inputs.length &&
-                values[filaIndex] !== undefined
-            ) {
-                inputs[periodoIndex].value = values[filaIndex];
-
-                inputs[periodoIndex].dispatchEvent(
-                    new Event('change', { bubbles: true })
-                );
-
-                filaIndex++;
-            }
+          const inputs = fila.querySelectorAll('input');
+          // El primer input de cada fila es el Periodo 1, por lo que
+          // periodoIndex coincide directamente con el índice del input.
+          if (periodoIndex < inputs.length && values[filaIndex] !== undefined) {
+            inputs[periodoIndex].value = values[filaIndex];
+            inputs[periodoIndex].dispatchEvent(new Event('change', { bubbles: true }));
+            filaIndex++;
+          }
         });
 
         const mensaje = filaIndex > 0
-            ? `✅ Se pegaron ${filaIndex} valores en "${nombrePeriodo}"`
-            : '⚠️ No se pudieron pegar valores. Verifica que los datos sean números.';
+          ? `✅ Se pegaron ${filaIndex} valores en "${nombrePeriodo}"`
+          : '⚠️ No se pudieron pegar valores. Verifica que los datos sean números.';
+        mostrarPasteStatus(tablaId, mensaje, filaIndex > 0 ? 'success' : 'error');
 
-        mostrarPasteStatus(
-            tablaId,
-            mensaje,
-            filaIndex > 0 ? 'success' : 'error'
-        );
-
-    }).catch(err => {
-        mostrarPasteStatus(
-            tablaId,
-            '❌ Error al leer el portapapeles',
-            'error'
-        );
-
+      }).catch(err => {
+        mostrarPasteStatus(tablaId, '❌ Error al leer el portapapeles', 'error');
         console.error('Error al leer portapapeles:', err);
-    });
-}
+      });
+    }
     
     function mostrarPasteStatus(tablaId, mensaje, tipo) {
       const tabla = document.getElementById(tablaId);
@@ -1840,13 +1809,13 @@ function pegarDatosColumna(tablaId, periodoIndex) {
       const thead = tabla.querySelector('thead');
       const tbody = tabla.querySelector('tbody');
 
-      let headerHTML = `<tr><th>Grado</th>`;
+      let headerHTML = `<tr><th>${campo === 'variabilidad' ? 'Tipo de residente' : 'Grado'}</th>`;
       periodosNombres.forEach((nombre, idx) => {
         const label = nombre || `Periodo ${idx + 1}`;
-       headerHTML += `<th class="periodo-header-cell">
-  <span class="periodo-nombre">${label}</span>
-  <button class="btn-paste" onclick="pegarDatosColumna('${tablaId}', ${idx})">📋 Pegar</button>
-</th>`;
+        headerHTML += `<th class="periodo-header-cell">
+          <span class="periodo-nombre">${label}</span>
+          <button class="btn-paste" onclick="pegarDatosColumna('${tablaId}', ${idx})">📋 Pegar</button>
+        </th>`;
       });
       headerHTML += `</tr>`;
       thead.innerHTML = headerHTML;
@@ -1854,28 +1823,63 @@ function pegarDatosColumna(tablaId, periodoIndex) {
       let bodyHTML = '';
       const ref = getReferenciaActiva();
 
-      TODOS_LOS_GRADOS.forEach(grado => {
-        bodyHTML += `<tr><td class="grado-cell">${grado}</td>`;
-        periodosNombres.forEach((nombre, idx) => {
-          const periodoNombre = nombre || `Periodo ${idx + 1}`;
-          const data = periodosData[periodoNombre] || ref;
-          let valor = 0;
-          if (subcampo) {
-            valor = data[grado]?.[campo]?.[subcampo] ?? 0;
-          } else {
-            valor = data[grado]?.[campo] ?? 0;
-          }
-          bodyHTML += `<td>
-            <div class="cell-with-paste">
-              <input type="number" step="0.01" class="admin-input" 
-                     data-grado="${grado}" data-periodo="${idx}" 
-                     data-campo="${campo}" data-subcampo="${subcampo || ''}" 
-                     value="${valor}">
-            </div>
-          </td>`;
+      // Fijación: solamente corresponde a los seis grados indicados.
+      const gradosParaTabla = campo === 'fijacion'
+        ? GRADOS_CON_FIJACION
+        : TODOS_LOS_GRADOS;
+
+      // Variabilidad: un único valor para todos los grados que no sean Aspirantes.
+      // Se muestran solamente dos filas y cada columna contiene ambos valores.
+      if (campo === 'variabilidad') {
+        const gradoReferencia = TODOS_LOS_GRADOS.find(g => determinarJerarquia(g) !== 'Aspirante');
+        const filasVariabilidad = [
+          { subcampo: 'unico', etiqueta: 'Residente único' },
+          { subcampo: 'familia', etiqueta: 'Residente con familia' }
+        ];
+
+        filasVariabilidad.forEach(fila => {
+          bodyHTML += `<tr><td class="grado-cell">${fila.etiqueta}</td>`;
+          periodosNombres.forEach((nombre, idx) => {
+            const periodoNombre = nombre || `Periodo ${idx + 1}`;
+            const data = periodosData[periodoNombre] || ref;
+            const valor = data[gradoReferencia]?.variabilidad?.[fila.subcampo] ?? 0;
+
+            bodyHTML += `<td>
+              <div class="cell-with-paste">
+                <input type="number" step="0.01" class="admin-input"
+                       data-grado="__VARIABILIDAD_GENERAL__" data-periodo="${idx}"
+                       data-campo="variabilidad" data-subcampo="${fila.subcampo}"
+                       value="${valor}">
+              </div>
+            </td>`;
+          });
+          bodyHTML += `</tr>`;
         });
-        bodyHTML += `</tr>`;
-      });
+      } else {
+        gradosParaTabla.forEach(grado => {
+          bodyHTML += `<tr><td class="grado-cell">${grado}</td>`;
+          periodosNombres.forEach((nombre, idx) => {
+            const periodoNombre = nombre || `Periodo ${idx + 1}`;
+            const data = periodosData[periodoNombre] || ref;
+            let valor = 0;
+            if (subcampo) {
+              valor = data[grado]?.[campo]?.[subcampo] ?? 0;
+            } else {
+              valor = data[grado]?.[campo] ?? 0;
+            }
+            bodyHTML += `<td>
+              <div class="cell-with-paste">
+                <input type="number" step="0.01" class="admin-input"
+                       data-grado="${grado}" data-periodo="${idx}"
+                       data-campo="${campo}" data-subcampo="${subcampo || ''}"
+                       value="${valor}">
+              </div>
+            </td>`;
+          });
+          bodyHTML += `</tr>`;
+        });
+      }
+
       tbody.innerHTML = bodyHTML;
     }
 
@@ -1903,6 +1907,34 @@ function pegarDatosColumna(tablaId, periodoIndex) {
         if (!periodosData[periodoNombre]) {
           periodosData[periodoNombre] = JSON.parse(JSON.stringify(DEFAULT_REFERENCIA));
         }
+
+        // Variabilidad: los dos valores son generales para todos los grados
+        // excepto Aspirantes. Se replica el valor en cada grado para que los
+        // cálculos existentes puedan seguir utilizando ref.variabilidad[...].
+        if (grado === '__VARIABILIDAD_GENERAL__') {
+          TODOS_LOS_GRADOS.forEach(gradoVariabilidad => {
+            if (determinarJerarquia(gradoVariabilidad) === 'Aspirante') return;
+
+            if (!periodosData[periodoNombre][gradoVariabilidad]) {
+              periodosData[periodoNombre][gradoVariabilidad] = JSON.parse(JSON.stringify(
+                DEFAULT_REFERENCIA[gradoVariabilidad] || {
+                  haber: 0,
+                  fijacion: 0,
+                  variabilidad: { unico: 0, familia: 0 },
+                  titulo: { terciario: 0, universitario: 0 },
+                  zona: 0
+                }
+              ));
+            }
+
+            if (!periodosData[periodoNombre][gradoVariabilidad].variabilidad) {
+              periodosData[periodoNombre][gradoVariabilidad].variabilidad = {};
+            }
+            periodosData[periodoNombre][gradoVariabilidad].variabilidad[subcampo] = valor;
+          });
+          return;
+        }
+
         if (!periodosData[periodoNombre][grado]) {
           periodosData[periodoNombre][grado] = JSON.parse(JSON.stringify(DEFAULT_REFERENCIA[grado] || {
             haber: 0,
@@ -2260,7 +2292,8 @@ function pegarDatosColumna(tablaId, periodoIndex) {
       const montoCasino = calcularCasino(grado);
       const adicionalCasino = usaCasino ? -montoCasino : 0;
       const adicionalFijacion = fijacion ? ref.fijacion : 0;
-      const adicionalVariabilidad = variabilidad !== "ninguna" ? ref.variabilidad[variabilidad] : 0;
+      const jerarquia = determinarJerarquia(grado);
+      const adicionalVariabilidad = jerarquia !== "Aspirante" && variabilidad !== "ninguna" ? ref.variabilidad[variabilidad] : 0;
       const adicionalZona = zona ? ref.zona : 0;
       const aporteJubilatorio = -baseAportes * 0.10;
       const aporteObra = -baseAportes * (obra === 'basica' ? 0.075 : obra === 'carga' ? 0.085 : 0.095);
