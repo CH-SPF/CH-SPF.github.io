@@ -1760,24 +1760,53 @@
 
         const tabla = document.getElementById(tablaId);
         const filas = tabla.querySelectorAll('tbody tr');
+        const encabezados = tabla.querySelectorAll('thead th');
 
         if (values.length === 0) {
           mostrarPasteStatus(tablaId, 'No hay datos en el portapapeles', 'error');
           return;
         }
 
-        // La columna 0 es "Grado", la columna 1 es el primer periodo (índice 0)
-        // Por lo tanto: columna = periodoIndex + 1
-        const columnaDestino = periodoIndex + 1;
+        const nombrePeriodo = periodosNombres[periodoIndex] || `Periodo ${periodoIndex + 1}`;
+        
+        // Buscar la columna buscando el botón que fue clickeado
+        // Como el botón está dentro del th, podemos encontrar su posición
+        let columnaDestino = -1;
+        
+        // Buscar el th que contiene el botón con el onclick correspondiente
+        const botones = document.querySelectorAll(`.btn-paste`);
+        botones.forEach((btn, idx) => {
+          // El onclick contiene el periodoIndex, así que podemos buscar el botón correcto
+          const onclickAttr = btn.getAttribute('onclick');
+          if (onclickAttr && onclickAttr.includes(`'${tablaId}', ${periodoIndex}`)) {
+            // Encontrar en qué th está este botón
+            const th = btn.closest('th');
+            if (th) {
+              const allThs = document.querySelectorAll(`#${tablaId} thead th`);
+              allThs.forEach((thEl, thIdx) => {
+                if (thEl === th) {
+                  columnaDestino = thIdx;
+                }
+              });
+            }
+          }
+        });
+
+        // Si no encontró por el botón, usar el índice + 1
+        if (columnaDestino === -1) {
+          columnaDestino = periodoIndex + 1;
+          console.warn(`⚠️ No se encontró la columna para "${nombrePeriodo}", usando índice ${columnaDestino}`);
+        }
+
+        console.log(`📌 Pegando en columna ${columnaDestino} para "${nombrePeriodo}"`);
+
         let filaIndex = 0;
 
         filas.forEach((fila) => {
           const inputs = fila.querySelectorAll('input');
-          // Verificar que la columna existe en esta fila
           if (inputs.length > columnaDestino) {
             if (values[filaIndex] !== undefined && !isNaN(values[filaIndex])) {
               inputs[columnaDestino].value = values[filaIndex];
-              // Disparar evento change
               const event = new Event('change', { bubbles: true });
               inputs[columnaDestino].dispatchEvent(event);
               filaIndex++;
@@ -1785,7 +1814,6 @@
           }
         });
 
-        const nombrePeriodo = periodosNombres[periodoIndex] || `Periodo ${periodoIndex + 1}`;
         const mensaje = filaIndex > 0 ? 
           `✅ Se pegaron ${filaIndex} valores en "${nombrePeriodo}"` : 
           '⚠️ No se pudieron pegar valores. Verifica que los datos sean números.';
@@ -1795,7 +1823,8 @@
         mostrarPasteStatus(tablaId, '❌ Error al leer el portapapeles', 'error');
         console.error('Error al leer portapapeles:', err);
       });
-    }    
+    }
+    
     function mostrarPasteStatus(tablaId, mensaje, tipo) {
       const tabla = document.getElementById(tablaId);
       let statusEl = tabla.querySelector('.paste-status');
