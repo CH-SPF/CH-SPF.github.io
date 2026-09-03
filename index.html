@@ -793,6 +793,43 @@
       flex: 1;
       min-width: 150px;
     }
+
+    /* ===== Panel de administración de referencias ===== */
+    .period-selector-main {
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,.7);
+      border: 1px solid #dfe4e8;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .period-selector-main select { width: auto; min-width: 150px; margin: 0; }
+    .period-help { font-size: 12px; color: #6c757d; }
+    .btn-admin { background: #6f42c1 !important; color: white !important; }
+    .admin-modal .modal-content { max-width: 1200px; }
+    .admin-toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:end; margin-bottom:15px; }
+    .admin-toolbar .field { flex:1; min-width:180px; }
+    .admin-toolbar label { display:block; font-weight:600; margin-bottom:5px; }
+    .admin-toolbar select, .admin-toolbar input { margin:0; }
+    .admin-actions { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; }
+    .admin-table-wrap { overflow:auto; max-height:58vh; border:1px solid #ddd; border-radius:8px; }
+    .admin-table { width:100%; border-collapse:collapse; min-width:1050px; font-size:13px; }
+    .admin-table th { position:sticky; top:0; z-index:2; background:var(--primary-color); color:white; padding:9px 7px; }
+    .admin-table td { border-bottom:1px solid #e5e5e5; padding:5px; background:white; }
+    .admin-table td:first-child { font-weight:600; white-space:nowrap; position:sticky; left:0; z-index:1; background:#f8f9fa; }
+    .admin-table input { width:100%; min-width:105px; padding:7px; margin:0; font-size:13px; }
+    .paste-box { width:100%; min-height:180px; font-family:monospace; font-size:12px; resize:vertical; }
+    .admin-note { padding:10px 12px; border-radius:8px; background:#f8f9fa; color:#495057; font-size:13px; margin:10px 0; }
+    .admin-note strong { color:#2c3e50; }
+    .status-ok { color:#198754; font-weight:600; }
+    .status-error { color:#dc3545; font-weight:600; }
+    @media (max-width: 768px) {
+      .period-selector-main { align-items:stretch; flex-direction:column; }
+      .period-selector-main select { width:100%; }
+    }
   </style>
 </head>
 <body>
@@ -802,6 +839,15 @@
         <h2>Calculadora de Haberes SPF</h2>
         <p>Complete los datos para estimar su haber mensual según su situación</p>
         <p class="update-info">Última actualización: <a href="https://www.boletinoficial.gob.ar/detalleAviso/primera/329387/20250806" target="_blank">RESOL-2025-944-APN-MSG (a percibir en diciembre)</a></p>
+        <div class="period-selector-main">
+          <label for="periodoActivo"><strong>Período de valores:</strong></label>
+          <select id="periodoActivo" onchange="cambiarPeriodo(this.value)">
+            <option value="periodo1">Período 1</option>
+            <option value="periodo2">Período 2</option>
+            <option value="periodo3">Período 3</option>
+          </select>
+          <span class="period-help">Los cálculos utilizan los valores del período seleccionado.</span>
+        </div>
       </div>
     </div>
 
@@ -909,6 +955,7 @@
           <button type="button" class="btn btn-secondary" onclick="mostrarTabla()">HABERES ESTIMADOS</button>
           <button type="button" class="btn btn-info" onclick="mostrarTablaAniosMinimos()">ANTIGUEDAD MINIMA</button>
           <button type="button" class="btn btn-warning" onclick="mostrarComparacion()">COMPARAR</button>
+          <button type="button" class="btn btn-admin" onclick="abrirAccesoAdmin()">⚙️ ADMINISTRAR VALORES</button>
         </div>
       </form>
     </div>
@@ -1426,7 +1473,7 @@
     };
 
     // Tabla de Referencia (Solo datos monetarios)
-    const referencia = {
+    const referenciaInicial = {
       "INSPECTOR GENERAL": {
         haber: 3135840.45,
         fijacion: 201423.40,
@@ -1562,11 +1609,63 @@
       }
     };
 
+    // ===== Gestión de períodos y referencias monetarias =====
+    const CLAVE_STORAGE_REFERENCIAS = "spf_referencias_v2";
+    const CLAVE_STORAGE_PERIODO = "spf_periodo_activo_v2";
+    const CLAVE_STORAGE_PASSWORD = "spf_admin_password_v2";
+    const PASSWORD_INICIAL = "admin1234";
+
+    function clonarObjeto(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    }
+
+    function cargarReferenciasGuardadas() {
+      try {
+        const guardado = localStorage.getItem(CLAVE_STORAGE_REFERENCIAS);
+        if (guardado) {
+          const datos = JSON.parse(guardado);
+          if (datos && datos.periodo1 && datos.periodo2 && datos.periodo3) return datos;
+        }
+      } catch (e) { console.warn("No se pudieron cargar las referencias guardadas", e); }
+      return {
+        periodo1: clonarObjeto(referenciaInicial),
+        periodo2: clonarObjeto(referenciaInicial),
+        periodo3: clonarObjeto(referenciaInicial)
+      };
+    }
+
+    let referencias = cargarReferenciasGuardadas();
+    let periodoActivo = localStorage.getItem(CLAVE_STORAGE_PERIODO) || "periodo1";
+    if (!referencias[periodoActivo]) periodoActivo = "periodo1";
+    let referenciaActiva = referencias[periodoActivo];
+
+    function guardarReferencias() {
+      localStorage.setItem(CLAVE_STORAGE_REFERENCIAS, JSON.stringify(referencias));
+      localStorage.setItem(CLAVE_STORAGE_PERIODO, periodoActivo);
+    }
+
+    function cambiarPeriodo(periodo) {
+      if (!referencias[periodo]) return;
+      periodoActivo = periodo;
+      referenciaActiva = referencias[periodoActivo];
+      localStorage.setItem(CLAVE_STORAGE_PERIODO, periodoActivo);
+      const selector = document.getElementById("periodoActivo");
+      if (selector) selector.value = periodoActivo;
+      cerrarResultados();
+    }
+
+    function cerrarResultados() {
+      ["resultado", "tablaReferencias", "comparisonResult"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = "none";
+      });
+    }
+
     // Variable global para el cuerpo seleccionado
     let cuerpoSeleccionado = "Cuerpo_General";
 
     // Variable para almacenar todos los grados
-    const todosLosGrados = Object.keys(referencia);
+    const todosLosGrados = Object.keys(referenciaActiva);
 
     // Objeto para almacenar las selecciones actuales
     const selecciones = {
@@ -1895,9 +1994,9 @@
     // Función para calcular casino automáticamente
     function calcularCasino(grado) {
       const jerarquia = determinarJerarquia(grado);
-      const haberSubadjutor = referencia["SUBADJUTOR"].haber;
-      const haberSubayudante = referencia["SUBAYUDANTE"].haber;
-      const haberActual = referencia[grado].haber;
+      const haberSubadjutor = referenciaActiva["SUBADJUTOR"].haber;
+      const haberSubayudante = referenciaActiva["SUBAYUDANTE"].haber;
+      const haberActual = referenciaActiva[grado].haber;
       
       switch(jerarquia) {
         case "Oficial":
@@ -2427,7 +2526,7 @@
     function calcular() {
       const datosUsuario = obtenerDatosFormulario();
       const grado = document.getElementById("grado").value;
-      const ref = referencia[grado];
+      const ref = referenciaActiva[grado];
       
       const calculo = calcularHaber(ref, datosUsuario, grado);
       renderizarResultado(calculo, grado, false);
@@ -2447,7 +2546,7 @@
         return;
       }
       
-      const ref = referencia[grado];
+      const ref = referenciaActiva[grado];
       
       const calculo = calcularHaberRetiro(ref, datosUsuario, grado);
       renderizarResultado(calculo, grado, true);
@@ -2470,8 +2569,8 @@
 
     // Función para mostrar tabla de referencias
     function mostrarTabla() {
-      const listaCalculada = Object.keys(referencia).map(grado => {
-        const datos = referencia[grado];
+      const listaCalculada = Object.keys(referenciaActiva).map(grado => {
+        const datos = referenciaActiva[grado];
         const años = obtenerAños(grado);
         
         // Si el grado no existe en el cuerpo seleccionado, retornar null
@@ -2609,11 +2708,11 @@
     function calcularComparacion() {
       const datosUsuario1 = obtenerDatosFormularioComparacion(1);
       const grado1 = document.getElementById("grado1").value;
-      const ref1 = referencia[grado1];
+      const ref1 = referenciaActiva[grado1];
       
       const datosUsuario2 = obtenerDatosFormularioComparacion(2);
       const grado2 = document.getElementById("grado2").value;
-      const ref2 = referencia[grado2];
+      const ref2 = referenciaActiva[grado2];
       
       const calculo1 = calcularHaber(ref1, datosUsuario1, grado1);
       const calculo2 = calcularHaber(ref2, datosUsuario2, grado2);
@@ -2662,8 +2761,224 @@
       document.getElementById("comparisonResult").style.display = "block";
     }
 
+    // ===== Funciones del administrador =====
+    function obtenerPasswordAdmin() {
+      return localStorage.getItem(CLAVE_STORAGE_PASSWORD) || PASSWORD_INICIAL;
+    }
+
+    function abrirAccesoAdmin() {
+      document.getElementById("modalAccesoAdmin").style.display = "flex";
+      const input = document.getElementById("passwordAdmin");
+      input.value = "";
+      setTimeout(() => input.focus(), 100);
+    }
+
+    function cerrarModalAdmin() {
+      document.getElementById("modalAccesoAdmin").style.display = "none";
+    }
+
+    function verificarAccesoAdmin() {
+      const pass = document.getElementById("passwordAdmin").value;
+      if (pass === obtenerPasswordAdmin()) {
+        cerrarModalAdmin();
+        document.getElementById("modalAdminPanel").style.display = "flex";
+        document.getElementById("adminPeriodo").value = periodoActivo;
+        cargarTablaAdmin(periodoActivo);
+      } else {
+        alert("Contraseña incorrecta.");
+        document.getElementById("passwordAdmin").select();
+      }
+    }
+
+    function cerrarPanelAdmin() {
+      document.getElementById("modalAdminPanel").style.display = "none";
+    }
+
+    function formatearInputMonetario(valor) {
+      return Number(valor || 0).toLocaleString("es-AR", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+
+    function cargarTablaAdmin(periodo) {
+      if (!referencias[periodo]) return;
+      document.getElementById("adminPeriodo").value = periodo;
+      const tbody = document.querySelector("#tablaAdmin tbody");
+      tbody.innerHTML = "";
+      Object.keys(referencias[periodo]).forEach(grado => {
+        const r = referencias[periodo][grado];
+        const tr = document.createElement("tr");
+        tr.dataset.grado = grado;
+        const valores = [r.haber, r.fijacion, r.variabilidad?.unico, r.variabilidad?.familia, r.titulo?.terciario, r.titulo?.universitario, r.zona];
+        tr.innerHTML = `<td>${grado}</td>` + valores.map((v, i) => `<td><input type="text" inputmode="decimal" data-campo="${i}" value="${formatearInputMonetario(v)}"></td>`).join("");
+        tbody.appendChild(tr);
+      });
+      document.getElementById("nuevoNombrePeriodo").value = localStorage.getItem("spf_nombre_" + periodo) || (periodo === "periodo1" ? "Período 1" : periodo === "periodo2" ? "Período 2" : "Período 3");
+      setAdminStatus(`Editando ${Object.keys(referencias[periodo]).length} grados de ${document.getElementById("nuevoNombrePeriodo").value}.`, true);
+    }
+
+    function parsearNumeroMonetario(valor) {
+      if (valor === null || valor === undefined) return NaN;
+      let s = String(valor).trim().replace(/[\s$€]/g, "");
+      if (!s) return NaN;
+      if (s.includes(",") && s.includes(".")) {
+        s = s.replace(/\./g, "").replace(",", ".");
+      } else if (s.includes(",")) {
+        s = s.replace(",", ".");
+      } else if ((s.match(/\./g) || []).length > 1) {
+        s = s.replace(/\./g, "");
+      } else if (s.includes(".")) {
+        const partes = s.split(".");
+        if (partes[1] && partes[1].length === 3 && partes[0].length <= 3) s = s.replace(".", "");
+      }
+      const n = Number(s);
+      return Number.isFinite(n) ? n : NaN;
+    }
+
+    function guardarTablaAdmin() {
+      const periodo = document.getElementById("adminPeriodo").value;
+      const filas = [...document.querySelectorAll("#tablaAdmin tbody tr")];
+      let errores = [];
+      const nueva = {};
+      filas.forEach((tr, filaIndex) => {
+        const grado = tr.dataset.grado;
+        const inputs = [...tr.querySelectorAll("input")];
+        const nums = inputs.map(i => parsearNumeroMonetario(i.value));
+        if (nums.some(n => !Number.isFinite(n))) errores.push(`Fila ${filaIndex + 1} (${grado})`);
+        else {
+          nueva[grado] = {
+            haber: nums[0], fijacion: nums[1],
+            variabilidad: { unico: nums[2], familia: nums[3] },
+            titulo: { terciario: nums[4], universitario: nums[5] },
+            zona: nums[6]
+          };
+        }
+      });
+      if (errores.length) {
+        setAdminStatus("Hay valores inválidos en: " + errores.join(", "), false);
+        return;
+      }
+      referencias[periodo] = nueva;
+      const nombre = document.getElementById("nuevoNombrePeriodo").value.trim() || periodo;
+      localStorage.setItem("spf_nombre_" + periodo, nombre);
+      guardarReferencias();
+      if (periodo === periodoActivo) referenciaActiva = referencias[periodoActivo];
+      actualizarNombresPeriodos();
+      setAdminStatus(`✓ Cambios guardados correctamente en ${nombre}.`, true);
+    }
+
+    function restaurarPeriodoAdmin() {
+      const periodo = document.getElementById("adminPeriodo").value;
+      if (!confirm("¿Restaurar este período a los valores originales del HTML? Se perderán los cambios guardados de este período.")) return;
+      referencias[periodo] = clonarObjeto(referenciaInicial);
+      guardarReferencias();
+      if (periodo === periodoActivo) referenciaActiva = referencias[periodoActivo];
+      cargarTablaAdmin(periodo);
+      setAdminStatus("Período restaurado a los valores originales.", true);
+    }
+
+    function abrirPegadoExcel() {
+      document.getElementById("modalPegadoExcel").style.display = "flex";
+      document.getElementById("excelPasteArea").value = "";
+      document.getElementById("pasteStatus").textContent = "Esperando datos...";
+      setTimeout(() => document.getElementById("excelPasteArea").focus(), 100);
+    }
+
+    function cerrarPegadoExcel() {
+      document.getElementById("modalPegadoExcel").style.display = "none";
+    }
+
+    async function leerPortapapelesExcel() {
+      try {
+        if (!navigator.clipboard || !navigator.clipboard.readText) throw new Error("Portapapeles no disponible");
+        const texto = await navigator.clipboard.readText();
+        document.getElementById("excelPasteArea").value = texto;
+        document.getElementById("pasteStatus").innerHTML = '<span class="status-ok">✓ Datos leídos del portapapeles.</span>';
+      } catch (e) {
+        document.getElementById("pasteStatus").innerHTML = '<span class="status-error">No se pudo leer automáticamente. Pegue los datos manualmente en el cuadro y vuelva a pulsar «Aplicar datos».</span>';
+        document.getElementById("excelPasteArea").focus();
+      }
+    }
+
+    function detectarFilaEncabezado(celdas) {
+      const texto = celdas.join(" ").toLowerCase();
+      return texto.includes("grado") || texto.includes("haber") || texto.includes("fijaci") || texto.includes("variabilidad");
+    }
+
+    function aplicarPegadoExcel() {
+      const texto = document.getElementById("excelPasteArea").value.trim();
+      if (!texto) { alert("No hay datos para importar."); return; }
+      const lineas = texto.split(/\r?\n/).map(l => l.split("\t"));
+      const filas = detectarFilaEncabezado(lineas[0]) ? lineas.slice(1) : lineas;
+      const periodo = document.getElementById("adminPeriodo").value;
+      const existentes = referencias[periodo];
+      let actualizadas = 0, ignoradas = 0, errores = [];
+      filas.forEach((celdas, idx) => {
+        if (!celdas.length || !String(celdas[0]).trim()) return;
+        const grado = String(celdas[0]).trim();
+        if (!existentes[grado]) { ignoradas++; return; }
+        if (celdas.length < 8) { errores.push(`Fila ${idx + 1}: faltan columnas`); return; }
+        const nums = celdas.slice(1, 8).map(parsearNumeroMonetario);
+        if (nums.some(n => !Number.isFinite(n))) { errores.push(`Fila ${idx + 1} (${grado}): número inválido`); return; }
+        existentes[grado] = {
+          haber: nums[0], fijacion: nums[1],
+          variabilidad: { unico: nums[2], familia: nums[3] },
+          titulo: { terciario: nums[4], universitario: nums[5] },
+          zona: nums[6]
+        };
+        actualizadas++;
+      });
+      cargarTablaAdmin(periodo);
+      const msg = `✓ ${actualizadas} grados actualizados${ignoradas ? `; ${ignoradas} filas ignoradas por grado no encontrado` : ""}${errores.length ? "; errores: " + errores.join(" | ") : ""}. Revise la tabla y pulse GUARDAR CAMBIOS.`;
+      document.getElementById("pasteStatus").textContent = msg;
+      setAdminStatus(msg, errores.length === 0);
+      cerrarPegadoExcel();
+    }
+
+    function exportarPeriodoExcel() {
+      const periodo = document.getElementById("adminPeriodo").value;
+      const r = referencias[periodo];
+      const filas = [["Grado","Haber","Fijación","Variabilidad único","Variabilidad familia","Título terciario","Título universitario","Zona"]];
+      Object.keys(r).forEach(grado => {
+        const x = r[grado];
+        filas.push([grado, x.haber, x.fijacion, x.variabilidad.unico, x.variabilidad.familia, x.titulo.terciario, x.titulo.universitario, x.zona]);
+      });
+      const texto = filas.map(f => f.map((v, i) => i === 0 ? v : String(v).replace(".", ",")).join("\t")).join("\n");
+      navigator.clipboard?.writeText(texto).then(() => setAdminStatus("✓ Tabla copiada al portapapeles para pegarla en Excel.", true)).catch(() => {
+        const area = document.getElementById("excelPasteArea");
+        abrirPegadoExcel(); area.value = texto;
+        document.getElementById("pasteStatus").textContent = "La tabla fue preparada. Puede copiarla manualmente desde este cuadro.";
+      });
+    }
+
+    function cambiarPasswordAdmin() {
+      const actual = prompt("Ingrese la contraseña actual:");
+      if (actual !== obtenerPasswordAdmin()) { alert("Contraseña actual incorrecta."); return; }
+      const nueva = prompt("Ingrese la nueva contraseña (mínimo 4 caracteres):");
+      if (!nueva || nueva.length < 4) { alert("La contraseña debe tener al menos 4 caracteres."); return; }
+      localStorage.setItem(CLAVE_STORAGE_PASSWORD, nueva);
+      alert("Contraseña cambiada correctamente.");
+    }
+
+    function setAdminStatus(texto, ok) {
+      const el = document.getElementById("adminStatus");
+      if (!el) return;
+      el.innerHTML = ok ? `<span class="status-ok">${texto}</span>` : `<span class="status-error">${texto}</span>`;
+    }
+
+    function actualizarNombresPeriodos() {
+      const nombrePorDefecto = {periodo1:"Período 1", periodo2:"Período 2", periodo3:"Período 3"};
+      ["periodo1","periodo2","periodo3"].forEach(p => {
+        const nombre = localStorage.getItem("spf_nombre_" + p) || nombrePorDefecto[p];
+        const a = document.querySelector(`#periodoActivo option[value="${p}"]`);
+        const b = document.querySelector(`#adminPeriodo option[value="${p}"]`);
+        if (a) a.textContent = nombre;
+        if (b) b.textContent = nombre;
+      });
+    }
+
     // Inicialización al cargar la página
     document.addEventListener('DOMContentLoaded', function() {
+      actualizarNombresPeriodos();
+      document.getElementById('periodoActivo').value = periodoActivo;
       // Inicializar el select de grados
       inicializarSelectGrados();
       
@@ -2686,6 +3001,97 @@
       });
     });
   </script>
+
+  <!-- Acceso de administrador -->
+  <div class="modal-overlay" id="modalAccesoAdmin">
+    <div class="modal-content" style="max-width:480px;">
+      <div class="modal-header">
+        <h3>🔐 Acceso de administrador</h3>
+        <button class="close-btn" onclick="cerrarModalAdmin()">×</button>
+      </div>
+      <div class="modal-body">
+        <p>Ingrese la contraseña para modificar las tablas de referencia monetaria.</p>
+        <label for="passwordAdmin">Contraseña:</label>
+        <input type="password" id="passwordAdmin" autocomplete="current-password" onkeydown="if(event.key==='Enter') verificarAccesoAdmin()">
+        <div class="admin-actions">
+          <button type="button" class="btn btn-success" onclick="verificarAccesoAdmin()">INGRESAR</button>
+          <button type="button" class="btn btn-secondary" onclick="cerrarModalAdmin()">CANCELAR</button>
+        </div>
+        <div class="admin-note">Contraseña inicial: <strong>admin1234</strong>. Puede cambiarla desde el panel de administración.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel de administración -->
+  <div class="modal-overlay admin-modal" id="modalAdminPanel">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>⚙️ Administración de valores de referencia</h3>
+        <button class="close-btn" onclick="cerrarPanelAdmin()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="admin-toolbar">
+          <div class="field">
+            <label for="adminPeriodo">Período a editar:</label>
+            <select id="adminPeriodo" onchange="cargarTablaAdmin(this.value)">
+              <option value="periodo1">Período 1</option>
+              <option value="periodo2">Período 2</option>
+              <option value="periodo3">Período 3</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="nuevoNombrePeriodo">Nombre del período:</label>
+            <input type="text" id="nuevoNombrePeriodo" placeholder="Ej.: Enero 2027">
+          </div>
+        </div>
+
+        <div class="admin-actions">
+          <button type="button" class="btn btn-info" onclick="abrirPegadoExcel()">📋 PEGAR DESDE EXCEL</button>
+          <button type="button" class="btn btn-success" onclick="guardarTablaAdmin()">💾 GUARDAR CAMBIOS</button>
+          <button type="button" class="btn btn-warning" onclick="restaurarPeriodoAdmin()">↩️ RESTAURAR ORIGINAL</button>
+          <button type="button" class="btn btn-secondary" onclick="exportarPeriodoExcel()">📤 COPIAR TABLA</button>
+          <button type="button" class="btn btn-danger" onclick="cambiarPasswordAdmin()">🔑 CAMBIAR CONTRASEÑA</button>
+        </div>
+
+        <div class="admin-note">
+          <strong>Importación desde Excel:</strong> copie directamente las celdas y utilice «Pegar desde Excel».
+          El formato esperado es: <strong>Grado | Haber | Fijación | Variabilidad único | Variabilidad familia | Título terciario | Título universitario | Zona</strong>.
+          Se aceptan números con formato argentino, por ejemplo <strong>3.135.840,45</strong>.
+        </div>
+
+        <div id="adminStatus" class="admin-note">Listo.</div>
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="tablaAdmin">
+            <thead><tr>
+              <th>Grado</th><th>Haber</th><th>Fijación</th><th>Var. único</th><th>Var. familia</th>
+              <th>Tít. terciario</th><th>Tít. universitario</th><th>Zona</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pegado de Excel -->
+  <div class="modal-overlay" id="modalPegadoExcel">
+    <div class="modal-content" style="max-width:850px;">
+      <div class="modal-header">
+        <h3>📋 Importar valores desde Excel</h3>
+        <button class="close-btn" onclick="cerrarPegadoExcel()">×</button>
+      </div>
+      <div class="modal-body">
+        <p>Copie en Excel las filas de la tabla, incluyendo o no los encabezados, y luego pulse <strong>LEER PORTAPAPELES</strong>. Si el navegador no permite acceder al portapapeles, pegue manualmente con Ctrl+V en el cuadro.</p>
+        <textarea id="excelPasteArea" class="paste-box" placeholder="Grado	Haber	Fijación	Variabilidad único	Variabilidad familia	Título terciario	Título universitario	Zona"></textarea>
+        <div class="admin-actions">
+          <button type="button" class="btn btn-info" onclick="leerPortapapelesExcel()">📋 LEER PORTAPAPELES</button>
+          <button type="button" class="btn btn-success" onclick="aplicarPegadoExcel()">✅ APLICAR DATOS</button>
+          <button type="button" class="btn btn-secondary" onclick="cerrarPegadoExcel()">CANCELAR</button>
+        </div>
+        <div id="pasteStatus" class="admin-note">Esperando datos...</div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
-
