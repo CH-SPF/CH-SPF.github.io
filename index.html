@@ -1031,7 +1031,7 @@
       <div class="header-content">
         <h2>Calculadora de Haberes SPF</h2>
         <p>Complete los datos para estimar su haber mensual según su situación</p>
-        <p class="update-info">Última actualización: <a href="https://www.boletinoficial.gob.ar/detalleAviso/primera/329387/20250806" target="_blank">RESOL-2025-944-APN-MSG (a percibir en diciembre)</a></p>
+        <p class="update-info">Última actualización: <a href="https://www.boletinoficial.gob.ar/detalleAviso/primera/346633/20260901" target="_blank"> Decreto 845/2026 </a></p>
         <div id="syncStatus" class="sync-status synced">✅ Datos sincronizados en la nube</div>
       </div>
     </div>
@@ -1132,9 +1132,9 @@
             <button type="button" class="btn-opcion active" data-suplemento-value="no" onclick="seleccionarSuplemento('seguridadAdicional','no')">No</button>
             <button type="button" class="btn-opcion" data-suplemento-value="si" onclick="seleccionarSuplemento('seguridadAdicional','si')">Sí</button>
             <div class="horas-suplemento" id="horasSeguridadAdicional" style="display:none;">
-              <label>Horas Servicio Continuo:</label><input type="number" min="0" step="0.5" id="horasServicioContinuo" value="0">
-              <label>Horas Servicio Discontinuo:</label><input type="number" min="0" step="0.5" id="horasServicioDiscontinuo" value="0">
-              <div class="horas-ayuda">Cada 4 horas equivalen a 1 Servicio; entre 4:00 y 4:30 continúa contando como 1. Más de 4:30 cuenta como 2.</div>
+              <label>Hasta 4:30 hrs.:</label><input type="number" min="0" step="1" id="unidadesServicioHasta430" value="0">
+              <label>+ 4:30 hrs.:</label><input type="number" min="0" step="1" id="unidadesServicioMas430" value="0">
+              <div class="horas-ayuda">Ingrese la cantidad de días. Cada día representa 1 unidad de Servicio.</div>
             </div>
           </div>
           <div class="btn-opcion-group" data-suplemento="recargoServicio">
@@ -1142,10 +1142,9 @@
             <button type="button" class="btn-opcion active" data-suplemento-value="no" onclick="seleccionarSuplemento('recargoServicio','no')">No</button>
             <button type="button" class="btn-opcion" data-suplemento-value="si" onclick="seleccionarSuplemento('recargoServicio','si')">Sí</button>
             <div class="horas-suplemento" id="horasRecargoServicio" style="display:none;">
-              <label>Tipo de Recargo:</label>
-              <select id="tipoRecargoServicio"><option value="ordinario">Ordinario</option><option value="extraordinario">Extraordinario</option></select>
-              <label>Horas Recargo:</label><input type="number" min="0" step="0.5" id="horasRecargo" value="0">
-              <div class="horas-ayuda">Ordinario: unidades según horas ÷ 3. Extraordinario: horas ÷ 5 y cualquier resto se redondea hacia arriba.</div>
+              <label>De 3 a 5 horas:</label><input type="number" min="0" step="1" id="unidadesRecargo3a5" value="0">
+              <label>+ 5 horas:</label><input type="number" min="0" step="1" id="unidadesRecargoMas5" value="0">
+              <div class="horas-ayuda">Ingrese la cantidad de días. Cada día representa 1 unidad de Recargo.</div>
             </div>
           </div>
           <div class="btn-opcion-group" data-suplemento="sanidad">
@@ -1884,7 +1883,7 @@
         if(campo==='recargo'){ /* second value inserted by separate row below */ }
       }); html+='</tr>'; });
       if(campo==='recargo'){ html='';
-        TODOS_LOS_GRADOS.filter(g=>determinarJerarquia(g)!=='Aspirante').forEach(g=>{ html+=`<tr><td class="grado-cell">${g}</td>`; periodosNombres.forEach((nombre,idx)=>{const pn=nombre||`Periodo ${idx+1}`, d=periodosData[pn]||ref, pair=RECARGOS_INICIALES[g]||[1,1], a=d[g]?.recargo?.ordinario??pair[0], b=d[g]?.recargo?.extraordinario??pair[1]; html+=`<td><div style="display:grid;gap:4px"><label style="font-size:10px">Ordinario (3 h)</label><input title="Ordinario" type="number" step="0.01" class="admin-input" data-grado="${g}" data-periodo="${idx}" data-campo="recargo" data-subcampo="ordinario" value="${a}"><label style="font-size:10px">Extraordinario (3-5 h)</label><input title="Extraordinario" type="number" step="0.01" class="admin-input" data-grado="${g}" data-periodo="${idx}" data-campo="recargo" data-subcampo="extraordinario" value="${b}"></div></td>`;}); html+='</tr>';}); }
+        TODOS_LOS_GRADOS.filter(g=>determinarJerarquia(g)!=='Aspirante').forEach(g=>{ html+=`<tr><td class="grado-cell">${g}</td>`; periodosNombres.forEach((nombre,idx)=>{const pn=nombre||`Periodo ${idx+1}`, d=periodosData[pn]||ref, pair=RECARGOS_INICIALES[g]||[1,1], a=d[g]?.recargo?.ordinario??pair[0], b=d[g]?.recargo?.extraordinario??pair[1]; html+=`<td><div style="display:grid;gap:4px"><label style="font-size:10px">De 3 a 5 horas</label><input title="Ordinario" type="number" step="0.01" class="admin-input" data-grado="${g}" data-periodo="${idx}" data-campo="recargo" data-subcampo="ordinario" value="${a}"><label style="font-size:10px">+ 5 horas</label><input title="Extraordinario" type="number" step="0.01" class="admin-input" data-grado="${g}" data-periodo="${idx}" data-campo="recargo" data-subcampo="extraordinario" value="${b}"></div></td>`;}); html+='</tr>';}); }
       if(campo==='zona'){ html=''; const zonaNombre=subcampo; TODOS_LOS_GRADOS.filter(g=>determinarJerarquia(g)!=='Aspirante').forEach(g=>{html+=`<tr><td class="grado-cell">${g}</td>`;periodosNombres.forEach((nombre,idx)=>{const pn=nombre||`Periodo ${idx+1}`,d=periodosData[pn]||ref,v=d[g]?.zona?.[zonaNombre]??1;html+=`<td><input type="number" step="1" class="admin-input" data-grado="${g}" data-periodo="${idx}" data-campo="zona" data-subcampo="${zonaNombre}" value="${v}"></td>`;});html+='</tr>';}); }
       tbody.innerHTML=html;
     }
@@ -2121,7 +2120,25 @@
     }
 
     function obtenerDatosFormulario() {
-      return {antiguedad:parseInt(document.getElementById('antiguedad').value)||0,titulo:selecciones.titulo,variabilidad:selecciones.variabilidad,fijacion:selecciones.fijacion==='si',provincia:document.getElementById('provincia').value,usaCasino:selecciones.casino==='si',obra:document.getElementById('obra').value,contactoAltoRiesgo:selecciones.contactoAltoRiesgo,controlRegistro:selecciones.controlRegistro,gruposEspeciales:selecciones.gruposEspeciales,seguridadAdicional:selecciones.seguridadAdicional,recargoServicio:selecciones.recargoServicio,sanidad:selecciones.sanidad,horasServicioContinuo:parseFloat(document.getElementById('horasServicioContinuo').value)||0,horasServicioDiscontinuo:parseFloat(document.getElementById('horasServicioDiscontinuo').value)||0,horasRecargo:parseFloat(document.getElementById('horasRecargo').value)||0,tipoRecargo:document.getElementById('tipoRecargoServicio').value};
+      return {
+        antiguedad: parseInt(document.getElementById('antiguedad').value) || 0,
+        titulo: selecciones.titulo,
+        variabilidad: selecciones.variabilidad,
+        fijacion: selecciones.fijacion === 'si',
+        provincia: document.getElementById('provincia').value,
+        usaCasino: selecciones.casino === 'si',
+        obra: document.getElementById('obra').value,
+        contactoAltoRiesgo: selecciones.contactoAltoRiesgo,
+        controlRegistro: selecciones.controlRegistro,
+        gruposEspeciales: selecciones.gruposEspeciales,
+        seguridadAdicional: selecciones.seguridadAdicional,
+        recargoServicio: selecciones.recargoServicio,
+        sanidad: selecciones.sanidad,
+        unidadesServicioHasta430: parseInt(document.getElementById('unidadesServicioHasta430')?.value) || 0,
+        unidadesServicioMas430: parseInt(document.getElementById('unidadesServicioMas430')?.value) || 0,
+        unidadesRecargo3a5: parseInt(document.getElementById('unidadesRecargo3a5')?.value) || 0,
+        unidadesRecargoMas5: parseInt(document.getElementById('unidadesRecargoMas5')?.value) || 0
+      };
     }
 
     function obtenerDatosFormularioComparacion(formulario) {
@@ -2232,15 +2249,102 @@
 
     // ============== FUNCIONES DE CÁLCULO ==============
 
-    function obtenerZonaPorProvincia(provincia){ if(!provincia || provincia==='CABA') return null; for(const [zona,lista] of Object.entries(ZONAS)){ if(lista.includes(provincia)) return zona; } return null; }
-    function obtenerMontoZona(ref, grado, provincia){ if(determinarJerarquia(grado)==='Aspirante') return 0; const zona=obtenerZonaPorProvincia(provincia); if(!zona) return 0; return ref?.zona?.[zona] ?? 0; }
-    function unidadesServicio(horas){ if(horas<=0) return 0; return Math.ceil(horas/4.5); }
-    function unidadesRecargo(horas,tipo){ if(horas<=0) return 0; return tipo==='ordinario' ? horas/3 : Math.ceil(horas/5); }
-    function validarHorasSuplementos(){ const s=parseFloat(document.getElementById('horasServicioContinuo')?.value)||0,d=parseFloat(document.getElementById('horasServicioDiscontinuo')?.value)||0,r=parseFloat(document.getElementById('horasRecargo')?.value)||0; const total=s+d+r; if(total>180){alert('Error: las horas de Servicio y Recargo sumadas no pueden superar 180 horas.'); return false;} return true; }
-    function seleccionarSuplemento(campo,valor){ selecciones[campo]=valor; const incompatibles=['contactoAltoRiesgo','controlRegistro','gruposEspeciales','seguridadAdicional']; if(valor==='si' && incompatibles.includes(campo)){ incompatibles.forEach(c=>{if(c!==campo) selecciones[c]='no';}); } Object.keys(selecciones).filter(k=>incompatibles.includes(k)).forEach(c=>{document.querySelectorAll(`[data-suplemento="${c}"] .btn-opcion`).forEach(b=>b.classList.toggle('active',b.dataset.suplementoValue===selecciones[c]));}); const a=document.getElementById('horasSeguridadAdicional'); if(a)a.style.display=selecciones.seguridadAdicional==='si'?'block':'none'; const r=document.getElementById('horasRecargoServicio'); if(r)r.style.display=selecciones.recargoServicio==='si'?'block':'none'; }
-    function actualizarEstadoSuplementos(){ const aspirante=determinarJerarquia(document.getElementById('grado').value)==='Aspirante'; const c=document.getElementById('suplementosContainer'); if(c)c.style.display=aspirante?'none':''; if(aspirante){ ['contactoAltoRiesgo','controlRegistro','gruposEspeciales','seguridadAdicional','recargoServicio','sanidad'].forEach(k=>selecciones[k]='no'); } }
-    function inicializarProvincias(){ const s=document.getElementById('provincia'); if(!s)return; PROVINCIAS_ARGENTINAS.forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;s.appendChild(o);}); }
-    function obtenerDatosSuplementos(grado,ref,datos){ const haber=ref?.haber||0; const res={}; ['contactoAltoRiesgo','controlRegistro','gruposEspeciales','sanidad'].forEach(k=>{res[k]=datos[k]==='si'?haber*(COEFICIENTES_SUPLEMENTOS[k]?.[grado]||0):0;}); const hs=datos.seguridadAdicional==='si'; const hc=hs?unidadesServicio(datos.horasServicioContinuo):0, hd=hs?unidadesServicio(datos.horasServicioDiscontinuo):0; const valores=periodosData[periodoActivo]?.__SUPLEMENTOS__?.seguridad||{continuo:22332,discontinuo:29714.34}; res.seguridadAdicional=hs?(hc*(valores.continuo||0)+hd*(valores.discontinuo||0)):0; const hr=datos.recargoServicio==='si'?unidadesRecargo(datos.horasRecargo,datos.tipoRecargo):0; const rv=periodosData[periodoActivo]?.[grado]?.recargo||{}; res.recargoServicio=datos.recargoServicio==='si'?hr*(rv[datos.tipoRecargo]||0):0; return res; }
+    function obtenerZonaPorProvincia(provincia){
+      if(!provincia || provincia === 'CABA') return null;
+      for(const [zona, lista] of Object.entries(ZONAS)){
+        if(lista.includes(provincia)) return zona;
+      }
+      return null;
+    }
+
+    function obtenerMontoZona(ref, grado, provincia){
+      if(determinarJerarquia(grado) === 'Aspirante') return 0;
+      const zona = obtenerZonaPorProvincia(provincia);
+      if(!zona) return 0;
+      return ref?.zona?.[zona] ?? 0;
+    }
+
+    function estimarHorasSuplementos(datos){
+      const servicioHasta430 = Math.max(0, parseInt(datos.unidadesServicioHasta430) || 0);
+      const servicioMas430 = Math.max(0, parseInt(datos.unidadesServicioMas430) || 0);
+      const recargo3a5 = Math.max(0, parseInt(datos.unidadesRecargo3a5) || 0);
+      const recargoMas5 = Math.max(0, parseInt(datos.unidadesRecargoMas5) || 0);
+      return (servicioHasta430 * 4) + (servicioMas430 * 6) + (recargo3a5 * 4) + (recargoMas5 * 6);
+    }
+
+    function seleccionarSuplemento(campo, valor){
+      selecciones[campo] = valor;
+      const incompatibles = ['contactoAltoRiesgo','controlRegistro','gruposEspeciales','seguridadAdicional'];
+      if(valor === 'si' && incompatibles.includes(campo)){
+        incompatibles.forEach(c => { if(c !== campo) selecciones[c] = 'no'; });
+      }
+
+      const gruposUI = [...incompatibles, 'recargoServicio', 'sanidad'];
+      gruposUI.forEach(c => {
+        document.querySelectorAll(`[data-suplemento="${c}"] .btn-opcion`).forEach(b => {
+          b.classList.toggle('active', b.dataset.suplementoValue === selecciones[c]);
+        });
+      });
+
+      const seguridad = document.getElementById('horasSeguridadAdicional');
+      if(seguridad) seguridad.style.display = selecciones.seguridadAdicional === 'si' ? 'block' : 'none';
+
+      const recargo = document.getElementById('horasRecargoServicio');
+      if(recargo) recargo.style.display = selecciones.recargoServicio === 'si' ? 'block' : 'none';
+    }
+
+    function actualizarEstadoSuplementos(){
+      const aspirante = determinarJerarquia(document.getElementById('grado').value) === 'Aspirante';
+      const c = document.getElementById('suplementosContainer');
+      if(c) c.style.display = aspirante ? 'none' : '';
+      if(aspirante){
+        ['contactoAltoRiesgo','controlRegistro','gruposEspeciales','seguridadAdicional','recargoServicio','sanidad'].forEach(k => selecciones[k] = 'no');
+      }
+      // Mantener el estado visual correcto, incluido Sanidad.
+      ['contactoAltoRiesgo','controlRegistro','gruposEspeciales','seguridadAdicional','recargoServicio','sanidad'].forEach(campo => {
+        document.querySelectorAll(`[data-suplemento="${campo}"] .btn-opcion`).forEach(b => {
+          b.classList.toggle('active', b.dataset.suplementoValue === selecciones[campo]);
+        });
+      });
+    }
+
+    function inicializarProvincias(){
+      const s = document.getElementById('provincia');
+      if(!s) return;
+      PROVINCIAS_ARGENTINAS.forEach(p => {
+        const o = document.createElement('option');
+        o.value = p;
+        o.textContent = p;
+        s.appendChild(o);
+      });
+    }
+
+    function obtenerDatosSuplementos(grado, ref, datos){
+      const haber = ref?.haber || 0;
+      const res = {};
+
+      ['contactoAltoRiesgo','controlRegistro','gruposEspeciales','sanidad'].forEach(k => {
+        res[k] = datos[k] === 'si' ? haber * (COEFICIENTES_SUPLEMENTOS[k]?.[grado] || 0) : 0;
+      });
+
+      const seguridadActiva = datos.seguridadAdicional === 'si';
+      const unidadesHasta430 = seguridadActiva ? Math.max(0, parseInt(datos.unidadesServicioHasta430) || 0) : 0;
+      const unidadesMas430 = seguridadActiva ? Math.max(0, parseInt(datos.unidadesServicioMas430) || 0) : 0;
+      const valoresSeguridad = periodosData[periodoActivo]?.__SUPLEMENTOS__?.seguridad || { continuo: 22332, discontinuo: 29714.34 };
+      res.seguridadAdicional = seguridadActiva
+        ? (unidadesHasta430 * (valoresSeguridad.continuo || 0)) + (unidadesMas430 * (valoresSeguridad.discontinuo || 0))
+        : 0;
+
+      const recargoActivo = datos.recargoServicio === 'si';
+      const unidades3a5 = recargoActivo ? Math.max(0, parseInt(datos.unidadesRecargo3a5) || 0) : 0;
+      const unidadesMas5 = recargoActivo ? Math.max(0, parseInt(datos.unidadesRecargoMas5) || 0) : 0;
+      const valoresRecargo = periodosData[periodoActivo]?.[grado]?.recargo || {};
+      res.recargoServicio = recargoActivo
+        ? (unidades3a5 * (valoresRecargo.ordinario || 0)) + (unidadesMas5 * (valoresRecargo.extraordinario || 0))
+        : 0;
+
+      return res;
+    }
 
     function calcularHaber(ref, datosUsuario, grado) {
       const { antiguedad, titulo, variabilidad, fijacion, provincia, usaCasino, obra } = datosUsuario;
@@ -2254,7 +2358,8 @@
       // Contacto, Control, Grupos y Sanidad no tienen deducciones. Seguridad no tiene Retiro pero sí Obra Social. Recargo tiene ambas.
       const aporteJubilatorioFinal=-(baseAportes+suplementos.recargoServicio)*0.10;
       const total=baseAportes+adicionalVariabilidad+adicionalFijacion+adicionalZona+adicionalCasino+Object.values(suplementos).reduce((a,b)=>a+b,0)+aporteJubilatorioFinal+aporteObra;
-      return {haber:ref.haber,suplemento,bonificacionTitulo,adicionalVariabilidad,adicionalFijacion,adicionalZona,adicionalCasino,montoCasino,aporteJubilatorio:aporteJubilatorioFinal,aporteObra,total,añosEscalafon,...suplementos};
+      const horasEstimadasSuplementos = estimarHorasSuplementos(datosUsuario);
+      return {haber:ref.haber,suplemento,bonificacionTitulo,adicionalVariabilidad,adicionalFijacion,adicionalZona,adicionalCasino,montoCasino,aporteJubilatorio:aporteJubilatorioFinal,aporteObra,total,añosEscalafon,horasEstimadasSuplementos,...suplementos};
     }
 
     function calcularHaberRetiro(ref, datosUsuario, grado) {
@@ -2423,6 +2528,10 @@
           <div class="mobile-result-container">${generarFilasResultadoMobile(calculo, esRetiro)}</div>
         </div>
         ${generarNotaAclaracion(esRetiro)}
+        ${!esRetiro && calculo.horasEstimadasSuplementos >= 150 ? `
+          <div style="margin-top:15px;padding:14px 16px;border:2px solid #e67e22;background:#fff4e5;border-radius:8px;color:#8a4b08;font-weight:700;text-align:center;">
+            ⚠️ ADVERTENCIA: Las horas estimadas de Servicio y Recargo alcanzan ${calculo.horasEstimadasSuplementos} horas. Tenga en cuenta que el límite conjunto mensual es de 180 horas.
+          </div>` : ''}
       `;
       document.getElementById("resultado").innerHTML = tablaHTML;
       document.getElementById("resultado").style.display = "block";
@@ -2437,7 +2546,6 @@
       }
       const ref = getReferenciaActiva();
       const datosUsuario = obtenerDatosFormulario();
-      if (!validarHorasSuplementos()) return;
       const grado = document.getElementById("grado").value;
       const calculo = calcularHaber(ref[grado] || DEFAULT_REFERENCIA[grado], datosUsuario, grado);
       renderizarResultado(calculo, grado, false);
