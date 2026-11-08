@@ -1151,8 +1151,12 @@
     .rex-cta .rex-cta-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.75; margin-bottom: 6px; }
     .rex-cta h3 { margin: 0 0 7px; font-family: 'Playfair Display', Georgia, serif; font-size: 25px; font-weight: 600; }
     .rex-cta p { margin: 0 auto 16px; max-width: 560px; color: #e7e3e0; font-size: 14px; }
+    .rex-cta-actions { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; }
     .rex-cta-button { display: inline-block; background: #f6f4f0; color: var(--rex-brown); text-decoration: none; font-weight: 800; padding: 11px 18px; border-radius: 8px; transition: var(--transition); }
     .rex-cta-button:hover { background: #fff; transform: translateY(-1px); }
+    .rex-cta-button-secondary { border: 1px solid rgba(246, 244, 240, 0.75); background: transparent; color: #f6f4f0; }
+    .rex-cta-button-secondary:hover { background: rgba(246, 244, 240, 0.12); }
+    @media (max-width: 480px) { .rex-cta-actions { flex-direction: column; } .rex-cta-actions .rex-cta-button { width: 100%; max-width: 330px; } }
     .rex-social { margin-top: 14px; font-size: 12px; color: #d7cecb; }
     .rex-social a { color: #fff; font-weight: 700; text-decoration: none; }
 
@@ -1367,7 +1371,10 @@
       <div class="rex-cta-eyebrow">REX ESTUDIO JURÍDICO</div>
       <h3>¿Tenés una consulta legal?</h3>
       <p>Podemos analizar tu situación particular y orientarte sobre las alternativas jurídicas disponibles.</p>
-      <a class="rex-cta-button" href="mailto:rexabogados@outlook.com?subject=Consulta%20jur%C3%ADdica%20-%20Calculadora%20de%20Haberes%20SPF">CONSULTAR CON REX ESTUDIO JURÍDICO →</a>
+      <div class="rex-cta-actions">
+        <a class="rex-cta-button" href="https://wa.me/5491177401574?text=Hola%2C%20quisiera%20realizar%20una%20consulta%20jur%C3%ADdica.%20Llegu%C3%A9%20a%20trav%C3%A9s%20de%20la%20Calculadora%20de%20Haberes%20SPF." target="_blank" rel="noopener">CONSULTAR POR WHATSAPP →</a>
+        <a class="rex-cta-button rex-cta-button-secondary" href="mailto:rexabogados@outlook.com?subject=Consulta%20jur%C3%ADdica%20-%20Calculadora%20de%20Haberes%20SPF">CONTACTAR POR CORREO</a>
+      </div>
       <div class="rex-social">Seguinos para recibir información jurídica · <a href="https://www.instagram.com/rexabogados" target="_blank" rel="noopener">@rexabogados</a></div>
     </div>
 
