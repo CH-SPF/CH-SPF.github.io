@@ -1057,11 +1057,11 @@
     .card { border: 1px solid rgba(44, 29, 29, 0.08); box-shadow: var(--box-shadow); }
 
     .rex-brand-bar {
-      background: var(--rex-ivory);
-      border: 1px solid rgba(44, 29, 29, 0.09);
-      border-radius: var(--border-radius);
-      box-shadow: var(--box-shadow);
-      padding: 14px 20px;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 10px 0;
       margin-bottom: 14px;
       display: flex;
       justify-content: center;
@@ -1162,7 +1162,7 @@
 
     .rex-legal-note { margin: 18px 0 8px; padding: 12px 14px; border-left: 3px solid var(--rex-taupe); background: rgba(231, 227, 224, 0.52); color: #5f5653; font-size: 12px; line-height: 1.5; border-radius: 0 7px 7px 0; }
     .rex-footer { text-align: center; padding: 20px 10px 8px; color: #6f6663; font-size: 12px; }
-    .rex-footer img { width: 180px; max-width: 70%; margin-bottom: 7px; }
+    .rex-footer img { display: block; width: 180px; max-width: 70%; height: auto; margin: 0 auto 7px; background: transparent; }
     .rex-footer p { margin: 3px 0; }
     .admin-footer { border-top-color: #d9d2cf; }
     .admin-footer .btn-admin { color: #6b5f5c; }
@@ -1367,6 +1367,23 @@
     </div>
 
     <div class="card" id="resultado" style="display: none;"></div>
+
+
+
+
+    <div class="card" id="tablaReferencias" style="display: none;"></div>
+
+    <div class="rex-footer">
+      <img src="logo-rex-banner.png" alt="Rex Estudio Jurídico">
+      <p>Herramienta desarrollada por Rex Estudio Jurídico para facilitar la consulta y estimación de haberes del personal del Servicio Penitenciario Federal.</p>
+      <p>Asesoramiento y representación jurídica.</p>
+    </div>
+
+    <div class="admin-footer">
+      <button type="button" class="btn-admin" onclick="abrirAdmin()">⚙ Administrar valores</button>
+      <button type="button" class="btn-admin" onclick="sincronizarDesdeNube()" style="margin-left:5px;">☁ Sincronizar</button>
+    </div>
+
     <div class="rex-cta" id="rexCta">
       <div class="rex-cta-eyebrow">REX ESTUDIO JURÍDICO</div>
       <h3>¿Tenés una consulta legal?</h3>
@@ -1380,19 +1397,6 @@
 
     <div class="rex-legal-note">
       <strong>Aviso:</strong> los resultados son estimativos y no constituyen liquidación oficial ni asesoramiento jurídico.
-    </div>
-
-    <div class="card" id="tablaReferencias" style="display: none;"></div>
-
-    <div class="rex-footer">
-      <img src="logo-rex-banner.png" alt="Rex Estudio Jurídico">
-      <p>Herramienta desarrollada por Rex Estudio Jurídico para facilitar la consulta y estimación de haberes del personal del Servicio Penitenciario Federal.</p>
-      <p>Asesoramiento y representación jurídica.</p>
-    </div>
-
-    <div class="admin-footer">
-      <button type="button" class="btn-admin" onclick="abrirAdmin()">⚙ Administrar valores</button>
-      <button type="button" class="btn-admin" onclick="sincronizarDesdeNube()" style="margin-left:5px;">☁ Sincronizar</button>
     </div>
   </div>
 
