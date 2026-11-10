@@ -1655,7 +1655,7 @@
     const ADMIN_UID = 'euhzkzPMVldWu9FLMdmpbENGFp82';
 
     function esAdministradorAutenticado() {
-      return !!(auth && auth.currentUser && auth.currentUser.uid === ADMIN_UID && ADMIN_UID !== 'euhzkzPMVldWu9FLMdmpbENGFp82');
+      return !!(auth && auth.currentUser && ADMIN_UID && auth.currentUser.uid === ADMIN_UID);
     }
 
     if (auth) {
@@ -2067,7 +2067,7 @@
       }
       try {
         const credential = await auth.signInWithEmailAndPassword(email, pass);
-        if (!credential.user || credential.user.uid !== ADMIN_UID || ADMIN_UID === 'euhzkzPMVldWu9FLMdmpbENGFp82') {
+        if (!credential.user || !ADMIN_UID || credential.user.uid !== ADMIN_UID) {
           await auth.signOut();
           throw new Error('Esta cuenta no está autorizada para administrar la calculadora.');
         }
